@@ -57,14 +57,19 @@ function LoginForm() {
         try {
             if (isSignUp) {
                 // Call backend API for registration with OTP
-                await api.post('/auth/register', {
+                const data = await api.post('/auth/register', {
                     email,
                     password,
                     name: email.split('@')[0], // Use email prefix as default name
                 });
                 
-                // Redirect to verification page
-                router.push(`/auth/verify-email?email=${encodeURIComponent(email)}`);
+                if (data.success) {
+                    toast.success("Account Created!", {
+                        description: "Check your email for verification code."
+                    });
+                    // Redirect to verification page
+                    router.push(`/auth/verify-email?email=${encodeURIComponent(email)}`);
+                }
             } else {
                 // Call backend API for login
                 const data = await api.post('/auth/login', {
@@ -72,7 +77,7 @@ function LoginForm() {
                     password,
                 });
                 
-                if (data.token) {
+                if (data.success && data.token) {
                     // Store token in localStorage or handle as needed
                     localStorage.setItem('auth_token', data.token);
                     
@@ -83,6 +88,7 @@ function LoginForm() {
                 }
             }
         } catch (error: any) {
+            console.error('[Auth Error]', error);
             toast.error(error.message || 'Authentication failed');
         } finally {
             setLoading(false);
@@ -144,9 +150,9 @@ function LoginForm() {
                         <div className="relative">
                             <input
                                 type="password"
-                                placeholder="Password"
+                                placeholder="Password (min 8 characters)"
                                 required
-                                minLength={6}
+                                minLength={8}
                                 className="w-full bg-black/50 border border-godzilla-border rounded-xl py-4 px-4 text-white focus:outline-none focus:border-godzilla-accent transition-all text-sm"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}

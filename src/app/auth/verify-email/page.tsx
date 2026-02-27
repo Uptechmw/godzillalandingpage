@@ -96,7 +96,7 @@ function VerifyEmailForm() {
                 code,
             });
 
-            if (data.token) {
+            if (data.success && data.token) {
                 localStorage.setItem('auth_token', data.token);
                 toast.success("Email Verified!", {
                     description: "Your account is now active. Redirecting..."
@@ -117,13 +117,15 @@ function VerifyEmailForm() {
         setError("");
 
         try {
-            await api.post('/auth/resend-otp', { email });
-            toast.success("Code Resent!", {
-                description: "Check your email for the new verification code."
-            });
-            setTimeLeft(600); // Reset timer
-            setOtp(["", "", "", "", "", ""]); // Clear inputs
-            inputRefs.current[0]?.focus();
+            const data = await api.post('/auth/resend-otp', { email });
+            if (data.success) {
+                toast.success("Code Resent!", {
+                    description: "Check your email for the new verification code."
+                });
+                setTimeLeft(600); // Reset timer
+                setOtp(["", "", "", "", "", ""]); // Clear inputs
+                inputRefs.current[0]?.focus();
+            }
         } catch (error: any) {
             toast.error(error.message || 'Failed to resend code');
         } finally {
