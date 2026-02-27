@@ -68,14 +68,27 @@ export default function DashboardPage() {
             <main className="lg:ml-64 p-4 lg:p-8">
                 {/* Header */}
                 <header className="flex flex-col lg:flex-row justify-between lg:items-center gap-6 mb-10">
-                    <div>
-                        <h1 className="text-3xl font-black text-white mb-2 tracking-tighter uppercase">
-                            Commander <span className="text-godzilla-accent">{user.name || "Benjamin"}</span>
-                        </h1>
-                        <p className="text-godzilla-text-muted font-bold text-sm tracking-tight italic">Status: System Online // Atomic Link Active</p>
+                    <div className="flex justify-between items-start w-full lg:w-auto">
+                        <div>
+                            <h1 className="text-2xl md:text-3xl font-black text-white mb-2 tracking-tighter uppercase">
+                                Commander <span className="text-godzilla-accent">{user.name || "Benjamin"}</span>
+                            </h1>
+                            <p className="text-godzilla-text-muted font-bold text-[10px] md:text-sm tracking-tight italic">Status: System Online // Atomic Link Active</p>
+                        </div>
+
+                        {/* Mobile Logout */}
+                        <button
+                            onClick={async () => {
+                                await supabase.auth.signOut();
+                                router.push("/");
+                            }}
+                            className="lg:hidden p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-500 hover:bg-red-500/20 transition-all"
+                        >
+                            <LogOut className="w-5 h-5" />
+                        </button>
                     </div>
 
-                    <div className="flex items-center gap-6">
+                    <div className="flex items-center gap-4 md:gap-6">
                         <div className="relative group hidden md:block">
                             <Search className="w-5 h-5 text-godzilla-text-muted group-focus-within:text-godzilla-accent transition-colors absolute left-3 top-1/2 -translate-y-1/2" />
                             <input
