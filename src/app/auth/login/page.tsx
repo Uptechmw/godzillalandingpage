@@ -11,6 +11,8 @@ import { Suspense } from "react";
 
 function LoginForm() {
     const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [isSignUp, setIsSignUp] = useState(false);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -28,6 +30,39 @@ function LoginForm() {
         setLoading(false);
     };
 
+    const handleEmailAuth = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoading(true);
+
+        let authError = null;
+
+        if (isSignUp) {
+            const { error } = await supabase.auth.signUp({
+                email,
+                password,
+                options: {
+                    emailRedirectTo: `${window.location.origin}/auth/callback${source ? `?source=${source}` : ''}`,
+                }
+            });
+            authError = error;
+            if (!error) {
+                alert("Check your email for the confirmation link!");
+            }
+        } else {
+            const { error } = await supabase.auth.signInWithPassword({
+                email,
+                password,
+            });
+            authError = error;
+            if (!error) {
+                router.push(source === 'app' ? `/auth/callback?source=app` : "/dashboard");
+            }
+        }
+
+        if (authError) alert(authError.message);
+        setLoading(false);
+    };
+
     return (
         <div className="min-h-screen bg-godzilla-bg flex items-center justify-center p-6 relative overflow-hidden">
             {/* Background Glow */}
@@ -42,7 +77,9 @@ function LoginForm() {
                     <div className="flex justify-center mb-6">
                         <Image src="/assets/logo.png" alt="Logo" width={64} height={64} className="w-16 h-16 drop-shadow-[0_0_15px_rgba(0,255,148,0.5)]" />
                     </div>
-                    <h1 className="text-3xl font-black text-white uppercase tracking-tighter mb-2">Atomic Login</h1>
+                    <h1 className="text-3xl font-black text-white uppercase tracking-tighter mb-2">
+                        {isSignUp ? "Atomic Sign Up" : "Atomic Login"}
+                    </h1>
                     <p className="text-godzilla-text-muted text-sm font-bold">Secure access to the Godzilla Coder ecosystem</p>
                 </div>
 
@@ -51,6 +88,7 @@ function LoginForm() {
                         onClick={() => handleOAuthLogin('github')}
                         disabled={loading}
                         className="w-full flex items-center justify-center gap-3 bg-white/5 border border-white/10 py-4 rounded-xl font-bold text-white hover:bg-white/10 transition-all group"
+                        type="button"
                     >
                         <Github className="w-5 h-5 group-hover:scale-110 transition-transform" />
                         Continue with GitHub
@@ -58,30 +96,53 @@ function LoginForm() {
 
                     <div className="relative py-4">
                         <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-godzilla-border"></div></div>
-                        <div className="relative flex justify-center text-xs uppercase"><span className="bg-godzilla-surface px-4 text-godzilla-text-muted font-black tracking-widest">Or Secure Link</span></div>
+                        <div className="relative flex justify-center text-xs uppercase"><span className="bg-godzilla-surface px-4 text-godzilla-text-muted font-black tracking-widest">Or Email</span></div>
                     </div>
 
-                    <div className="space-y-4">
+                    <form onSubmit={handleEmailAuth} className="space-y-4">
                         <div className="relative">
                             <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-godzilla-text-muted" />
                             <input
                                 type="email"
                                 placeholder="Email address"
-                                className="w-full bg-black/50 border border-godzilla-border rounded-xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-godzilla-accent transition-all text-sm"
+                                required
+                                className="w-full bg-black/50 border border-godzilla-border rounded-xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-godzilla-accent transition-all text-sm mb-4"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                             />
                         </div>
+                        <div className="relative">
+                            <input
+                                type="password"
+                                placeholder="Password"
+                                required
+                                minLength={6}
+                                className="w-full bg-black/50 border border-godzilla-border rounded-xl py-4 px-4 text-white focus:outline-none focus:border-godzilla-accent transition-all text-sm"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                        </div>
+
                         <button
+                            type="submit"
                             disabled={loading}
-                            className="w-full bg-godzilla-accent text-black py-4 rounded-xl font-black text-sm shadow-[0_0_20px_rgba(0,255,148,0.2)] hover:shadow-[0_0_30px_rgba(0,255,148,0.4)] transition-all flex items-center justify-center gap-2"
+                            className="w-full bg-godzilla-accent text-black py-4 rounded-xl font-black text-sm shadow-[0_0_20px_rgba(0,255,148,0.2)] hover:shadow-[0_0_30px_rgba(0,255,148,0.4)] transition-all flex items-center justify-center gap-2 mt-2"
                         >
                             <LogIn className="w-5 h-5" />
-                            Send Magic Link
+                            {isSignUp ? "Create Account" : "Sign In to Dashboard"}
+                        </button>
+                    </form>
+
+                    <div className="text-center mt-6">
+                        <button
+                            type="button"
+                            onClick={() => setIsSignUp(!isSignUp)}
+                            className="text-godzilla-text-muted hover:text-white text-xs font-bold transition-colors"
+                        >
+                            {isSignUp ? "Already have an account? Sign In" : "Need an account? Sign Up"}
                         </button>
                     </div>
                 </div>
-
                 {source === "app" && (
                     <div className="mt-8 p-4 bg-godzilla-accent/10 border border-godzilla-accent/20 rounded-xl text-center">
                         <p className="text-[10px] font-black text-godzilla-accent uppercase tracking-widest">Authentication Source Identified</p>
