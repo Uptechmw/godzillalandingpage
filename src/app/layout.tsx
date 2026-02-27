@@ -13,6 +13,8 @@ export const metadata: Metadata = {
   description: "The world's most advanced AI-first desktop code editor. Built on VS Code, powered by Godzilla AI.",
 };
 
+import { Toaster } from "sonner";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -22,6 +24,7 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <body className={`${outfit.variable} font-outfit antialiased`}>
         {children}
+        <Toaster position="top-center" richColors theme="dark" />
       </body>
     </html>
   );

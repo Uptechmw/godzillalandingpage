@@ -8,6 +8,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 
 import { Suspense } from "react";
+import { toast } from "sonner";
 
 function LoginForm() {
     const [email, setEmail] = useState("");
@@ -26,7 +27,7 @@ function LoginForm() {
                 redirectTo: `${window.location.origin}/auth/callback${source ? `?source=${source}` : ''}`,
             },
         });
-        if (error) alert(error.message);
+        if (error) toast.error(error.message);
         setLoading(false);
     };
 
@@ -46,7 +47,9 @@ function LoginForm() {
             });
             authError = error;
             if (!error) {
-                alert("Check your email for the confirmation link!");
+                toast.success("Atomic Link Sent!", {
+                    description: "Check your email for the confirmation link to finalize your secure account."
+                });
             }
         } else {
             const { error } = await supabase.auth.signInWithPassword({
@@ -55,11 +58,14 @@ function LoginForm() {
             });
             authError = error;
             if (!error) {
+                toast.success("Access Granted", {
+                    description: "Redirecting to your command center..."
+                });
                 router.push(source === 'app' ? `/auth/callback?source=app` : "/dashboard");
             }
         }
 
-        if (authError) alert(authError.message);
+        if (authError) toast.error(authError.message);
         setLoading(false);
     };
 
