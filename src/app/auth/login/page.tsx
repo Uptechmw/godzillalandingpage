@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
+import { api } from "@/lib/api";
 import { motion } from "framer-motion";
-import { LogIn, Github, Mail, Chrome } from "lucide-react";
+import { LogIn, Github, Mail, Chrome, Loader2 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 
@@ -14,6 +15,8 @@ function LoginForm() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
+    const [githubLoading, setGithubLoading] = useState(false);
+    const [googleLoading, setGoogleLoading] = useState(false);
     const router = useRouter();
     const searchParams = useSearchParams();
     const source = searchParams.get("source");
@@ -26,53 +29,64 @@ function LoginForm() {
     }, [mode]);
 
     const handleOAuthLogin = async (provider: 'github' | 'google') => {
-        setLoading(true);
+        if (provider === 'github') {
+            setGithubLoading(true);
+        } else {
+            setGoogleLoading(true);
+        }
+        
         const { error } = await supabase.auth.signInWithOAuth({
             provider,
             options: {
                 redirectTo: `${window.location.origin}/auth/callback${source ? `?source=${source}` : ''}`,
             },
         });
-        if (error) toast.error(error.message);
-        setLoading(false);
+        
+        if (error) {
+            toast.error(error.message);
+            setGithubLoading(false);
+            setGoogleLoading(false);
+        }
+        // Don't reset loading on success - user will be redirected
     };
 
     const handleEmailAuth = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
 
-        let authError = null;
-
-        if (isSignUp) {
-            const { error } = await supabase.auth.signUp({
-                email,
-                password,
-                options: {
-                    emailRedirectTo: `${window.location.origin}/auth/callback${source ? `?source=${source}` : ''}`,
+        try {
+            if (isSignUp) {
+                // Call backend API for registration with OTP
+                await api.post('/auth/register', {
+                    email,
+                    password,
+                    name: email.split('@')[0], // Use email prefix as default name
+                });
+                
+                // Redirect to verification page
+                router.push(`/auth/verify-email?email=${encodeURIComponent(email)}`);
+            } else {
+                // Call backend API for login
+                const data = await api.post('/auth/login', {
+                    email,
+                    password,
+                });
+                
+                if (data.token) {
+                    // Store token in localStorage or handle as needed
+                    localStorage.setItem('auth_token', data.token);
+                    
+                    toast.success("Access Granted", {
+                        description: "Redirecting to your command center..."
+                    });
+                    router.push(source === 'app' ? `/auth/callback?source=app` : "/dashboard");
                 }
-            });
-            authError = error;
-            if (!error) {
-                toast.success("Atomic Link Sent!", {
-                    description: "Check your email for the confirmation link to finalize your secure account."
-                });
             }
-        } else {
-            const { error } = await supabase.auth.signInWithPassword({
-                email,
-                password,
-            });
-            authError = error;
-            if (!error) {
-                toast.success("Access Granted", {
-                    description: "Redirecting to your command center..."
-                });
-                router.push(source === 'app' ? `/auth/callback?source=app` : "/dashboard");
-            }
+        } catch (error: any) {
+            toast.error(error.message || 'Authentication failed');
+        } finally {
+            setLoading(false);
         }
-
-        if (authError) toast.error(authError.message);
-        setLoading(false);
     };
 
     return (
@@ -98,11 +112,15 @@ function LoginForm() {
                 <div className="space-y-4">
                     <button
                         onClick={() => handleOAuthLogin('github')}
-                        disabled={loading}
-                        className="w-full flex items-center justify-center gap-3 bg-white/5 border border-white/10 py-4 rounded-xl font-bold text-white hover:bg-white/10 transition-all group"
+                        disabled={loading || githubLoading || googleLoading}
+                        className="w-full flex items-center justify-center gap-3 bg-white/5 border border-white/10 py-4 rounded-xl font-bold text-white hover:bg-white/10 transition-all group disabled:opacity-50 disabled:cursor-not-allowed"
                         type="button"
                     >
-                        <Github className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                        {githubLoading ? (
+                            <Loader2 className="w-5 h-5 animate-spin" />
+                        ) : (
+                            <Github className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                        )}
                         Continue with GitHub
                     </button>
 
@@ -137,10 +155,14 @@ function LoginForm() {
 
                         <button
                             type="submit"
-                            disabled={loading}
-                            className="w-full bg-godzilla-accent text-black py-4 rounded-xl font-black text-sm shadow-[0_0_20px_rgba(0,255,148,0.2)] hover:shadow-[0_0_30px_rgba(0,255,148,0.4)] transition-all flex items-center justify-center gap-2 mt-2"
+                            disabled={loading || githubLoading || googleLoading}
+                            className="w-full bg-godzilla-accent text-black py-4 rounded-xl font-black text-sm shadow-[0_0_20px_rgba(0,255,148,0.2)] hover:shadow-[0_0_30px_rgba(0,255,148,0.4)] transition-all flex items-center justify-center gap-2 mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            <LogIn className="w-5 h-5" />
+                            {loading ? (
+                                <Loader2 className="w-5 h-5 animate-spin" />
+                            ) : (
+                                <LogIn className="w-5 h-5" />
+                            )}
                             {isSignUp ? "Create Account" : "Sign In to Dashboard"}
                         </button>
                     </form>
