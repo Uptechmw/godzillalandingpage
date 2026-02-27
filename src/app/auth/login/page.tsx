@@ -56,15 +56,6 @@ function LoginForm() {
                         Continue with GitHub
                     </button>
 
-                    <button
-                        onClick={() => handleOAuthLogin('google')}
-                        disabled={loading}
-                        className="w-full flex items-center justify-center gap-3 bg-white/5 border border-white/10 py-4 rounded-xl font-bold text-white hover:bg-white/10 transition-all group"
-                    >
-                        <Chrome className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                        Continue with Google
-                    </button>
-
                     <div className="relative py-4">
                         <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-godzilla-border"></div></div>
                         <div className="relative flex justify-center text-xs uppercase"><span className="bg-godzilla-surface px-4 text-godzilla-text-muted font-black tracking-widest">Or Secure Link</span></div>
