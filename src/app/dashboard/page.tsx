@@ -5,7 +5,7 @@ import Sidebar from "@/components/dashboard/Sidebar";
 import CoinCard from "@/components/dashboard/CoinCard";
 import TransactionHistory from "@/components/dashboard/TransactionHistory";
 import { motion } from "framer-motion";
-import { Bell, Search, UserCircle, Loader2 } from "lucide-react";
+import { Bell, Search, UserCircle, Loader2, LogOut } from "lucide-react";
 import { api } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
