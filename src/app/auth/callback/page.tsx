@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
 
-export default function AuthCallbackPage() {
+function AuthCallbackHandler() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const source = searchParams.get("source");
@@ -61,5 +61,18 @@ export default function AuthCallbackPage() {
                 }
             </p>
         </div>
+    );
+}
+
+export default function AuthCallbackPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-godzilla-bg flex flex-col items-center justify-center p-6 text-center">
+                <Loader2 className="w-12 h-12 text-godzilla-accent animate-spin mb-4" />
+                <p className="text-godzilla-text-muted font-bold italic">Initializing Atomic Link...</p>
+            </div>
+        }>
+            <AuthCallbackHandler />
+        </Suspense>
     );
 }
