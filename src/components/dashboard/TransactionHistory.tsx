@@ -1,13 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowDownLeft, ArrowUpRight, Zap, MessageSquare, BugSquare } from "lucide-react";
+import { ArrowDownLeft, ArrowUpRight, Zap, MessageSquare, Bug } from "lucide-react";
 
 const transactions = [
     { id: 1, type: "spend", feature: "Chat", amount: -3, date: "2 mins ago", icon: MessageSquare, color: "text-blue-400" },
     { id: 2, type: "spend", feature: "Completion", amount: -1, date: "15 mins ago", icon: Zap, color: "text-amber-400" },
     { id: 3, type: "purchase", feature: "Starter Pack", amount: +100, date: "1 hour ago", icon: ArrowDownLeft, color: "text-godzilla-accent" },
-    { id: 4, type: "spend", feature: "Debug Assistant", amount: -3, date: "2 hours ago", icon: BugSquare, color: "text-purple-400" },
+    { id: 4, type: "spend", feature: "Debug Assistant", amount: -3, date: "2 hours ago", icon: Bug, color: "text-purple-400" },
 ];
 
 export default function TransactionHistory() {
