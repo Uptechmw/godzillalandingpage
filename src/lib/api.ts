@@ -14,7 +14,10 @@ export async function apiRequest(endpoint: string, options: RequestInit = {}) {
     }
     headers.set('Content-Type', 'application/json');
 
-    const url = endpoint.startsWith('http') ? endpoint : `${API_URL}${endpoint}`;
+    // Sanitize API_URL and endpoint to prevent double slashes.
+    const baseUrl = API_URL.endsWith('/') ? API_URL.slice(0, -1) : API_URL;
+    const path = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+    const url = endpoint.startsWith('http') ? endpoint : `${baseUrl}${path}`;
 
     const response = await fetch(url, {
         ...options,
