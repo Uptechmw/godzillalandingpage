@@ -5,10 +5,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { User, LogIn, LayoutDashboard } from "lucide-react";
+import { User, LogIn, LayoutDashboard, LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
     const [user, setUser] = useState<any>(null);
+    const router = useRouter();
 
     useEffect(() => {
         const checkUser = async () => {
@@ -23,6 +25,12 @@ export default function Navbar() {
 
         return () => subscription.unsubscribe();
     }, []);
+
+    const handleLogout = async () => {
+        await supabase.auth.signOut();
+        router.push("/");
+        router.refresh();
+    };
 
     return (
         <nav className="fixed top-0 w-full z-[1000] bg-godzilla-bg/80 backdrop-blur-xl border-b border-godzilla-border h-20 flex items-center">
@@ -54,16 +62,28 @@ export default function Navbar() {
                     <div className="h-6 w-px bg-white/10 mx-2" />
 
                     {user ? (
-                        <Link href="/dashboard">
+                        <div className="flex items-center gap-4">
+                            <Link href="/dashboard">
+                                <motion.button
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    className="flex items-center gap-2 bg-white/5 border border-white/10 text-white px-6 py-2.5 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-white/10 transition-all shadow-[0_0_20px_rgba(255,255,255,0.05)]"
+                                >
+                                    <LayoutDashboard className="w-4 h-4 text-godzilla-accent" />
+                                    Dashboard
+                                </motion.button>
+                            </Link>
+
                             <motion.button
+                                onClick={handleLogout}
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
-                                className="flex items-center gap-2 bg-white/5 border border-white/10 text-white px-6 py-2.5 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-white/10 transition-all shadow-[0_0_20px_rgba(255,255,255,0.05)]"
+                                className="flex items-center gap-2 text-godzilla-text-muted hover:text-red-400 px-4 py-2.5 rounded-xl font-black text-xs uppercase tracking-widest transition-all"
                             >
-                                <LayoutDashboard className="w-4 h-4 text-godzilla-accent" />
-                                Dashboard
+                                <LogOut className="w-4 h-4" />
+                                Sign Out
                             </motion.button>
-                        </Link>
+                        </div>
                     ) : (
                         <div className="flex items-center gap-6">
                             <Link href="/auth/login" className="text-white hover:text-godzilla-accent text-xs font-black uppercase tracking-widest transition-colors flex items-center gap-2">
