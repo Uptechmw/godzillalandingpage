@@ -90,14 +90,15 @@ export default function Navbar() {
                                 <LogIn className="w-4 h-4" />
                                 Sign In
                             </Link>
-                            <motion.a
-                                href="/auth/login"
-                                whileHover={{ scale: 1.05, translateY: -2 }}
-                                whileTap={{ scale: 0.95 }}
-                                className="bg-godzilla-accent text-black px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest shadow-[0_0_20px_rgba(0,255,148,0.3)] hover:shadow-[0_0_30px_rgba(0,255,148,0.5)] transition-all"
-                            >
-                                Get Tokens
-                            </motion.a>
+                            <Link href="/auth/signup">
+                                <motion.button
+                                    whileHover={{ scale: 1.05, translateY: -2 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    className="bg-godzilla-accent text-black px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest shadow-[0_0_20px_rgba(0,255,148,0.3)] hover:shadow-[0_0_30px_rgba(0,255,148,0.5)] transition-all"
+                                >
+                                    Get Tokens
+                                </motion.button>
+                            </Link>
                         </div>
                     )}
                 </div>

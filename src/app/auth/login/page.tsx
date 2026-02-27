@@ -13,11 +13,17 @@ import { toast } from "sonner";
 function LoginForm() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [isSignUp, setIsSignUp] = useState(false);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
     const searchParams = useSearchParams();
     const source = searchParams.get("source");
+    const mode = searchParams.get("mode");
+    const [isSignUp, setIsSignUp] = useState(mode === "signup");
+
+    // Also listen for query changes if user navigates while on the same page
+    useEffect(() => {
+        if (mode === "signup") setIsSignUp(true);
+    }, [mode]);
 
     const handleOAuthLogin = async (provider: 'github' | 'google') => {
         setLoading(true);

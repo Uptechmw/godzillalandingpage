@@ -29,6 +29,12 @@ export default function DashboardPage() {
                 setUser(userData);
             } catch (err: any) {
                 console.error("Dashboard Fetch Error:", err);
+                // Handle 401 Unauthorized by gracefully logging out
+                if (err.message && (err.message.includes("401") || err.message.includes("Expired") || err.message.includes("Invalid"))) {
+                    await supabase.auth.signOut();
+                    router.push("/auth/login?error=Session expired. Please log in again.");
+                    return;
+                }
                 setError(err.message);
             } finally {
                 setLoading(false);
