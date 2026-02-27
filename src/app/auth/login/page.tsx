@@ -7,7 +7,9 @@ import { LogIn, Github, Mail, Chrome } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 
-export default function LoginPage() {
+import { Suspense } from "react";
+
+function LoginForm() {
     const [email, setEmail] = useState("");
     const [loading, setLoading] = useState(false);
     const router = useRouter();
@@ -101,5 +103,17 @@ export default function LoginPage() {
                 </p>
             </motion.div>
         </div>
+    );
+}
+
+export default function LoginPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-godzilla-bg flex items-center justify-center">
+                <div className="w-12 h-12 border-4 border-godzilla-accent border-t-transparent rounded-full animate-spin" />
+            </div>
+        }>
+            <LoginForm />
+        </Suspense>
     );
 }
