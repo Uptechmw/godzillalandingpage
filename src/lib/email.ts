@@ -96,7 +96,12 @@ async function sendEmail({ to, subject, html }: EmailOptions): Promise<void> {
 async function sendWithSMTP({ to, subject, html }: EmailOptions): Promise<void> {
   const host = process.env.SMTP_HOST;
   const port = parseInt(process.env.SMTP_PORT || '587');
-  const secure = process.env.SMTP_SECURE === 'true';
+
+  // Auto-detect secure based on port if SMTP_SECURE is not explicitly set
+  const secure = process.env.SMTP_SECURE !== undefined
+    ? process.env.SMTP_SECURE === 'true'
+    : port === 465;
+
   const user = process.env.SMTP_USER;
   const pass = process.env.SMTP_PASS;
   const from = process.env.FROM_EMAIL || process.env.EMAIL_FROM || process.env.SMTP_USER || 'noreply@godzillaai.com';
@@ -110,6 +115,11 @@ async function sendWithSMTP({ to, subject, html }: EmailOptions): Promise<void> 
     port,
     secure,
     auth: { user, pass },
+    connectionTimeout: 10000, // 10s timeout instead of hanging
+    tls: {
+      // Do not fail on invalid certs in case user is using a local/development SMTP server
+      rejectUnauthorized: false
+    }
   });
 
   await transporter.sendMail({
