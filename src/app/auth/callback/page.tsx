@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, Suspense } from "react";
-// TODO: Update to use new JWT auth system
-// import { supabase } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
@@ -14,39 +13,56 @@ function AuthCallbackHandler() {
 
     useEffect(() => {
         const handleAuth = async () => {
-            // TODO: Implement with new JWT auth system
-            // For now, redirect to login
-            console.log("Auth callback - redirecting to login");
-            router.push("/auth/login");
-            
-            /* Old Supabase code - to be replaced with JWT auth
-            const { data, error } = await supabase.auth.getSession();
+            try {
+                // For OAuth (GitHub/Google), Supabase passes the token in the URL hash.
+                // supabase.auth.getSession() will automatically parse it.
+                const { data, error } = await supabase.auth.getSession();
 
-            if (error) {
-                console.error("Auth Error:", error.message);
-                router.push("/auth/login?error=" + encodeURIComponent(error.message));
-                return;
-            }
+                if (error || !data.session) {
+                    console.error("Auth Callback Error:", error?.message || "No session found");
+                    router.push("/auth/login?error=" + encodeURIComponent(error?.message || "Authentication failed"));
+                    return;
+                }
 
-            if (data.session) {
-                const token = data.session.access_token;
+                const accessToken = data.session.access_token;
 
-                // If the source is 'app', redirect using deep link
+                // Provision/sync the user in our Prisma database
+                try {
+                    const response = await fetch("/api/auth/provision", {
+                        method: "POST",
+                        headers: {
+                            "Authorization": `Bearer ${accessToken}`,
+                            "Content-Type": "application/json",
+                        },
+                    });
+
+                    if (!response.ok) {
+                        const errData = await response.json().catch(() => ({}));
+                        console.error("[Provision Error]", errData.error);
+                        // Don't block login if provisioning fails — Supabase session is still valid
+                    }
+                } catch (provisionErr) {
+                    console.error("[Provision Network Error]", provisionErr);
+                    // Continue — the user still has a valid Supabase session
+                }
+
+                // If the source is the desktop app, redirect using deep link
                 if (source === "app") {
-                    const deepLink = `godzillacoder://auth?token=${token}`;
+                    const deepLink = `godzillacoder://auth?token=${accessToken}`;
                     window.location.href = deepLink;
-
-                    // Fallback UI if deep link isn't captured
+                    // Fallback if deep link isn't captured
                     setTimeout(() => {
                         router.push("/dashboard?status=success");
                     }, 3000);
                     return;
                 }
 
-                // Otherwise, go to web dashboard
+                // Otherwise, go to the web dashboard
                 router.push("/dashboard");
+            } catch (err: any) {
+                console.error("Unexpected Auth Callback Error:", err);
+                router.push("/auth/login?error=" + encodeURIComponent("Unexpected error during authentication"));
             }
-            */
         };
 
         handleAuth();
