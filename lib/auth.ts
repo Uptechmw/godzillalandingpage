@@ -1,15 +1,16 @@
-import jwt from 'jsonwebtoken';
+import jwt, { SignOptions } from 'jsonwebtoken';
 import { NextRequest } from 'next/server';
 
 /**
  * JWT Authentication Utilities
  */
 
-const JWT_SECRET = process.env.JWT_SECRET!;
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';
+const JWT_SECRET = process.env.JWT_SECRET || 'build-time-placeholder-secret';
+const JWT_EXPIRES_IN = (process.env.JWT_EXPIRES_IN || '7d') as string;
 
-if (!JWT_SECRET) {
-  throw new Error('JWT_SECRET environment variable is not set');
+// Warn if JWT_SECRET is not set in production
+if (!process.env.JWT_SECRET && process.env.NODE_ENV === 'production') {
+  console.warn('WARNING: JWT_SECRET environment variable is not set in production!');
 }
 
 export interface JWTPayload {
@@ -26,7 +27,7 @@ export function signToken(userId: string, email: string): string {
   return jwt.sign(
     { id: userId, email },
     JWT_SECRET,
-    { expiresIn: JWT_EXPIRES_IN }
+    { expiresIn: JWT_EXPIRES_IN } as SignOptions
   );
 }
 

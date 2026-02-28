@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, Suspense } from "react";
-import { supabase } from "@/lib/supabase";
+// TODO: Update to use new JWT auth system
+// import { supabase } from "@/lib/supabase";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
@@ -13,6 +14,12 @@ function AuthCallbackHandler() {
 
     useEffect(() => {
         const handleAuth = async () => {
+            // TODO: Implement with new JWT auth system
+            // For now, redirect to login
+            console.log("Auth callback - redirecting to login");
+            router.push("/auth/login");
+            
+            /* Old Supabase code - to be replaced with JWT auth
             const { data, error } = await supabase.auth.getSession();
 
             if (error) {
@@ -39,6 +46,7 @@ function AuthCallbackHandler() {
                 // Otherwise, go to web dashboard
                 router.push("/dashboard");
             }
+            */
         };
 
         handleAuth();
