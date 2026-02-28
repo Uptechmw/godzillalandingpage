@@ -92,6 +92,7 @@ export async function POST(request: NextRequest) {
             {
                 success: false,
                 error: 'Failed to provision user account.',
+                details: error?.message || String(error),
             },
             { status: 500 }
         );

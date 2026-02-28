@@ -88,6 +88,7 @@ export async function POST(request: NextRequest) {
       {
         success: false,
         error: 'Login failed. Please try again.',
+        details: error?.message || String(error),
       },
       { status: 500 }
     );
