@@ -4,15 +4,22 @@
   /* New Premium Monochrome Palette */
   --color-primary-white: #FFFFFF;
   --color-primary-black: #000000;
-  
+
   /* Backgrounds */
   --color-bg-base: #0A0A0A;
   --color-bg-surface-1: #121212;
   --color-bg-surface-2: #161616;
-  
+
   /* Borders */
   --color-border-subtle: #2A2A2A;
   --color-border-strong: #444444;
+
+  /* Godzilla Brand Colors — used by auth pages */
+  --color-godzilla-bg: #0A0A0A;
+  --color-godzilla-surface: #111111;
+  --color-godzilla-border: #2A2A2A;
+  --color-godzilla-accent: #00FF94;
+  --color-godzilla-text-muted: #6B6B6B;
 
   /* Typography */
   --font-sans: "Inter", "Geist", -apple-system, BlinkMacSystemFont, sans-serif;

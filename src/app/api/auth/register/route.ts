@@ -114,8 +114,6 @@ export async function POST(request: NextRequest) {
       {
         success: false,
         error: 'Failed to create account. Please try again.',
-        details: error?.message || String(error),
-        stack: error?.stack,
       },
       { status: 500 }
     );
