@@ -1,192 +1,133 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Download, Play } from "lucide-react";
+import { Download, Monitor, Command, Server, ArrowRight } from "lucide-react";
 
 export default function HeroNew() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Gradient Mesh Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-blue-900/20 to-cyan-900/20" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-purple-600/20 via-transparent to-transparent" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-blue-600/20 via-transparent to-transparent" />
-      
-      {/* Grid Pattern */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(139,92,246,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(139,92,246,0.03)_1px,transparent_1px)] bg-[size:72px_72px]" />
+    <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-[#0A0A0A]">
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="flex flex-col items-center text-center">
 
-      <div className="relative max-w-7xl mx-auto px-6 py-32 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          {/* Left Column - Content */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center lg:text-left"
+            transition={{ duration: 0.5 }}
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#2A2A2A] bg-[#121212] mb-8"
           >
-            {/* Badge */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.1 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/20 mb-8"
-            >
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
-              </span>
-              <span className="text-sm font-medium text-purple-300">500 developers in private beta</span>
-            </motion.div>
-
-            {/* Headline */}
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="text-5xl lg:text-7xl font-black tracking-tight mb-6"
-            >
-              <span className="bg-gradient-to-r from-white via-purple-200 to-blue-200 bg-clip-text text-transparent">
-                Code with every AI.
-              </span>
-              <br />
-              <span className="text-white">Ship with one editor.</span>
-            </motion.h1>
-
-            {/* Subheadline */}
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="text-xl text-gray-300 mb-10 max-w-2xl"
-            >
-              Godzilla Coder brings ChatGPT-4, Claude Sonnet, and Gemini Pro into a single native desktop editor. 
-              Multi-agent orchestration, deep codebase understanding, and transparent token pricing.
-            </motion.p>
-
-            {/* CTAs */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
-            >
-              <button className="group relative px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl font-semibold text-lg shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transition-all duration-300 hover:-translate-y-1">
-                <Download className="inline-block w-5 h-5 mr-2" />
-                Download for macOS
-                <div className="absolute -bottom-8 left-0 right-0 text-sm text-gray-400 font-normal">
-                  Free 20 tokens • No credit card
-                </div>
-              </button>
-              
-              <button className="group px-8 py-4 bg-transparent border-2 border-purple-500/30 rounded-xl font-semibold text-lg hover:border-purple-500/60 hover:bg-purple-500/10 transition-all duration-300">
-                <Play className="inline-block w-5 h-5 mr-2" />
-                See it in action
-              </button>
-            </motion.div>
+            <div className="w-2 h-2 rounded-full bg-white opacity-80" />
+            <span className="text-xs font-mono text-gray-400">v1.2.0 Desktop Release</span>
           </motion.div>
 
-          {/* Right Column - Visual */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.5, duration: 0.8 }}
-            className="relative hidden lg:block"
+          <motion.h1
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="text-5xl lg:text-[72px] font-semibold tracking-[-0.02em] leading-[1.1] mb-6 max-w-4xl text-white"
           >
-            {/* Editor Preview Mockup */}
-            <div className="relative">
-              {/* Floating AI Model Badges */}
-              <motion.div
-                animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 3, repeat: Infinity }}
-                className="absolute -top-8 -left-8 px-4 py-2 bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 rounded-lg backdrop-blur-sm"
-              >
-                <span className="text-sm font-semibold text-green-300">ChatGPT-4</span>
-              </motion.div>
-              
-              <motion.div
-                animate={{ y: [0, -15, 0] }}
-                transition={{ duration: 4, repeat: Infinity, delay: 0.5 }}
-                className="absolute -top-4 right-12 px-4 py-2 bg-gradient-to-r from-orange-500/20 to-amber-500/20 border border-orange-500/30 rounded-lg backdrop-blur-sm"
-              >
-                <span className="text-sm font-semibold text-orange-300">Claude Sonnet</span>
-              </motion.div>
-              
-              <motion.div
-                animate={{ y: [0, -12, 0] }}
-                transition={{ duration: 3.5, repeat: Infinity, delay: 1 }}
-                className="absolute top-8 -right-8 px-4 py-2 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border border-blue-500/30 rounded-lg backdrop-blur-sm"
-              >
-                <span className="text-sm font-semibold text-blue-300">Gemini Pro</span>
-              </motion.div>
+            The AI development environment for serious engineering.
+          </motion.h1>
 
-              {/* Main Editor Window */}
-              <div className="relative bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl border border-gray-700 shadow-2xl overflow-hidden">
-                {/* Window Controls */}
-                <div className="flex items-center gap-2 px-4 py-3 bg-gray-800/50 border-b border-gray-700">
-                  <div className="flex gap-2">
-                    <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                    <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                    <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                  </div>
-                  <div className="flex-1 text-center text-sm text-gray-400">Godzilla Coder</div>
-                </div>
-                
-                {/* Code Content */}
-                <div className="p-6 font-mono text-sm">
-                  <div className="space-y-2">
-                    <div className="text-purple-400">// Multi-AI orchestration in action</div>
-                    <div className="text-gray-300">
-                      <span className="text-blue-400">const</span> result = <span className="text-yellow-400">await</span> godzilla.orchestrate({'{'}
-                    </div>
-                    <div className="text-gray-300 pl-4">
-                      models: [<span className="text-green-400">'gpt-4'</span>, <span className="text-orange-400">'claude'</span>, <span className="text-cyan-400">'gemini'</span>],
-                    </div>
-                    <div className="text-gray-300 pl-4">
-                      task: <span className="text-green-400">'refactor'</span>
-                    </div>
-                    <div className="text-gray-300">{'}'});</div>
-                  </div>
-                </div>
-              </div>
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="text-lg text-gray-400 mb-12 max-w-2xl leading-relaxed"
+          >
+            A desktop-native code editor with multi-agent orchestration. Bring Claude, GPT, and Gemini directly to your local file system. Token-based pricing. Zero lock-in.
+          </motion.p>
 
-              {/* Connection Lines */}
-              <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: -1 }}>
-                <motion.line
-                  x1="10%" y1="20%" x2="50%" y2="50%"
-                  stroke="url(#gradient1)"
-                  strokeWidth="2"
-                  initial={{ pathLength: 0 }}
-                  animate={{ pathLength: 1 }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                />
-                <defs>
-                  <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#8B5CF6" stopOpacity="0.5" />
-                    <stop offset="100%" stopColor="#3B82F6" stopOpacity="0" />
-                  </linearGradient>
-                </defs>
-              </svg>
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="flex flex-col items-center gap-4 w-full"
+          >
+            <div className="flex flex-col sm:flex-row gap-4 justify-center w-full max-w-md">
+              <button className="flex-1 flex items-center justify-center gap-2 px-6 py-3.5 bg-white text-black rounded-lg font-medium hover:bg-gray-100 transition-colors border border-transparent">
+                <Download className="w-4 h-4" />
+                Download for macOS
+              </button>
+
+              <button className="flex-1 flex items-center justify-center gap-2 px-6 py-3.5 bg-transparent border border-[#2A2A2A] text-white rounded-lg font-medium hover:bg-[#121212] transition-colors group">
+                View Documentation
+                <ArrowRight className="w-4 h-4 text-gray-500 group-hover:text-white transition-colors" />
+              </button>
+            </div>
+
+            <div className="flex items-center gap-6 mt-4 text-sm text-gray-500 font-mono">
+              <a href="#" className="flex items-center gap-2 hover:text-white transition-colors"><Command className="w-3.5 h-3.5" /> macOS (Apple Silicon & Intel)</a>
+              <span className="w-1 h-1 rounded-full bg-[#2A2A2A]" />
+              <a href="#" className="flex items-center gap-2 hover:text-white transition-colors"><Monitor className="w-3.5 h-3.5" /> Windows (.exe)</a>
+              <span className="w-1 h-1 rounded-full bg-[#2A2A2A]" />
+              <a href="#" className="flex items-center gap-2 hover:text-white transition-colors"><Server className="w-3.5 h-3.5" /> Linux (.AppImage)</a>
             </div>
           </motion.div>
         </div>
 
-        {/* Trust Bar */}
+        {/* Product Screenshot Mockup */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8 }}
-          className="mt-24 flex flex-wrap justify-center gap-8 text-sm text-gray-400"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.5 }}
+          className="mt-24 relative max-w-5xl mx-auto"
         >
-          <div className="flex items-center gap-2">
-            <span className="text-green-400">🔒</span>
-            <span>Secure local storage</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-purple-400">⚡</span>
-            <span>Native performance</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-blue-400">💎</span>
-            <span>Premium quality</span>
+          <div className="relative rounded-lg overflow-hidden border border-[#2A2A2A] bg-[#0A0A0A] shadow-2xl">
+            {/* Window Chrome */}
+            <div className="flex items-center px-4 py-3 bg-[#121212] border-b border-[#2A2A2A]">
+              <div className="flex gap-2">
+                <div className="w-3 h-3 rounded-full bg-[#2A2A2A]"></div>
+                <div className="w-3 h-3 rounded-full bg-[#2A2A2A]"></div>
+                <div className="w-3 h-3 rounded-full bg-[#2A2A2A]"></div>
+              </div>
+              <div className="mx-auto flex gap-6 text-xs font-mono text-gray-500">
+                <span className="text-gray-300">src/agents/orchestrator.ts</span>
+                <span>lib/models.ts</span>
+                <span>test/agent.test.ts</span>
+              </div>
+            </div>
+            {/* Editor Area */}
+            <div className="flex">
+              {/* Sidebar */}
+              <div className="hidden sm:block w-64 border-r border-[#2A2A2A] bg-[#0A0A0A] p-4 font-mono text-xs text-gray-500">
+                <div className="mb-4 text-gray-400 font-medium tracking-wide text-[10px] uppercase">Explorer</div>
+                <div className="space-y-2">
+                  <div className="text-gray-300">📁 src</div>
+                  <div className="pl-4">📁 agents</div>
+                  <div className="pl-8 text-white">📄 orchestrator.ts</div>
+                  <div className="pl-8">📄 execute.ts</div>
+                  <div className="pl-4">📁 lib</div>
+                  <div className="pl-4">📁 ui</div>
+                  <div className="mt-4 text-gray-300">📁 test</div>
+                  <div className="text-gray-300">📄 package.json</div>
+                </div>
+              </div>
+              {/* Main Workspace */}
+              <div className="flex-1 p-6 font-mono text-[13px] leading-relaxed overflow-hidden">
+                <div className="text-gray-500 mb-4">/* Godzilla Coder: Agent Orchestration Engine */</div>
+                <div className="text-blue-400">import</div> <div className="inline text-white">{'{'} Route, AgentContext {'}'}</div> <div className="inline text-blue-400">from</div> <div className="inline text-green-400">'@/lib/types'</div>;
+                <br /><br />
+                <div className="text-purple-400">export async function</div> <div className="inline text-yellow-200">routeTask</div><div className="inline text-white">(context: AgentContext): Promise&lt;Route&gt; {'{'}</div>
+                <div className="pl-4 mt-2">
+                  <div className="text-gray-500">// Fallback to local deterministic rules for routing.</div>
+                  <div className="text-purple-400">const</div> <div className="inline text-white">complexity = await <span className="text-yellow-200">analyzeComplexity</span>(context.prompt);</div>
+                  <br /><br />
+                  <div className="text-purple-400">if</div> <div className="inline text-white">(complexity &gt; <span className="text-orange-300">0.8</span>) {'{'}</div>
+                  <div className="pl-4 mt-1">
+                    <div className="text-purple-400">return</div> <div className="inline text-white">models.ClaudeSonnet35; <span className="text-gray-500">// Best for deep reasoning</span></div>
+                  </div>
+                  <div className="text-white mt-1">{'}'}</div>
+                  <br />
+                  <div className="text-purple-400">return</div> <div className="inline text-white">models.GPT4oMini; <span className="text-gray-500">// Default fast path</span></div>
+                </div>
+                <div className="text-white mt-2">{'}'}</div>
+                <br /><br />
+                <div className="flex items-center gap-2 mt-8 pt-4 border-t border-[#2A2A2A]">
+                  <div className="text-blue-400 font-bold">~</div> <div className="text-white">npm run test:agents</div>
+                </div>
+                <div className="text-gray-400 mt-2">[✓] Passing: 42/42</div>
+              </div>
+            </div>
           </div>
         </motion.div>
       </div>
