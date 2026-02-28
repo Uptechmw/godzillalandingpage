@@ -1,0 +1,68 @@
+// Prisma Schema for Godzilla AI
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 String               @id @default(cuid())
+  email              String               @unique
+  passwordHash       String?
+  name               String?
+  avatarUrl          String?
+  provider           String               @default("local") // local | google | github
+  providerId         String?
+  emailVerified      Boolean              @default(false)
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  tokenBalance       TokenBalance?
+  transactions       Transaction[]
+  preferences        Preferences?
+  emailVerifications EmailVerification[]
+}
+
+model TokenBalance {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  coins     Int      @default(20) // 20 signup bonus coins
+  updatedAt DateTime @updatedAt
+}
+
+model Transaction {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type        String   // SIGNUP_BONUS, PURCHASE, AI_AUTOCOMPLETE, etc.
+  amount      Int      // positive = credit, negative = debit
+  description String
+  metadata    String?  // JSON string for extra data
+  createdAt   DateTime @default(now())
+}
+
+model Preferences {
+  id               String   @id @default(cuid())
+  userId           String   @unique
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  theme            String   @default("godzilla-dark")
+  defaultAgent     String   @default("gpt4") // gpt4 | claude | gemini | all
+  fontSize         Int      @default(14)
+  tabSize          Int      @default(2)
+  autoComplete     Boolean  @default(true)
+  updatedAt        DateTime @updatedAt
+}
+
+model EmailVerification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  code      String   // 6-digit OTP
+  expiresAt DateTime
+  verified  Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
