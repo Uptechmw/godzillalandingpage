@@ -13,7 +13,7 @@ import { sendOTPEmail } from '@/lib/email';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    
+
     // Validate input
     const parsed = registerSchema.safeParse(body);
     if (!parsed.success) {
@@ -108,12 +108,14 @@ export async function POST(request: NextRequest) {
       },
       { status: 201 }
     );
-  } catch (error) {
+  } catch (error: any) {
     console.error('[Register Error]', error);
     return NextResponse.json(
       {
         success: false,
         error: 'Failed to create account. Please try again.',
+        details: error?.message || String(error),
+        stack: error?.stack,
       },
       { status: 500 }
     );

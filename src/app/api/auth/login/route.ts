@@ -12,7 +12,7 @@ import { loginSchema } from '@/lib/validation';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    
+
     // Validate input
     const parsed = loginSchema.safeParse(body);
     if (!parsed.success) {
@@ -82,12 +82,14 @@ export async function POST(request: NextRequest) {
         coins: user.tokenBalance?.coins ?? 0,
       },
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('[Login Error]', error);
     return NextResponse.json(
       {
         success: false,
         error: 'Login failed. Please try again.',
+        details: error?.message || String(error),
+        stack: error?.stack,
       },
       { status: 500 }
     );
