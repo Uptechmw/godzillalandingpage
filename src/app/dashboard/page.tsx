@@ -19,7 +19,8 @@ import {
     Activity,
     DollarSign,
     LayoutDashboard,
-    Zap
+    Zap,
+    Menu
 } from "lucide-react";
 import { api } from "@/lib/api";
 import { useRouter } from "next/navigation";

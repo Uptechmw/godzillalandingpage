@@ -13,7 +13,7 @@ function getAdminJwtSecret(): Uint8Array {
   return new TextEncoder().encode(key);
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // 1. Protect Admin Routes (/admin/* and /api/admin/*)
