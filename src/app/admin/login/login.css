@@ -1,21 +1,21 @@
-/* Admin Login Portal Styles */
+/* Admin Login Portal Styles — uses design tokens from globals.css */
 
 .admin-login-wrapper {
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #020617;
+    background-color: var(--color-admin-bg);
     padding: 24px;
-    color: #f8fafc;
-    font-family: var(--font-outfit), sans-serif;
+    color: var(--color-admin-text);
+    font-family: var(--font-sans);
 }
 
 .login-card {
     width: 100%;
     max-width: 420px;
-    background-color: #0f172a;
-    border: 1px solid #1e293b;
+    background-color: var(--color-admin-surface);
+    border: 1px solid var(--color-admin-border);
     border-radius: 16px;
     padding: 48px;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
@@ -29,7 +29,7 @@
 .logo-box {
     width: 64px;
     height: 64px;
-    background-color: #1e293b;
+    background-color: var(--color-admin-surface-2);
     border-radius: 12px;
     display: flex;
     align-items: center;
@@ -38,7 +38,7 @@
 }
 
 .logo-icon {
-    color: #3b82f6;
+    color: var(--color-accent);
 }
 
 .login-title {
@@ -46,11 +46,11 @@
     font-weight: 700;
     margin-bottom: 8px;
     letter-spacing: -0.5px;
-    color: #ffffff;
+    color: var(--color-admin-text);
 }
 
 .login-subtitle {
-    color: #94a3b8;
+    color: var(--color-admin-muted);
     font-size: 0.9rem;
 }
 
@@ -61,9 +61,9 @@
 }
 
 .error-banner {
-    background-color: rgba(239, 68, 68, 0.1);
-    border: 1px solid rgba(239, 68, 68, 0.2);
-    color: #f87171;
+    background-color: rgba(220, 38, 38, 0.1);
+    border: 1px solid rgba(220, 38, 38, 0.2);
+    color: var(--color-danger);
     padding: 12px;
     border-radius: 8px;
     font-size: 0.85rem;
@@ -81,7 +81,7 @@
 .label {
     font-size: 0.8rem;
     font-weight: 600;
-    color: #94a3b8;
+    color: var(--color-admin-muted);
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
@@ -95,28 +95,28 @@
     left: 12px;
     top: 50%;
     transform: translateY(-50%);
-    color: #475569;
+    color: var(--color-admin-subtle);
 }
 
 .input {
     width: 100%;
-    background-color: #020617;
-    border: 1px solid #1e293b;
+    background-color: var(--color-admin-bg);
+    border: 1px solid var(--color-admin-border);
     border-radius: 8px;
     padding: 12px 12px 12px 40px;
-    color: #fff;
+    color: var(--color-admin-text);
     font-size: 0.95rem;
     outline: none;
     transition: all 0.2s;
 }
 
 .input:focus {
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 1px #3b82f6;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 1px var(--color-accent);
 }
 
 .submit-btn {
-    background-color: #3b82f6;
+    background-color: var(--color-accent);
     color: #fff;
     border: none;
     border-radius: 8px;
@@ -124,7 +124,7 @@
     font-weight: 700;
     font-size: 0.95rem;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: opacity 0.2s;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -132,7 +132,7 @@
 }
 
 .submit-btn:hover:not(:disabled) {
-    background-color: #2563eb;
+    opacity: 0.9;
 }
 
 .submit-btn:disabled {
@@ -144,7 +144,7 @@
     margin-top: 48px;
     text-align: center;
     font-size: 0.75rem;
-    color: #475569;
+    color: var(--color-admin-subtle);
     letter-spacing: 0.5px;
 }
 

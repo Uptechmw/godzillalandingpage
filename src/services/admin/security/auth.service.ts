@@ -12,7 +12,14 @@ import { verifyPassword } from '@/lib/hash';
 // Local type fallback for AdminRole
 export type AdminRole = 'SUPER_ADMIN' | 'ADMIN' | 'SUPPORT' | 'BILLING_ADMIN';
 
-const ADMIN_JWT_SECRET = new TextEncoder().encode(process.env.MASTER_ENCRYPTION_KEY);
+function getAdminJwtSecret(): Uint8Array {
+    const key = process.env.MASTER_ENCRYPTION_KEY;
+    if (!key) {
+        throw new Error('[AdminAuth] MASTER_ENCRYPTION_KEY is not set in environment variables.');
+    }
+    return new TextEncoder().encode(key);
+}
+
 const COOKIE_NAME = 'godzilla_admin_session';
 const OTP_PENDING_COOKIE = 'godzilla_admin_otp_pending';
 
@@ -93,7 +100,7 @@ export class AdminAuthService {
             const otpToken = await new SignJWT({ adminId: admin.id, email: admin.email, role: admin.role })
                 .setProtectedHeader({ alg: 'HS256' })
                 .setExpirationTime('5m')
-                .sign(ADMIN_JWT_SECRET);
+                .sign(getAdminJwtSecret());
 
             (await cookies()).set(OTP_PENDING_COOKIE, otpToken, { httpOnly: true, secure: true });
 
@@ -111,7 +118,7 @@ export class AdminAuthService {
         const otpToken = (await cookies()).get(OTP_PENDING_COOKIE)?.value;
         if (!otpToken) throw new Error("MFA session expired.");
 
-        const { payload } = await jwtVerify(otpToken, ADMIN_JWT_SECRET);
+        const { payload } = await jwtVerify(otpToken, getAdminJwtSecret());
         const { adminId, email, role } = payload as any;
 
         const isValid = await AdminOTPService.verifyOTP(adminId, otp);
@@ -133,7 +140,7 @@ export class AdminAuthService {
             .setProtectedHeader({ alg: 'HS256' })
             .setIssuedAt()
             .setExpirationTime('12h')
-            .sign(ADMIN_JWT_SECRET);
+            .sign(getAdminJwtSecret());
 
         await prisma.adminSession.create({
             data: {
@@ -159,7 +166,7 @@ export class AdminAuthService {
      */
     static async verifyAdminToken(token: string): Promise<AdminTokenPayload | null> {
         try {
-            const { payload } = await jwtVerify(token, ADMIN_JWT_SECRET);
+            const { payload } = await jwtVerify(token, getAdminJwtSecret());
             return payload as unknown as AdminTokenPayload;
         } catch (error) {
             return null;
@@ -174,7 +181,7 @@ export class AdminAuthService {
         if (!token) return null;
 
         try {
-            const { payload } = await jwtVerify(token, ADMIN_JWT_SECRET);
+            const { payload } = await jwtVerify(token, getAdminJwtSecret());
             const session = payload as any as AdminSession;
 
             const dbSession = await prisma.adminSession.findUnique({

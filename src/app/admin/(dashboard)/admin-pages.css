@@ -1,4 +1,4 @@
-/* Admin Page Styles */
+/* Admin Page Styles — uses design tokens from globals.css */
 
 .admin-overview {
     display: flex;
@@ -17,8 +17,8 @@
 }
 
 .stat-card {
-    background-color: #0f172a;
-    border: 1px solid #1e293b;
+    background-color: var(--color-admin-surface);
+    border: 1px solid var(--color-admin-border);
     border-radius: 12px;
     padding: 24px;
     display: flex;
@@ -44,14 +44,14 @@
 
 .stat-label {
     font-size: 0.85rem;
-    color: #94a3b8;
+    color: var(--color-admin-muted);
     font-weight: 500;
 }
 
 .stat-value {
     font-size: 1.25rem;
     font-weight: 700;
-    color: #fff;
+    color: var(--color-admin-text);
 }
 
 .dashboard-grid {
@@ -61,8 +61,8 @@
 }
 
 .dashboard-section {
-    background-color: #0f172a;
-    border: 1px solid #1e293b;
+    background-color: var(--color-admin-surface);
+    border: 1px solid var(--color-admin-border);
     border-radius: 12px;
     padding: 24px;
     display: flex;
@@ -79,16 +79,17 @@
 .section-title {
     font-size: 1rem;
     font-weight: 600;
+    color: var(--color-admin-text);
 }
 
 .view-all {
     font-size: 0.8rem;
-    color: #3b82f6;
+    color: var(--color-accent);
     text-decoration: none;
 }
 
 .empty-state {
-    color: #64748b;
+    color: var(--color-admin-subtle);
     font-size: 0.9rem;
     text-align: center;
     padding: 40px 0;
@@ -105,22 +106,34 @@
     align-items: center;
     justify-content: space-between;
     font-size: 0.9rem;
-    color: #94a3b8;
+    color: var(--color-admin-muted);
 }
 
-.health-badge {
+.badge {
     padding: 4px 8px;
     border-radius: 4px;
     font-size: 0.7rem;
     font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-.health-badge.success {
-    background-color: rgba(16, 185, 129, 0.1);
-    color: #10b981;
+.badge.success {
+    background-color: rgba(22, 163, 74, 0.1);
+    color: var(--color-success);
 }
 
-/* User/Billing/Models/Logs Table Generic Styles */
+.badge.warning {
+    background-color: rgba(245, 158, 11, 0.1);
+    color: var(--color-warning);
+}
+
+.badge.danger {
+    background-color: rgba(220, 38, 38, 0.1);
+    color: var(--color-danger);
+}
+
+/* Generic page layouts */
 .admin-users-page,
 .admin-billing-page,
 .admin-models-page,
@@ -141,44 +154,54 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
-}
-
-.btn-primary {
-    background-color: #3b82f6;
-    color: white;
     border: none;
 }
 
+.btn-primary {
+    background-color: var(--color-accent);
+    color: white;
+}
+
 .btn-primary:hover {
-    background-color: #2563eb;
+    opacity: 0.9;
 }
 
 .btn-secondary {
-    background-color: #0f172a;
-    border: 1px solid #1e293b;
-    color: #94a3b8;
+    background-color: var(--color-admin-surface);
+    border: 1px solid var(--color-admin-border);
+    color: var(--color-admin-muted);
 }
 
 .btn-secondary:hover {
-    background-color: #1e293b;
-    color: #f8fafc;
+    background-color: var(--color-admin-surface-2);
+    color: var(--color-admin-text);
 }
 
-/* Auth Page */
+.btn-danger {
+    background-color: rgba(220, 38, 38, 0.1);
+    border: 1px solid rgba(220, 38, 38, 0.2);
+    color: var(--color-danger);
+}
+
+.btn-danger:hover {
+    background-color: rgba(220, 38, 38, 0.2);
+}
+
+/* Auth Page (2FA verify) */
 .auth-page {
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #020617;
+    background-color: var(--color-admin-bg);
     padding: 24px;
 }
 
 .auth-card {
     width: 100%;
     max-width: 400px;
-    background-color: #0f172a;
-    border: 1px solid #1e293b;
+    background-color: var(--color-admin-surface);
+    border: 1px solid var(--color-admin-border);
     border-radius: 16px;
     padding: 40px;
 }

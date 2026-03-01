@@ -1,0 +1,111 @@
+/* Admin Sidebar Styles — uses design tokens from globals.css */
+
+.admin-sidebar {
+    width: 260px;
+    height: 100vh;
+    background-color: var(--color-admin-bg);
+    border-right: 1px solid var(--color-admin-border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+}
+
+.sidebar-header {
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid var(--color-admin-border);
+}
+
+.logo-text {
+    font-size: 1.1rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+    color: var(--color-admin-text);
+}
+
+.logo-subtext {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--color-admin-subtle);
+    letter-spacing: 2px;
+    margin-top: 4px;
+    text-transform: uppercase;
+}
+
+.sidebar-nav {
+    flex: 1;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    overflow-y: auto;
+}
+
+.nav-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.group-label {
+    padding: 0 12px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--color-admin-subtle);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    color: var(--color-admin-muted);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: all 0.15s;
+}
+
+.nav-item:hover {
+    background-color: var(--color-admin-surface);
+    color: var(--color-admin-text);
+}
+
+.nav-item.active {
+    background-color: var(--color-admin-surface-2);
+    color: var(--color-admin-text);
+}
+
+.sidebar-footer {
+    padding: 16px;
+    border-top: 1px solid var(--color-admin-border);
+}
+
+.logout-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    background-color: transparent;
+    border: 1px solid var(--color-admin-border);
+    color: var(--color-admin-muted);
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.15s;
+}
+
+.logout-button:hover {
+    background-color: rgba(220, 38, 38, 0.08);
+    color: var(--color-danger);
+    border-color: rgba(220, 38, 38, 0.2);
+}

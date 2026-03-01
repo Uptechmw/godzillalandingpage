@@ -1,39 +1,67 @@
 @import "tailwindcss";
 
-@theme {
-  /* New Premium Monochrome Palette */
-  --color-primary-white: #FFFFFF;
-  --color-primary-black: #000000;
+/* ============================================================
+   GODZILLA AI — GLOBAL DESIGN TOKEN SYSTEM
+   One source of truth for all colors across the project.
+   Landing Page, User Dashboard, and Admin all use these vars.
+   ============================================================ */
 
-  /* Backgrounds */
-  --color-bg-base: #0A0A0A;
-  --color-bg-surface-1: #121212;
-  --color-bg-surface-2: #161616;
+:root {
+  /* --- Professional Palette (Admin + Landing) --- */
+  --color-primary: #0F172A;
+  --color-accent: #2563EB;
+  --color-bg: #F8FAFC;
+  --color-surface: #FFFFFF;
+  --color-border: #E2E8F0;
+  --color-text: #0F172A;
+  --color-muted: #64748B;
+  --color-success: #16A34A;
+  --color-warning: #F59E0B;
+  --color-danger: #DC2626;
 
-  /* Borders */
-  --color-border-subtle: #2A2A2A;
-  --color-border-strong: #444444;
+  /* --- Admin-Specific Dark Surface Tokens --- */
+  --color-admin-bg: #020617;
+  --color-admin-surface: #0F172A;
+  --color-admin-surface-2: #1E293B;
+  --color-admin-border: #1E293B;
+  --color-admin-text: #F8FAFC;
+  --color-admin-muted: #94A3B8;
+  --color-admin-subtle: #64748B;
 
-  /* Godzilla Brand Colors -- used by auth pages */
+  /* --- Godzilla Brand (User Auth Pages — keep as-is) --- */
   --color-godzilla-bg: #0A0A0A;
   --color-godzilla-surface: #111111;
   --color-godzilla-border: #2A2A2A;
   --color-godzilla-accent: #00FF94;
   --color-godzilla-text-muted: #6B6B6B;
 
-  /* Typography */
-  --font-sans: "Inter", "Geist", -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-mono: "Geist Mono", "JetBrains Mono", "Fira Code", monospace;
+  /* --- Typography --- */
+  --font-outfit: "Outfit", sans-serif;
+  --font-sans: var(--font-outfit), "Inter", -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", monospace;
 }
 
-:root {
-  --background: var(--color-bg-base);
-  --foreground: var(--color-primary-white);
+@theme {
+  /* Expose to Tailwind */
+  --color-primary-white: #FFFFFF;
+  --color-primary-black: #000000;
+  --color-bg-base: var(--color-admin-bg);
+  --color-bg-surface-1: var(--color-admin-surface);
+  --color-bg-surface-2: var(--color-admin-surface-2);
+  --color-border-subtle: var(--color-admin-border);
+  --color-border-strong: #444444;
+  --color-godzilla-bg: var(--color-godzilla-bg);
+  --color-godzilla-surface: var(--color-godzilla-surface);
+  --color-godzilla-border: var(--color-godzilla-border);
+  --color-godzilla-accent: var(--color-godzilla-accent);
+  --color-godzilla-text-muted: var(--color-godzilla-text-muted);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
 }
 
 body {
-  background-color: var(--color-bg-base);
-  color: var(--color-primary-white);
+  background-color: var(--color-admin-bg);
+  color: var(--color-admin-text);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -44,29 +72,27 @@ body {
     background: rgba(18, 18, 18, 0.7);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid var(--color-border-subtle);
+    border: 1px solid var(--color-admin-border);
   }
 }
 
-/* Smooth scrolling */
 html {
   scroll-behavior: smooth;
 }
 
-/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-bg-base);
+  background: var(--color-admin-bg);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-border-subtle);
+  background: var(--color-admin-border);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-border-strong);
+  background: var(--color-admin-surface-2);
 }
