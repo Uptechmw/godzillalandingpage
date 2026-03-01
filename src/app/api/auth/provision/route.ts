@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
         });
 
         // Generate our own JWT token for this user so they can access our API
-        const token = signToken(user.id, user.email);
+        const token = await signToken(user.id, user.email);
 
         return NextResponse.json({
             success: true,

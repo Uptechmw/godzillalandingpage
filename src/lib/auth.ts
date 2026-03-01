@@ -1,42 +1,44 @@
-import jwt, { SignOptions } from 'jsonwebtoken';
+import * as jose from 'jose';
 import { NextRequest } from 'next/server';
 
 /**
- * JWT Authentication Utilities
+ * JWT Authentication Utilities (Edge Runtime Compatible)
+ * Using 'jose' instead of 'jsonwebtoken' so it works in Middleware
  */
 
 const JWT_SECRET = process.env.JWT_SECRET || 'build-time-placeholder-secret';
-const JWT_EXPIRES_IN = (process.env.JWT_EXPIRES_IN || '7d') as string;
-
-// Warn if JWT_SECRET is not set in production
-if (!process.env.JWT_SECRET && process.env.NODE_ENV === 'production') {
-  console.warn('WARNING: JWT_SECRET environment variable is not set in production!');
-}
+const secret = new TextEncoder().encode(JWT_SECRET);
 
 export interface JWTPayload {
   id: string;
   email: string;
-  iat?: number;
-  exp?: number;
 }
 
 /**
  * Sign a JWT token for a user
  */
-export function signToken(userId: string, email: string): string {
-  return jwt.sign(
-    { id: userId, email },
-    JWT_SECRET,
-    { expiresIn: JWT_EXPIRES_IN } as SignOptions
-  );
+export async function signToken(userId: string, email: string): Promise<string> {
+  const token = await new jose.SignJWT({ id: userId, email })
+    .setProtectedHeader({ alg: 'HS256' })
+    .setIssuedAt()
+    .setExpirationTime('7d')
+    .sign(secret);
+
+  return token;
 }
 
 /**
- * Verify and decode a JWT token
+ * Sync version of signToken (legacy/compatibility if needed)
+ * Note: jose is inherently async. For now, we update callers to await.
  */
-export function verifyToken(token: string): JWTPayload {
+
+/**
+ * Verify and decode a JWT token (Async)
+ */
+export async function verifyToken(token: string): Promise<JWTPayload> {
   try {
-    return jwt.verify(token, JWT_SECRET) as JWTPayload;
+    const { payload } = await jose.jwtVerify(token, secret);
+    return payload as unknown as JWTPayload;
   } catch (error) {
     throw new Error('Invalid or expired token');
   }
@@ -47,25 +49,25 @@ export function verifyToken(token: string): JWTPayload {
  */
 export function extractToken(request: NextRequest): string | null {
   const authHeader = request.headers.get('authorization');
-  
+
   if (!authHeader) {
     return null;
   }
-  
+
   // Support both "Bearer <token>" and "<token>"
   const parts = authHeader.split(' ');
   return parts.length === 2 ? parts[1] : authHeader;
 }
 
 /**
- * Get authenticated user from request
+ * Get authenticated user from request (Async)
  */
-export function getAuthUser(request: NextRequest): JWTPayload {
+export async function getAuthUser(request: NextRequest): Promise<JWTPayload> {
   const token = extractToken(request);
-  
+
   if (!token) {
     throw new Error('No authentication token provided');
   }
-  
-  return verifyToken(token);
+
+  return await verifyToken(token);
 }

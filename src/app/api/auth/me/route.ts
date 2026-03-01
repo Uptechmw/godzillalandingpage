@@ -11,7 +11,7 @@ import { getAuthUser } from '@/lib/auth';
 export async function GET(request: NextRequest) {
   try {
     // Verify JWT and extract user
-    const authUser = getAuthUser(request);
+    const authUser = await getAuthUser(request);
 
     // Fetch full user profile
     const user = await prisma.user.findUnique({
@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
     });
   } catch (error: any) {
     console.error('[Auth Me Error]', error);
-    
+
     // Handle authentication errors
     if (error.message.includes('token')) {
       return NextResponse.json(

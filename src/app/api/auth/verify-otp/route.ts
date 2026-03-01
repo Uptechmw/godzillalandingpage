@@ -11,7 +11,7 @@ import { verifyOtpSchema } from '@/lib/validation';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    
+
     // Validate input
     const parsed = verifyOtpSchema.safeParse(body);
     if (!parsed.success) {
@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
     ]);
 
     // Generate JWT token
-    const token = signToken(user.id, user.email);
+    const token = await signToken(user.id, user.email);
 
     return NextResponse.json({
       success: true,
