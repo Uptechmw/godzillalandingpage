@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import Cookies from 'js-cookie';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
 
@@ -8,10 +9,14 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
 export async function apiRequest(endpoint: string, options: RequestInit = {}) {
     try {
         const { data: { session } } = await supabase.auth.getSession();
+        const customToken = Cookies.get('auth_token');
 
         const headers = new Headers(options.headers || {});
-        if (session?.access_token) {
-            headers.set('Authorization', `Bearer ${session.access_token}`);
+        // Prioritize our custom token if available, fallback to Supabase
+        const token = customToken || session?.access_token;
+
+        if (token) {
+            headers.set('Authorization', `Bearer ${token}`);
         }
         headers.set('Content-Type', 'application/json');
 

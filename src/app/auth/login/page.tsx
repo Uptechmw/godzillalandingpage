@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { api } from "@/lib/api";
+import Cookies from "js-cookie";
 import { motion } from "framer-motion";
 import { LogIn, Github, Mail, Chrome, Loader2 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -78,8 +79,9 @@ function LoginForm() {
                 });
 
                 if (data.success && data.token) {
-                    // Store token in localStorage or handle as needed
+                    // Store token in localStorage and Cookies for middleware
                     localStorage.setItem('auth_token', data.token);
+                    Cookies.set('auth_token', data.token, { expires: 7 }); // Match JWT 7d expiration
 
                     toast.success("Access Granted", {
                         description: "Redirecting to your command center..."

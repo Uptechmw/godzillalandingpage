@@ -20,22 +20,17 @@ export default function DashboardPage() {
         const fetchUserData = async () => {
             try {
                 const { data: { session } } = await supabase.auth.getSession();
-                if (!session) {
-                    router.push("/auth/login");
-                    return;
-                }
 
+                // Fetch full user profile from our API 
+                // (apiRequest will automatically use the JWT from cookies if session is missing)
                 const userData = await api.get("/auth/me");
-                setUser(userData);
+                setUser(userData.user || userData); // Match backend response format
             } catch (err: any) {
                 console.error("Dashboard Fetch Error:", err);
-                // Handle 401 Unauthorized by gracefully logging out
-                if (err.message && (err.message.includes("401") || err.message.includes("Expired") || err.message.includes("Invalid"))) {
-                    await supabase.auth.signOut();
-                    router.push("/auth/login?error=Session expired. Please log in again.");
-                    return;
-                }
-                setError(err.message);
+
+                // If we get here, it means both Supabase session and our JWT are invalid/missing
+                router.push("/auth/login?error=" + encodeURIComponent("Please log in to access your dashboard."));
+                return;
             } finally {
                 setLoading(false);
             }

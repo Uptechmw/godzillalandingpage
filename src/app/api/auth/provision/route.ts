@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { createClient } from '@supabase/supabase-js';
+import { signToken } from '@/lib/auth';
 
 /**
  * POST /api/auth/provision
@@ -76,8 +77,12 @@ export async function POST(request: NextRequest) {
             },
         });
 
+        // Generate our own JWT token for this user so they can access our API
+        const token = signToken(user.id, user.email);
+
         return NextResponse.json({
             success: true,
+            token,
             user: {
                 id: user.id,
                 email: user.email,

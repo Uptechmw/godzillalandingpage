@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { api } from "@/lib/api";
+import Cookies from "js-cookie";
 import { motion } from "framer-motion";
 import { Mail, Loader2, CheckCircle2, RefreshCw } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -23,7 +24,7 @@ function VerifyEmailForm() {
     // Countdown timer
     useEffect(() => {
         if (timeLeft <= 0) return;
-        
+
         const timer = setInterval(() => {
             setTimeLeft((prev) => prev - 1);
         }, 1000);
@@ -65,13 +66,13 @@ function VerifyEmailForm() {
         e.preventDefault();
         const pastedData = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
         const newOtp = [...otp];
-        
+
         for (let i = 0; i < pastedData.length; i++) {
             newOtp[i] = pastedData[i];
         }
-        
+
         setOtp(newOtp);
-        
+
         // Focus last filled input or first empty
         const nextIndex = Math.min(pastedData.length, 5);
         inputRefs.current[nextIndex]?.focus();
@@ -80,7 +81,7 @@ function VerifyEmailForm() {
     // Verify OTP
     const handleVerify = async (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         const code = otp.join('');
         if (code.length !== 6) {
             setError('Please enter all 6 digits');
@@ -97,7 +98,10 @@ function VerifyEmailForm() {
             });
 
             if (data.success && data.token) {
+                // Store token in localStorage and Cookies for middleware
                 localStorage.setItem('auth_token', data.token);
+                Cookies.set('auth_token', data.token, { expires: 7 });
+
                 toast.success("Email Verified!", {
                     description: "Your account is now active. Redirecting..."
                 });

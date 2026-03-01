@@ -3,6 +3,7 @@
 import { useEffect, Suspense } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter, useSearchParams } from "next/navigation";
+import Cookies from "js-cookie";
 import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
 
@@ -40,6 +41,13 @@ function AuthCallbackHandler() {
                         const errData = await response.json().catch(() => ({}));
                         console.error("[Provision Error]", errData.error);
                         // Don't block login if provisioning fails — Supabase session is still valid
+                    } else {
+                        const data = await response.json();
+                        if (data.success && data.token) {
+                            // Store our custom JWT in cookies for the middleware
+                            localStorage.setItem('auth_token', data.token);
+                            Cookies.set('auth_token', data.token, { expires: 7 });
+                        }
                     }
                 } catch (provisionErr) {
                     console.error("[Provision Network Error]", provisionErr);
