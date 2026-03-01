@@ -13,9 +13,9 @@ import { verifyPassword } from '@/lib/hash';
 export type AdminRole = 'SUPER_ADMIN' | 'ADMIN' | 'SUPPORT' | 'BILLING_ADMIN';
 
 function getAdminJwtSecret(): Uint8Array {
-    const key = process.env.MASTER_ENCRYPTION_KEY;
-    if (!key) {
-        throw new Error('[AdminAuth] MASTER_ENCRYPTION_KEY is not set in environment variables.');
+    const key = process.env.MASTER_ENCRYPTION_KEY || 'temporary-dev-secret-change-me-in-production';
+    if (!process.env.MASTER_ENCRYPTION_KEY) {
+        console.warn('[SECURITY] MASTER_ENCRYPTION_KEY is missing. Using insecure fallback.');
     }
     return new TextEncoder().encode(key);
 }

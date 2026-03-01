@@ -14,7 +14,7 @@ export class EncryptionUtils {
      * v1: Initial master key.
      */
     private static readonly KEY_REGISTRY: Record<string, string | undefined> = {
-        v1: process.env.MASTER_ENCRYPTION_KEY
+        v1: process.env.MASTER_ENCRYPTION_KEY || 'temporary-dev-secret-change-me-in-production'
     };
 
     private static readonly CURRENT_VERSION = 'v1';

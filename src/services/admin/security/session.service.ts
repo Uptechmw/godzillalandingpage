@@ -3,8 +3,15 @@ import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
 import { AdminRole } from './auth.service';
 
-const ADMIN_JWT_SECRET = new TextEncoder().encode(process.env.MASTER_ENCRYPTION_KEY);
 const COOKIE_NAME = 'godzilla_admin_session';
+
+function getAdminJwtSecret(): Uint8Array {
+    const key = process.env.MASTER_ENCRYPTION_KEY || 'temporary-dev-secret-change-me-in-production';
+    if (!process.env.MASTER_ENCRYPTION_KEY) {
+        console.warn('[SECURITY] MASTER_ENCRYPTION_KEY is missing. Using insecure fallback.');
+    }
+    return new TextEncoder().encode(key);
+}
 
 export class AdminSessionService {
     /**
@@ -15,7 +22,7 @@ export class AdminSessionService {
             .setProtectedHeader({ alg: 'HS256' })
             .setIssuedAt()
             .setExpirationTime('12h')
-            .sign(ADMIN_JWT_SECRET);
+            .sign(getAdminJwtSecret());
 
         await prisma.adminSession.create({
             data: {
@@ -43,7 +50,7 @@ export class AdminSessionService {
         if (!token) return null;
 
         try {
-            const { payload } = await jwtVerify(token, ADMIN_JWT_SECRET);
+            const { payload } = await jwtVerify(token, getAdminJwtSecret());
 
             // Critical: DB Check for Revocation
             const dbSession = await prisma.adminSession.findUnique({

@@ -3,8 +3,15 @@ import type { NextRequest } from 'next/server';
 import { verifyToken } from '@/lib/auth';
 import { jwtVerify } from 'jose';
 
-const ADMIN_JWT_SECRET = new TextEncoder().encode(process.env.MASTER_ENCRYPTION_KEY);
 const ADMIN_COOKIE_NAME = 'godzilla_admin_session';
+
+function getAdminJwtSecret(): Uint8Array {
+  const key = process.env.MASTER_ENCRYPTION_KEY || 'temporary-dev-secret-change-me-in-production';
+  if (!process.env.MASTER_ENCRYPTION_KEY) {
+    console.warn('[SECURITY] MASTER_ENCRYPTION_KEY is missing. Using insecure fallback.');
+  }
+  return new TextEncoder().encode(key);
+}
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -27,7 +34,7 @@ export async function middleware(request: NextRequest) {
 
     try {
       // Edge-safe JWT verification
-      const { payload } = await jwtVerify(adminToken, ADMIN_JWT_SECRET);
+      const { payload } = await jwtVerify(adminToken, getAdminJwtSecret());
       const role = (payload as any).role;
 
       // Basic role check at Edge
