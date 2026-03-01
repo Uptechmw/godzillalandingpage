@@ -9,8 +9,8 @@ import Image from "next/image";
 
 const menuItems = [
     { icon: Home, label: "Overview", href: "/dashboard" },
-    { icon: Coins, label: "Buy Coins", href: "/dashboard/billing" },
-    { icon: History, label: "Transaction History", href: "/dashboard/history" },
+    { icon: Coins, label: "Buy Coins", href: "/dashboard/buy" },
+    { icon: History, label: "Transaction History", href: "/dashboard/transactions" },
     { icon: Settings, label: "Settings", href: "/dashboard/settings" },
 ];
 
