@@ -140,4 +140,31 @@ export class SecretsService {
             value: '********' // Always masked for frontend
         }));
     }
+
+    /**
+     * Retrieves all SMTP settings and decrypts them for use in the email service.
+     */
+    static async getSmtpConfig(): Promise<any> {
+        const [host, port, user, pass, fromName, fromEmail, secure] = await Promise.all([
+            this.getSecret('SMTP_HOST'),
+            this.getSecret('SMTP_PORT'),
+            this.getSecret('SMTP_USERNAME'),
+            this.getSecret('SMTP_PASSWORD'),
+            this.getSecret('SMTP_FROM_NAME'),
+            this.getSecret('SMTP_FROM_EMAIL'),
+            this.getSecret('SMTP_SECURE'),
+        ]);
+
+        if (!host || !user || !pass) return null;
+
+        return {
+            host,
+            port,
+            user,
+            pass,
+            fromName,
+            fromEmail,
+            secure: secure === 'true',
+        };
+    }
 }

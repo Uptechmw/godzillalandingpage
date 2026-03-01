@@ -39,6 +39,9 @@ export interface AdminTokenPayload {
     mfaVerified: boolean;
 }
 
+import { sendAdminOTPEmail } from '@/lib/email';
+import { SecretsService } from '../config/settings.service';
+
 /**
  * Service for administrative authentication and session management.
  */
@@ -96,6 +99,14 @@ export class AdminAuthService {
         if (admin.role === 'SUPER_ADMIN') {
             const otp = await AdminOTPService.generateOTP(admin.id);
             console.log(`[SECURITY] OTP generated for ${email}: ${otp}`);
+
+            // Fetch SMTP settings from database secrets
+            try {
+                const smtpConfig = await SecretsService.getSmtpConfig();
+                await sendAdminOTPEmail(admin.email, otp, smtpConfig);
+            } catch (emailError) {
+                console.error('[SECURITY] Failed to send OTP email:', emailError);
+            }
 
             const otpToken = await new SignJWT({ adminId: admin.id, email: admin.email, role: admin.role })
                 .setProtectedHeader({ alg: 'HS256' })

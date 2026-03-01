@@ -4,6 +4,7 @@ import { prisma } from '@/lib/db';
 import { hashPassword } from '@/lib/hash';
 import { registerSchema } from '@/lib/validation';
 import { sendOTPEmail } from '@/lib/email';
+import { SecretsService } from '@/services/admin/config/settings.service';
 
 /**
  * POST /api/auth/register
@@ -89,7 +90,8 @@ export async function POST(request: NextRequest) {
 
     // Send OTP email (don't fail registration if email fails)
     try {
-      await sendOTPEmail(email, otpCode);
+      const smtpConfig = await SecretsService.getSmtpConfig();
+      await sendOTPEmail(email, otpCode, smtpConfig as any);
     } catch (error) {
       console.error('[Register] Failed to send OTP email:', error);
       // Continue - user can request resend

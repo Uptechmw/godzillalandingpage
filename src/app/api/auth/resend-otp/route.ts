@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { prisma } from '@/lib/db';
 import { sendOTPEmail } from '@/lib/email';
+import { SecretsService } from '@/services/admin/config/settings.service';
 import { resendOtpSchema } from '@/lib/validation';
 
 /**
@@ -12,7 +13,7 @@ import { resendOtpSchema } from '@/lib/validation';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    
+
     // Validate input
     const parsed = resendOtpSchema.safeParse(body);
     if (!parsed.success) {
@@ -78,15 +79,16 @@ export async function POST(request: NextRequest) {
 
     // Send OTP email
     try {
-      await sendOTPEmail(email, otpCode);
-      
+      const smtpConfig = await SecretsService.getSmtpConfig();
+      await sendOTPEmail(email, otpCode, smtpConfig as any);
+
       return NextResponse.json({
         success: true,
         message: 'Verification code sent successfully!',
       });
     } catch (error) {
       console.error('[Resend OTP] Failed to send email:', error);
-      
+
       return NextResponse.json(
         {
           success: false,

@@ -19,7 +19,7 @@ interface EmailOptions {
 /**
  * Send OTP verification email
  */
-export async function sendOTPEmail(email: string, code: string): Promise<void> {
+export async function sendOTPEmail(email: string, code: string, customConfig?: any): Promise<void> {
   const html = `
     <!DOCTYPE html>
     <html>
@@ -59,14 +59,68 @@ export async function sendOTPEmail(email: string, code: string): Promise<void> {
     to: email,
     subject: 'Verify your Godzilla Coder account',
     html,
-  });
+  }, customConfig);
+}
+
+/**
+ * Send Admin 2FA OTP email
+ */
+export async function sendAdminOTPEmail(email: string, code: string, customConfig?: any): Promise<void> {
+  const html = `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <style>
+          body { font-family: 'Inter', sans-serif; line-height: 1.6; color: #F1F5F9; background: #0B1220; }
+          .container { max-width: 600px; margin: 0 auto; padding: 40px 20px; }
+          .header { text-align: center; margin-bottom: 30px; }
+          .logo { width: 48px; height: 48px; margin-bottom: 10px; }
+          .title { font-size: 20px; font-weight: 700; color: #F1F5F9; letter-spacing: -0.02em; margin: 0; }
+          .content { background: #111827; padding: 40px; border-radius: 16px; border: 1px solid #1F2937; text-align: center; }
+          .subtitle { font-size: 14px; color: #94A3B8; margin-bottom: 24px; }
+          .code { font-size: 38px; font-weight: 800; letter-spacing: 12px; color: #2563EB; background: #0B1220; padding: 24px; border-radius: 12px; margin: 20px 0; border: 1px solid #1F2937; display: inline-block; width: 80%; }
+          .expiry { font-size: 12px; color: #475569; margin-top: 24px; }
+          .footer { text-align: center; margin-top: 30px; color: #475569; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <div class="title">GODZILLA CODER</div>
+            <p style="color: #64748B; font-size: 12px; margin-top: 5px;">SECURITY PROTOCOL</p>
+          </div>
+          <div class="content">
+            <h2 style="font-size: 18px; margin-bottom: 8px;">Verify Your Identity</h2>
+            <p class="subtitle">Enter the clinical authorization code below to establish your secure session.</p>
+            <div class="code">${code}</div>
+            <p class="expiry">This code will expire in 5 minutes.</p>
+          </div>
+          <div class="footer">
+            <p>&copy; ${new Date().getFullYear()} Godzilla AI. Protected by secure encryption.</p>
+          </div>
+        </div>
+      </body>
+    </html>
+  `;
+
+  await sendEmail({
+    to: email,
+    subject: 'System Authorization Code',
+    html,
+  }, customConfig);
 }
 
 /**
  * Determine which provider to use and send
  */
-async function sendEmail({ to, subject, html }: EmailOptions): Promise<void> {
-  // Auto-detect: if SMTP credentials exist, use SMTP
+async function sendEmail({ to, subject, html }: EmailOptions, customConfig?: any): Promise<void> {
+  // If customConfig is provided, prioritize it (Admin side database secrets)
+  if (customConfig && customConfig.host && customConfig.user && customConfig.pass) {
+    await sendWithSMTP({ to, subject, html }, customConfig);
+    return;
+  }
+
+  // Auto-detect: if SMTP credentials exist in env, use SMTP
   if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
     await sendWithSMTP({ to, subject, html });
     return;
@@ -93,21 +147,23 @@ async function sendEmail({ to, subject, html }: EmailOptions): Promise<void> {
 /**
  * Send email via SMTP (nodemailer)
  */
-async function sendWithSMTP({ to, subject, html }: EmailOptions): Promise<void> {
-  const host = process.env.SMTP_HOST;
-  const port = parseInt(process.env.SMTP_PORT || '587');
+async function sendWithSMTP({ to, subject, html }: EmailOptions, customConfig?: any): Promise<void> {
+  const host = customConfig?.host || process.env.SMTP_HOST;
+  const port = parseInt(customConfig?.port || process.env.SMTP_PORT || '587');
 
   // Auto-detect secure based on port if SMTP_SECURE is not explicitly set
-  const secure = process.env.SMTP_SECURE !== undefined
-    ? process.env.SMTP_SECURE === 'true'
-    : port === 465;
+  const secure = customConfig?.secure !== undefined
+    ? customConfig.secure
+    : (process.env.SMTP_SECURE !== undefined
+      ? process.env.SMTP_SECURE === 'true'
+      : port === 465);
 
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASS;
-  const from = process.env.FROM_EMAIL || process.env.EMAIL_FROM || process.env.SMTP_USER || 'noreply@godzillaai.com';
+  const user = customConfig?.user || process.env.SMTP_USER;
+  const pass = customConfig?.pass || process.env.SMTP_PASS;
+  const from = customConfig?.fromEmail || process.env.FROM_EMAIL || process.env.EMAIL_FROM || user || 'noreply@godzillaai.com';
 
   if (!host || !user || !pass) {
-    throw new Error('SMTP credentials not fully configured (need SMTP_HOST, SMTP_USER, SMTP_PASS)');
+    throw new Error('SMTP credentials not fully configured (need host, user, pass)');
   }
 
   const transporter = nodemailer.createTransport({
@@ -123,7 +179,7 @@ async function sendWithSMTP({ to, subject, html }: EmailOptions): Promise<void> 
   });
 
   await transporter.sendMail({
-    from,
+    from: customConfig?.fromName ? `"${customConfig.fromName}" <${from}>` : from,
     to,
     subject,
     html,
