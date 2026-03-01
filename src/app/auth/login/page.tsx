@@ -79,14 +79,24 @@ function LoginForm() {
                 });
 
                 if (data.success && data.token) {
-                    // Store token in localStorage and Cookies for middleware
-                    localStorage.setItem('auth_token', data.token);
-                    Cookies.set('auth_token', data.token, { expires: 7 }); // Match JWT 7d expiration
+                    // Store token in localStorage and Cookies for regular users
+                    // Admins will be redirected to /admin where they will likely need
+                    // to login specifically to get the godzilla_admin_session cookie.
 
-                    toast.success("Access Granted", {
-                        description: "Redirecting to your command center..."
-                    });
-                    router.push(source === 'app' ? `/auth/callback?source=app` : "/dashboard");
+                    if (data.redirectTo === '/admin') {
+                        toast.info("Admin Account Detected", {
+                            description: "Redirecting to secure admin portal..."
+                        });
+                        router.push('/admin'); // Middleware will catch and redirect to admin login if no admin session
+                    } else {
+                        localStorage.setItem('auth_token', data.token);
+                        Cookies.set('auth_token', data.token, { expires: 7 });
+
+                        toast.success("Access Granted", {
+                            description: "Redirecting to your command center..."
+                        });
+                        router.push(source === 'app' ? `/auth/callback?source=app` : "/dashboard");
+                    }
                 }
             }
         } catch (error: any) {

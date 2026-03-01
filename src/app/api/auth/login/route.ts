@@ -72,9 +72,19 @@ export async function POST(request: NextRequest) {
     // Generate JWT token
     const token = await signToken(user.id, user.email);
 
+    // FIX: Professional redirect logic for Admins vs Users
+    // This is the USER login route. If an admin logs in here, we should ideally
+    // check if they have an AdminUser record and redirect accordingly.
+    const adminUser = await (prisma as any).adminUser.findUnique({
+      where: { email: user.email }
+    });
+
+    const redirectTo = adminUser ? '/admin' : '/dashboard';
+
     return NextResponse.json({
       success: true,
       token,
+      redirectTo,
       user: {
         id: user.id,
         email: user.email,

@@ -5,6 +5,8 @@ import { AdminSidebar } from '@/components/admin/Sidebar';
 import { AdminAuthService } from '@/services/admin/security/auth.service';
 import { redirect } from 'next/navigation';
 
+import { AdminStatusIndicator } from '@/components/admin/StatusIndicator';
+
 export default async function AdminLayout({
     children,
 }: {
@@ -12,11 +14,9 @@ export default async function AdminLayout({
 }) {
     const session = await AdminAuthService.getSession();
 
-    // Secure the entire /admin route at the layout level
+    // Secure the entire /admin route at the layout level (Node.js layer)
     if (!session) {
-        // redirect('/admin/login');
-        // For development, if no session, we might want to allow access or mock it.
-        // But for production-ready, it MUST redirect.
+        redirect('/auth/login?error=unauthorized_admin');
     }
 
     return (
@@ -26,16 +26,17 @@ export default async function AdminLayout({
                 <main className="admin-main">
                     <header className="admin-header">
                         <div className="header-left">
-                            <h1 className="page-title">Admin Dashboard</h1>
+                            <h1 className="page-title">Management Console</h1>
                         </div>
                         <div className="header-right">
+                            <AdminStatusIndicator />
                             <div className="admin-profile">
                                 <div className="admin-avatar">
                                     {session?.email?.[0].toUpperCase() || 'A'}
                                 </div>
                                 <div className="admin-info">
-                                    <span className="admin-name">{session?.email || 'System Admin'}</span>
-                                    <span className="admin-role">{session?.role || 'SUPER_ADMIN'}</span>
+                                    <span className="admin-name">{session?.name || session?.email.split('@')[0]}</span>
+                                    <span className="admin-role">{session?.role.replace('_', ' ')}</span>
                                 </div>
                             </div>
                         </div>

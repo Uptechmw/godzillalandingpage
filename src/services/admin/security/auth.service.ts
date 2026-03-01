@@ -18,6 +18,15 @@ const OTP_PENDING_COOKIE = 'godzilla_admin_otp_pending';
 export interface AdminSession {
     adminId: string;
     email: string;
+    name: string | null;
+    role: AdminRole;
+    mfaVerified: boolean;
+}
+
+export interface AdminTokenPayload {
+    adminId: string;
+    email: string;
+    name: string | null;
     role: AdminRole;
     mfaVerified: boolean;
 }
@@ -88,7 +97,7 @@ export class AdminAuthService {
             return { requires2FA: true, adminId: admin.id };
         }
 
-        await this.createSession(admin.id, admin.email, admin.role as AdminRole, true, ip, userAgent);
+        await this.createSession(admin.id, admin.email, admin.name, admin.role as AdminRole, true, ip, userAgent);
         return { requires2FA: false };
     }
 
@@ -110,14 +119,14 @@ export class AdminAuthService {
         }
 
         (await cookies()).delete(OTP_PENDING_COOKIE);
-        await this.createSession(adminId, email, role, true, ip, userAgent);
+        await this.createSession(adminId, email, (payload as any).name || null, role, true, ip, userAgent);
     }
 
     /**
      * Creates a signed JWT and persists a session in the DB.
      */
-    static async createSession(adminId: string, email: string, role: AdminRole, mfaVerified: boolean, ip: string, userAgent: string) {
-        const token = await new SignJWT({ adminId, email, role, mfaVerified })
+    static async createSession(adminId: string, email: string, name: string | null, role: AdminRole, mfaVerified: boolean, ip: string, userAgent: string) {
+        const token = await new SignJWT({ adminId, email, name, role, mfaVerified })
             .setProtectedHeader({ alg: 'HS256' })
             .setIssuedAt()
             .setExpirationTime('12h')
@@ -137,8 +146,21 @@ export class AdminAuthService {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'lax',
-            path: '/'
+            path: '/',
+            maxAge: 12 * 60 * 60 // 12 hours
         });
+    }
+
+    /**
+     * Edge-compatible token verification (Used in Middleware)
+     */
+    static async verifyAdminToken(token: string): Promise<AdminTokenPayload | null> {
+        try {
+            const { payload } = await jwtVerify(token, ADMIN_JWT_SECRET);
+            return payload as unknown as AdminTokenPayload;
+        } catch (error) {
+            return null;
+        }
     }
 
     /**

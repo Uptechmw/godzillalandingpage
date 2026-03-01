@@ -1,41 +1,73 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { verifyToken } from '@/lib/auth';
+import { jwtVerify } from 'jose';
 
-/**
- * Next.js Middleware
- * 
- * Protects routes that require authentication
- */
+const ADMIN_JWT_SECRET = new TextEncoder().encode(process.env.MASTER_ENCRYPTION_KEY);
+const ADMIN_COOKIE_NAME = 'godzilla_admin_session';
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Protected routes that require authentication
-  const protectedRoutes = ['/dashboard', '/settings', '/profile'];
+  // 1. Protect Admin Routes (/admin/* and /api/admin/*)
+  if (pathname.startsWith('/admin') || pathname.startsWith('/api/admin')) {
+    // Skip public admin routes if any (e.g., login API is handled by the API itself or excluded here)
+    if (pathname === '/api/admin/auth/login' || pathname === '/admin/auth/verify-2fa') {
+      return NextResponse.next();
+    }
 
-  const isProtectedRoute = protectedRoutes.some(route =>
-    pathname.startsWith(route)
-  );
+    const adminToken = request.cookies.get(ADMIN_COOKIE_NAME)?.value;
+
+    if (!adminToken) {
+      if (pathname.startsWith('/api/')) {
+        return NextResponse.json({ error: 'Unauthorized admin access' }, { status: 401 });
+      }
+      return NextResponse.redirect(new URL('/auth/login', request.url));
+    }
+
+    try {
+      // Edge-safe JWT verification
+      const { payload } = await jwtVerify(adminToken, ADMIN_JWT_SECRET);
+      const role = (payload as any).role;
+
+      // Basic role check at Edge
+      const adminRoles = ['SUPER_ADMIN', 'ADMIN', 'SUPPORT', 'BILLING_ADMIN'];
+      if (!role || !adminRoles.includes(role)) {
+        throw new Error('Invalid role');
+      }
+
+      // MFA enforcement for SUPER_ADMIN at Edge
+      if (role === 'SUPER_ADMIN' && !(payload as any).mfaVerified && pathname !== '/admin/auth/verify-2fa') {
+        return NextResponse.redirect(new URL('/admin/auth/verify-2fa', request.url));
+      }
+
+      return NextResponse.next();
+    } catch (error) {
+      if (pathname.startsWith('/api/')) {
+        return NextResponse.json({ error: 'Invalid admin session' }, { status: 403 });
+      }
+      return NextResponse.redirect(new URL('/auth/login', request.url));
+    }
+  }
+
+  // 2. Protect Regular User Routes
+  const protectedRoutes = ['/dashboard', '/settings', '/profile'];
+  const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
 
   if (isProtectedRoute) {
-    // Check for auth token in cookies or Authorization header
     const token = request.cookies.get('auth_token')?.value ||
       request.headers.get('authorization')?.replace('Bearer ', '');
 
     if (!token) {
-      // Redirect to login if no token
       const url = new URL('/auth/login', request.url);
       url.searchParams.set('redirect', pathname);
       return NextResponse.redirect(url);
     }
 
     try {
-      // Verify token
       await verifyToken(token);
       return NextResponse.next();
     } catch (error) {
-      // Invalid token - redirect to login
       const url = new URL('/auth/login', request.url);
       url.searchParams.set('redirect', pathname);
       url.searchParams.set('error', 'session_expired');
@@ -48,14 +80,10 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except:
-     * - api routes (handled separately)
-     * - _next/static (static files)
-     * - _next/image (image optimization)
-     * - favicon.ico (favicon)
-     * - public files
-     */
-    '/((?!api|_next/static|_next/image|favicon.ico|.*\\..*|auth/login|auth/register).*)',
+    '/admin/:path*',
+    '/api/admin/:path*',
+    '/dashboard/:path*',
+    '/settings/:path*',
+    '/profile/:path*'
   ],
 };
