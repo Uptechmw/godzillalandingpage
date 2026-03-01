@@ -43,11 +43,15 @@ const SYSTEM_LOAD_DATA = [
 export default function AdminDashboardClient({
     userCount,
     tokensUsedToday,
-    totalRevenue
+    totalRevenue,
+    growthData,
+    systemLoad
 }: {
     userCount: number,
     tokensUsedToday: string,
-    totalRevenue: number
+    totalRevenue: number,
+    growthData?: any[],
+    systemLoad?: any[]
 }) {
     return (
         <div className="font-outfit">
@@ -87,7 +91,7 @@ export default function AdminDashboardClient({
                             <p className="text-xs text-slate-500">Monthly active user growth trend</p>
                         </div>
 
-                        <SalesOverviewChart data={USER_GROWTH_DATA} />
+                        <SalesOverviewChart data={growthData || USER_GROWTH_DATA} />
 
                         <div className="grid grid-cols-2 gap-4 mt-8 pt-8 border-t border-[#1F2937]">
                             <div>
@@ -172,7 +176,7 @@ export default function AdminDashboardClient({
                                         </div>
                                     </div>
                                 </div>
-                                <WeeklyComparisonChart data={SYSTEM_LOAD_DATA} />
+                                <WeeklyComparisonChart data={systemLoad || SYSTEM_LOAD_DATA} />
                             </div>
 
                             <div className="space-y-6">

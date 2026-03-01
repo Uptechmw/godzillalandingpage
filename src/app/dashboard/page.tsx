@@ -18,7 +18,8 @@ import {
     TrendingUp,
     Activity,
     DollarSign,
-    LayoutDashboard
+    LayoutDashboard,
+    Zap
 } from "lucide-react";
 import { api } from "@/lib/api";
 import { useRouter } from "next/navigation";
@@ -47,14 +48,20 @@ const WEEKLY_DATA = [
 
 export default function DashboardPage() {
     const [user, setUser] = useState<any>(null);
+    const [stats, setStats] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
 
     useEffect(() => {
-        const fetchUserData = async () => {
+        const fetchDashboardData = async () => {
             try {
-                const userData = await api.get("/auth/me");
+                const [userData, statsData] = await Promise.all([
+                    api.get("/auth/me"),
+                    api.get("/user/stats")
+                ]);
+
                 setUser(userData.user || userData);
+                setStats(statsData.stats);
             } catch (err: any) {
                 console.error("Dashboard Fetch Error:", err);
                 router.push("/auth/login");
@@ -62,7 +69,7 @@ export default function DashboardPage() {
                 setLoading(false);
             }
         };
-        fetchUserData();
+        fetchDashboardData();
     }, [router]);
 
     if (loading) {
@@ -72,6 +79,8 @@ export default function DashboardPage() {
             </div>
         );
     }
+
+    const balancePercent = Math.min(((stats?.balance || user?.coins || 0) / 1000) * 100, 100);
 
     return (
         <div className="min-h-screen bg-[#0B1220] font-outfit">
@@ -98,11 +107,17 @@ export default function DashboardPage() {
                                 className="py-2.5 pl-10 pr-4 text-xs rounded-xl w-64 bg-[#0B1220] border border-[#1F2937] text-white outline-none focus:border-blue-500 transition-all"
                             />
                         </div>
-                        <div className="flex items-center gap-3 bg-[#0B1220] p-1.5 rounded-xl border border-[#1F2937]">
-                            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold text-xs">
-                                {user?.name?.charAt(0) || "G"}
+                        <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-500/10 border border-blue-500/20 rounded-xl">
+                                <Zap className="w-4 h-4 text-blue-500 fill-blue-500" />
+                                <span className="text-sm font-bold text-white">{(stats?.balance || user?.coins || 0).toLocaleString()} <span className="text-[10px] text-slate-500">COINS</span></span>
                             </div>
-                            <span className="text-xs font-bold text-white pr-2 hidden sm:block">{user?.name || "Admin"}</span>
+                            <div className="flex items-center gap-3 bg-[#0B1220] p-1.5 rounded-xl border border-[#1F2937]">
+                                <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold text-xs">
+                                    {user?.name?.charAt(0) || "G"}
+                                </div>
+                                <span className="text-xs font-bold text-white pr-2 hidden sm:block">{user?.name || "Admin"}</span>
+                            </div>
                         </div>
                     </div>
                 </header>
@@ -115,36 +130,20 @@ export default function DashboardPage() {
                         <div className="bg-[#111827] border border-[#1F2937] rounded-3xl p-6 shadow-2xl">
                             <div className="mb-6">
                                 <h3 className="text-white font-bold text-lg mb-1">Development Velocity</h3>
-                                <p className="text-xs text-slate-500">Cumulative lines of code written across projects</p>
+                                <p className="text-xs text-slate-500">Cumulative lines of code assisted by AI</p>
                             </div>
 
-                            <SalesOverviewChart data={OVERVIEW_DATA} />
+                            <SalesOverviewChart data={stats?.overviewData || OVERVIEW_DATA} />
 
                             <div className="grid grid-cols-2 gap-4 mt-8 pt-8 border-t border-[#1F2937]">
                                 <div>
-                                    <p className="text-2xl font-black text-white">48,520</p>
+                                    <p className="text-2xl font-black text-white">{(stats?.locCount || 0).toLocaleString()}</p>
                                     <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Total LOC</p>
                                 </div>
                                 <div>
-                                    <p className="text-2xl font-black text-slate-400">32,100</p>
+                                    <p className="text-2xl font-black text-slate-400">{(stats?.locCount * 0.7 || 0).toLocaleString()}</p>
                                     <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Prev Period</p>
                                 </div>
-                            </div>
-
-                            <div className="mt-6 space-y-3">
-                                {[
-                                    { label: "Frontend Web", val: "23,497", ly: "18,200", u: "12 Projects" },
-                                    { label: "Backend API", val: "21,976", ly: "12,500", u: "8 Projects" },
-                                    { label: "AI Training", val: "3,047", ly: "1,400", u: "2 Tasks" },
-                                ].map(row => (row.label && (
-                                    <div key={row.label} className="flex justify-between items-center text-[10px] font-bold">
-                                        <span className="text-slate-400">{row.label}</span>
-                                        <div className="flex gap-4">
-                                            <span className="text-white">{row.val}</span>
-                                            <span className="text-slate-500">{row.ly}</span>
-                                        </div>
-                                    </div>
-                                )))}
                             </div>
                         </div>
                     </div>
@@ -158,22 +157,22 @@ export default function DashboardPage() {
                                     <div>
                                         <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Coin Consumption</p>
                                         <div className="flex items-center gap-2">
-                                            <h2 className="text-2xl font-black text-white">{user?.coins?.toLocaleString() || "12,350"}</h2>
-                                            <span className="bg-blue-600/10 text-blue-500 text-[10px] font-bold px-2 py-0.5 rounded-full">Spent Today</span>
+                                            <h2 className="text-2xl font-black text-white">{(stats?.totalUsage || 0).toLocaleString()}</h2>
+                                            <span className="bg-blue-600/10 text-blue-500 text-[10px] font-bold px-2 py-0.5 rounded-full">Total Spent</span>
                                         </div>
                                     </div>
                                     <TrendingUp className="text-slate-600" size={20} />
                                 </div>
-                                <PurchasesSparkline data={SPARKLINE_DATA} />
+                                <PurchasesSparkline data={stats?.dailyUsage || SPARKLINE_DATA} />
                             </div>
 
                             {/* Sales Progress Widget */}
                             <div className="bg-[#111827] border border-[#1F2937] rounded-3xl p-6">
                                 <div className="mb-2">
                                     <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Project Milestone</p>
-                                    <p className="text-xs text-white">Full-Stack Deployment</p>
+                                    <p className="text-xs text-white">Compute Readiness</p>
                                 </div>
-                                <SalesProgressChart value={75} total={100} />
+                                <SalesProgressChart value={balancePercent} total={100} />
                             </div>
                         </div>
 
@@ -189,26 +188,16 @@ export default function DashboardPage() {
                                     <div className="flex justify-between items-end mb-4">
                                         <div>
                                             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Weekly Tokens</p>
-                                            <h2 className="text-3xl font-black text-white">45.2K</h2>
+                                            <h2 className="text-3xl font-black text-white">{(stats?.totalUsage / 1000).toFixed(1)}K</h2>
                                             <p className="text-[10px] text-slate-400 mt-2 max-w-[200px]">Real-time token processing across all active AI agents</p>
                                         </div>
-                                        <div className="flex gap-4">
-                                            <div className="flex items-center gap-2">
-                                                <div className="w-2 h-2 rounded-full bg-blue-500" />
-                                                <span className="text-[10px] font-bold text-slate-500">Active</span>
-                                            </div>
-                                            <div className="flex items-center gap-2">
-                                                <div className="w-2 h-2 rounded-full bg-blue-300" />
-                                                <span className="text-[10px] font-bold text-slate-500">Idle</span>
-                                            </div>
-                                        </div>
                                     </div>
-                                    <WeeklyComparisonChart data={WEEKLY_DATA} />
+                                    <WeeklyComparisonChart data={stats?.weeklyData || WEEKLY_DATA} />
                                 </div>
 
                                 <div className="space-y-6">
                                     <div className="p-4 bg-[#0B1220] rounded-2xl border border-[#1F2937]">
-                                        <p className="text-sm font-black text-white">24</p>
+                                        <p className="text-sm font-black text-white">{stats?.activeAgents || 2}</p>
                                         <p className="text-[10px] font-bold text-slate-500">Active Agents</p>
                                     </div>
                                     <div className="p-4 bg-[#0B1220] rounded-2xl border border-[#1F2937]">
@@ -216,7 +205,7 @@ export default function DashboardPage() {
                                         <p className="text-[10px] font-bold text-slate-500">Avg Latency</p>
                                     </div>
                                     <div className="p-4 bg-[#0B1220] rounded-2xl border border-[#1F2937]">
-                                        <p className="text-sm font-black text-white">12</p>
+                                        <p className="text-sm font-black text-white">{stats?.projectCount || 0}</p>
                                         <p className="text-[10px] font-bold text-slate-500">Live Projects</p>
                                     </div>
                                 </div>

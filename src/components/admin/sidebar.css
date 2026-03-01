@@ -1,5 +1,21 @@
 /* Admin Sidebar Styles — uses design tokens from globals.css */
 
+.admin-sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+}
+
+.admin-sidebar-overlay.visible {
+    display: block;
+}
+
 .admin-sidebar {
     width: 260px;
     height: 100vh;
@@ -10,6 +26,21 @@
     flex-shrink: 0;
     position: sticky;
     top: 0;
+    transition: transform 0.3s ease;
+    z-index: 1001;
+}
+
+@media (max-width: 1024px) {
+    .admin-sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        transform: translateX(-100%);
+    }
+
+    .admin-sidebar.mobile-open {
+        transform: translateX(0);
+    }
 }
 
 .sidebar-header {

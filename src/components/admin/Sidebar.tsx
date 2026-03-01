@@ -25,7 +25,12 @@ const navItems = [
     { name: 'Audit Logs', href: '/admin/logs', icon: ShieldCheck, group: 'Security' },
 ];
 
-export function AdminSidebar() {
+interface AdminSidebarProps {
+    isOpen?: boolean;
+    onClose?: () => void;
+}
+
+export function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
     const router = useRouter();
     const pathname = usePathname();
 
@@ -46,36 +51,43 @@ export function AdminSidebar() {
     const groups = ['System', 'Management', 'Security'];
 
     return (
-        <aside className="admin-sidebar">
-            <div className="sidebar-header">
-                <span className="logo-text">GODZILLA</span>
-                <span className="logo-subtext">CORE ADMIN</span>
-            </div>
+        <>
+            <div
+                className={`admin-sidebar-overlay ${isOpen ? 'visible' : ''}`}
+                onClick={onClose}
+            />
+            <aside className={`admin-sidebar ${isOpen ? 'mobile-open' : ''}`}>
+                <div className="sidebar-header">
+                    <span className="logo-text">GODZILLA</span>
+                    <span className="logo-subtext">CORE ADMIN</span>
+                </div>
 
-            <nav className="sidebar-nav">
-                {groups.map(group => (
-                    <div key={group} className="nav-group">
-                        <div className="group-label">{group}</div>
-                        {navItems.filter(item => item.group === group).map((item) => (
-                            <Link
-                                key={item.name}
-                                href={item.href}
-                                className={`nav-item${pathname === item.href ? ' active' : ''}`}
-                            >
-                                <item.icon size={17} />
-                                <span>{item.name}</span>
-                            </Link>
-                        ))}
-                    </div>
-                ))}
-            </nav>
+                <nav className="sidebar-nav">
+                    {groups.map(group => (
+                        <div key={group} className="nav-group">
+                            <div className="group-label">{group}</div>
+                            {navItems.filter(item => item.group === group).map((item) => (
+                                <Link
+                                    key={item.name}
+                                    href={item.href}
+                                    className={`nav-item${pathname === item.href ? ' active' : ''}`}
+                                    onClick={onClose}
+                                >
+                                    <item.icon size={17} />
+                                    <span>{item.name}</span>
+                                </Link>
+                            ))}
+                        </div>
+                    ))}
+                </nav>
 
-            <div className="sidebar-footer">
-                <button className="logout-button" onClick={handleLogout}>
-                    <LogOut size={17} />
-                    <span>Sign Out</span>
-                </button>
-            </div>
-        </aside>
+                <div className="sidebar-footer">
+                    <button className="logout-button" onClick={handleLogout}>
+                        <LogOut size={17} />
+                        <span>Sign Out</span>
+                    </button>
+                </div>
+            </aside>
+        </>
     );
 }

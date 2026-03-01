@@ -27,257 +27,90 @@ interface AdminUserTableProps {
 
 export function AdminUserTable({ users }: AdminUserTableProps) {
     return (
-        <div className="admin-user-table-container">
-            <div className="table-actions">
-                <div className="search-bar">
-                    <Search size={18} />
-                    <input type="text" placeholder="Search by email..." />
+        <div className="space-y-6">
+            <div className="flex flex-col md:flex-row gap-4 justify-between items-center bg-[#111827] p-4 rounded-2xl border border-[#1F2937]">
+                <div className="relative w-full md:w-96 group">
+                    <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                    <input
+                        type="text"
+                        placeholder="Search by email..."
+                        className="w-full py-2.5 pl-10 pr-4 text-xs rounded-xl bg-[#0B1220] border border-[#1F2937] text-white outline-none focus:border-blue-500 transition-all"
+                    />
                 </div>
-                <button className="filter-button">
-                    <Filter size={18} />
+                <button className="flex items-center gap-2 px-4 py-2.5 text-xs font-bold text-slate-300 bg-[#1F2937] hover:bg-[#374151] rounded-xl border border-[#374151] transition-all">
+                    <Filter size={14} />
                     <span>Filter</span>
                 </button>
             </div>
 
-            <table className="admin-table">
-                <thead>
-                    <tr>
-                        <th>User</th>
-                        <th>Verification</th>
-                        <th>Balance</th>
-                        <th>Activity</th>
-                        <th>Joined</th>
-                        <th className="text-right">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {users.length === 0 ? (
-                        <tr>
-                            <td colSpan={6} className="empty-row">No users found.</td>
-                        </tr>
-                    ) : (
-                        users.map((user) => (
-                            <tr key={user.id}>
-                                <td>
-                                    <div className="user-cell">
-                                        <div className="user-avatar">
-                                            {user.email[0].toUpperCase()}
-                                        </div>
-                                        <div className="user-meta">
-                                            <span className="user-email">{user.email}</span>
-                                            <span className="user-id">{user.id}</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span className={`status-badge ${user.emailVerified ? 'active' : 'disabled'}`}>
-                                        {user.emailVerified ? 'Verified' : 'Pending'}
-                                    </span>
-                                </td>
-                                <td>
-                                    <div className="balance-cell">
-                                        <Coins size={14} />
-                                        <span>{user.tokenBalance?.coins || 0}</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className="activity-cell">
-                                        <span>{user._count.transactions} txns</span>
-                                        <span className="subtext">{user._count.tokenReservations} requests</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    {new Date(user.createdAt).toLocaleDateString()}
-                                </td>
-                                <td className="text-right">
-                                    <button className="action-menu-button">
-                                        <MoreVertical size={18} />
-                                    </button>
-                                </td>
+            <div className="bg-[#111827] border border-[#1F2937] rounded-3xl overflow-hidden shadow-2xl">
+                <div className="overflow-x-auto">
+                    <table className="w-full text-left border-collapse">
+                        <thead>
+                            <tr className="border-b border-[#1F2937]">
+                                <th className="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Identify</th>
+                                <th className="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Email Status</th>
+                                <th className="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Balance</th>
+                                <th className="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Activity</th>
+                                <th className="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Join Date</th>
+                                <th className="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest text-right">Ops</th>
                             </tr>
-                        ))
-                    )}
-                </tbody>
-            </table>
-
-            <style jsx>{`
-                .admin-user-table-container {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 16px;
-                }
-
-                .table-actions {
-                    display: flex;
-                    align-items: center;
-                    gap: 12px;
-                }
-
-                .search-bar {
-                    flex: 1;
-                    max-width: 320px;
-                    background-color: #0f172a;
-                    border: 1px solid #1e293b;
-                    border-radius: 8px;
-                    display: flex;
-                    align-items: center;
-                    padding: 0 12px;
-                    gap: 10px;
-                    color: #64748b;
-                }
-
-                .search-bar input {
-                    background: none;
-                    border: none;
-                    height: 36px;
-                    width: 100%;
-                    color: #f8fafc;
-                    font-size: 0.9rem;
-                    outline: none;
-                }
-
-                .filter-button {
-                    display: flex;
-                    align-items: center;
-                    gap: 8px;
-                    padding: 0 16px;
-                    height: 38px;
-                    background-color: #0f172a;
-                    border: 1px solid #1e293b;
-                    border-radius: 8px;
-                    color: #94a3b8;
-                    cursor: pointer;
-                    font-size: 0.85rem;
-                    transition: all 0.2s;
-                }
-
-                .filter-button:hover {
-                    background-color: #1e293b;
-                    color: #f8fafc;
-                }
-
-                .admin-table {
-                    width: 100%;
-                    border-collapse: collapse;
-                    background-color: #0f172a;
-                    border: 1px solid #1e293b;
-                    border-radius: 12px;
-                    overflow: hidden;
-                }
-
-                th {
-                    text-align: left;
-                    padding: 12px 20px;
-                    background-color: #1e293b;
-                    color: #94a3b8;
-                    font-size: 0.75rem;
-                    font-weight: 600;
-                    text-transform: uppercase;
-                    letter-spacing: 0.5px;
-                }
-
-                td {
-                    padding: 16px 20px;
-                    border-bottom: 1px solid #1e293b;
-                    font-size: 0.9rem;
-                }
-
-                .text-right { text-align: right; }
-
-                .empty-row {
-                    text-align: center;
-                    padding: 48px;
-                    color: #64748b;
-                }
-
-                .user-cell {
-                    display: flex;
-                    align-items: center;
-                    gap: 12px;
-                }
-
-                .user-avatar {
-                    width: 32px;
-                    height: 32px;
-                    background-color: #334155;
-                    border-radius: 8px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-weight: 700;
-                    font-size: 0.8rem;
-                }
-
-                .user-meta {
-                    display: flex;
-                    flex-direction: column;
-                }
-
-                .user-email {
-                    font-weight: 500;
-                    color: #f8fafc;
-                }
-
-                .user-id {
-                    font-size: 0.75rem;
-                    color: #64748b;
-                }
-
-                .status-badge {
-                    padding: 4px 8px;
-                    border-radius: 4px;
-                    font-size: 0.7rem;
-                    font-weight: 700;
-                    text-transform: uppercase;
-                }
-
-                .status-badge.active {
-                    background-color: #10b9811a;
-                    color: #10b981;
-                }
-
-                .status-badge.disabled {
-                    background-color: #f59e0b1a;
-                    color: #f59e0b;
-                }
-
-                .status-badge.banned {
-                    background-color: #ef44441a;
-                    color: #ef4444;
-                }
-
-                .balance-cell {
-                    display: flex;
-                    align-items: center;
-                    gap: 6px;
-                    color: #f8fafc;
-                    font-weight: 600;
-                }
-
-                .activity-cell {
-                    display: flex;
-                    flex-direction: column;
-                }
-
-                .activity-cell .subtext {
-                    font-size: 0.75rem;
-                    color: #64748b;
-                }
-
-                .action-menu-button {
-                    background: none;
-                    border: none;
-                    color: #64748b;
-                    cursor: pointer;
-                    padding: 4px;
-                    border-radius: 4px;
-                }
-
-                .action-menu-button:hover {
-                    background-color: #1e293b;
-                    color: #f8fafc;
-                }
-            `}</style>
+                        </thead>
+                        <tbody className="divide-y divide-[#1F2937]">
+                            {users.length === 0 ? (
+                                <tr>
+                                    <td colSpan={6} className="px-6 py-12 text-center text-slate-500 text-xs">
+                                        No authorized users found in local registry.
+                                    </td>
+                                </tr>
+                            ) : (
+                                users.map((user) => (
+                                    <tr key={user.id} className="hover:bg-blue-500/5 transition-colors group">
+                                        <td className="px-6 py-4">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white font-black text-xs shadow-lg shadow-blue-600/20">
+                                                    {user.email[0].toUpperCase()}
+                                                </div>
+                                                <div className="flex flex-col">
+                                                    <span className="text-xs font-bold text-white leading-tight">{user.email}</span>
+                                                    <span className="text-[9px] text-slate-500 font-mono tracking-tighter mt-1">{user.id}</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <div className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest ${user.emailVerified ? 'bg-green-500/10 text-green-500' : 'bg-amber-500/10 text-amber-500'
+                                                }`}>
+                                                <div className={`w-1 h-1 rounded-full ${user.emailVerified ? 'bg-green-500' : 'bg-amber-500'}`} />
+                                                {user.emailVerified ? 'Verified' : 'Pending'}
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <div className="flex items-center gap-1.5 text-xs font-black text-white">
+                                                <Coins size={12} className="text-blue-500" />
+                                                <span>{(user.tokenBalance?.coins || 0).toLocaleString()}</span>
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <div className="flex flex-col">
+                                                <span className="text-xs font-bold text-slate-300">{user._count.transactions} txns</span>
+                                                <span className="text-[9px] text-slate-500 font-bold uppercase tracking-tighter">{user._count.tokenReservations} compute hooks</span>
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4 text-xs font-bold text-slate-400">
+                                            {new Date(user.createdAt).toLocaleDateString()}
+                                        </td>
+                                        <td className="px-6 py-4 text-right">
+                                            <button className="p-2 text-slate-500 hover:text-white transition-colors">
+                                                <MoreVertical size={16} />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     );
 }

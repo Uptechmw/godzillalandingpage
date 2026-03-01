@@ -7,6 +7,8 @@ import { redirect } from 'next/navigation';
 
 import { AdminStatusIndicator } from '@/components/admin/StatusIndicator';
 
+import { AdminDashboardLayout } from '@/components/admin/AdminDashboardLayout';
+
 export default async function AdminLayout({
     children,
 }: {
@@ -21,31 +23,9 @@ export default async function AdminLayout({
 
     return (
         <AdminLayoutStyles>
-            <div className="admin-container">
-                <AdminSidebar />
-                <main className="admin-main">
-                    <header className="admin-header">
-                        <div className="header-left">
-                            <h1 className="page-title">Management Console</h1>
-                        </div>
-                        <div className="header-right">
-                            <AdminStatusIndicator />
-                            <div className="admin-profile">
-                                <div className="admin-avatar">
-                                    {session?.email?.[0].toUpperCase() || 'A'}
-                                </div>
-                                <div className="admin-info">
-                                    <span className="admin-name">{session?.name || session?.email.split('@')[0]}</span>
-                                    <span className="admin-role">{session?.role.replace('_', ' ')}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </header>
-                    <section className="admin-content">
-                        {children}
-                    </section>
-                </main>
-            </div>
+            <AdminDashboardLayout session={session}>
+                {children}
+            </AdminDashboardLayout>
         </AdminLayoutStyles>
     );
 }
