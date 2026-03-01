@@ -1,16 +1,18 @@
-/* Admin Page Styles — uses design tokens from globals.css */
+.admin-page-container {
+    padding: 2rem;
+    min-height: 100vh;
+    background: #0B1220;
+}
 
 .admin-overview {
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
+    display: none;
 }
 
 .page-header-container {
     margin-bottom: 8px;
 }
 
-.stats-grid {
+.stats-grid-legacy {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 20px;

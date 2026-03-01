@@ -69,7 +69,7 @@ export const SalesOverviewChart = ({ data }: { data: any[] }) => (
                     axisLine={false}
                     tickLine={false}
                     tick={{ fill: COLORS.muted, fontSize: 12 }}
-                    tickFormatter={(value) => `$${value / 1000}k`}
+                    tickFormatter={(value) => `${value / 1000}k`}
                 />
                 <Tooltip content={<CustomTooltip />} />
                 <Area
@@ -163,9 +163,9 @@ export const SalesProgressChart = ({ value, total }: { value: number, total: num
             </ResponsiveContainer>
             <div className="absolute top-[65%] text-center">
                 <p className="text-2xl font-extrabold" style={{ color: COLORS.text }}>
-                    ${(value / 1000).toFixed(2)}K
+                    {(value).toFixed(0)}%
                 </p>
-                <p className="text-xs" style={{ color: COLORS.muted }}>/ ${(total / 1000).toFixed(0)}K</p>
+                <p className="text-xs" style={{ color: COLORS.muted }}>Completion</p>
             </div>
         </div>
     );
