@@ -15,6 +15,7 @@ export interface PricingSnapshot {
 }
 
 export interface ModelConfig {
+    name: string;
     provider: ProviderName;
     maxOutputTokens: number;
     timeoutMs: number;
@@ -32,6 +33,7 @@ export interface ModelConfig {
 
 export const MODEL_REGISTRY: Readonly<Record<ModelKey, Readonly<ModelConfig>>> = Object.freeze({
     'gemini-3.1-pro': Object.freeze({
+        name: 'Gemini 1.5 Pro (3.1)',
         provider: 'gemini',
         maxOutputTokens: 8192,
         timeoutMs: 60000,
@@ -40,6 +42,7 @@ export const MODEL_REGISTRY: Readonly<Record<ModelKey, Readonly<ModelConfig>>> =
         capabilities: { thinking: false, streaming: true, functionCalling: true }
     }),
     'gemini-3.1-pro-9b': Object.freeze({
+        name: 'Gemini 1.5 Pro 9B',
         provider: 'gemini',
         maxOutputTokens: 8192,
         timeoutMs: 45000,
@@ -48,6 +51,7 @@ export const MODEL_REGISTRY: Readonly<Record<ModelKey, Readonly<ModelConfig>>> =
         capabilities: { thinking: false, streaming: true, functionCalling: true }
     }),
     'gemini-3-flash': Object.freeze({
+        name: 'Gemini 1.5 Flash',
         provider: 'gemini',
         maxOutputTokens: 8192,
         timeoutMs: 30000,
@@ -56,6 +60,7 @@ export const MODEL_REGISTRY: Readonly<Record<ModelKey, Readonly<ModelConfig>>> =
         capabilities: { thinking: false, streaming: true, functionCalling: true }
     }),
     'claude-3-7-sonnet-thinking': Object.freeze({
+        name: 'Claude 3.7 Sonnet (Thinking)',
         provider: 'anthropic',
         maxOutputTokens: 64000,
         timeoutMs: 120000,
@@ -64,6 +69,7 @@ export const MODEL_REGISTRY: Readonly<Record<ModelKey, Readonly<ModelConfig>>> =
         capabilities: { thinking: true, streaming: true, functionCalling: true }
     }),
     'claude-3-7-opus-thinking': Object.freeze({
+        name: 'Claude 3.7 Opus (Thinking)',
         provider: 'anthropic',
         maxOutputTokens: 64000,
         timeoutMs: 180000,

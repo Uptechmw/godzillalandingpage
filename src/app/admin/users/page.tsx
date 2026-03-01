@@ -24,46 +24,6 @@ export default async function AdminUsersPage() {
             </PageHeader>
 
             <AdminUserTable users={users as any} />
-
-            <style jsx>{`
-                .admin-users-page {
-                    display: flex;
-                    flex-direction: column;
-                }
-
-                .btn {
-                    display: flex;
-                    align-items: center;
-                    gap: 8px;
-                    padding: 8px 16px;
-                    border-radius: 8px;
-                    font-size: 0.85rem;
-                    font-weight: 600;
-                    cursor: pointer;
-                    transition: all 0.2s;
-                }
-
-                .btn-primary {
-                    background-color: #3b82f6;
-                    color: white;
-                    border: none;
-                }
-
-                .btn-primary:hover {
-                    background-color: #2563eb;
-                }
-
-                .btn-secondary {
-                    background-color: #0f172a;
-                    border: 1px solid #1e293b;
-                    color: #94a3b8;
-                }
-
-                .btn-secondary:hover {
-                    background-color: #1e293b;
-                    color: #f8fafc;
-                }
-            `}</style>
         </div>
     );
 }

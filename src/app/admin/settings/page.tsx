@@ -52,7 +52,6 @@ export default async function AdminSettingsPage() {
                             label="SMTP Password / App Password"
                             description="Encrypted password for the SMTP server."
                         />
-                        {/* Note: Plaintext SMTP settings would go here using a similar PlaintextForm if needed */}
                     </div>
                 </section>
 
@@ -92,108 +91,11 @@ export default async function AdminSettingsPage() {
                                 <span className="card-title">Clear System Cache</span>
                                 <p className="card-desc">Redistributes latest DB settings to all active server nodes.</p>
                             </div>
-                            <button className="btn-secondary">Reload All Settings</button>
+                            <button className="btn btn-secondary">Reload All Settings</button>
                         </div>
                     </div>
                 </section>
             </div>
-
-            <style jsx>{`
-                .admin-settings-page {
-                    display: flex;
-                    flex-direction: column;
-                }
-
-                .settings-container {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 40px;
-                }
-
-                .settings-section {
-                    display: grid;
-                    grid-template-columns: 1fr 2fr;
-                    gap: 48px;
-                }
-
-                .section-info {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 8px;
-                }
-
-                .section-title {
-                    font-size: 1.1rem;
-                    font-weight: 700;
-                    margin-top: 4px;
-                }
-
-                .section-desc {
-                    font-size: 0.85rem;
-                    color: #94a3b8;
-                    line-height: 1.5;
-                }
-
-                .section-content {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 24px;
-                }
-
-                .divider {
-                    height: 1px;
-                    background-color: #1e293b;
-                    width: 100%;
-                }
-
-                .maintenance-card {
-                    background-color: #0f172a;
-                    border: 1px solid #1e293b;
-                    border-radius: 10px;
-                    padding: 20px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                }
-
-                .card-text {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 4px;
-                }
-
-                .card-title {
-                    font-weight: 600;
-                    font-size: 0.95rem;
-                }
-
-                .card-desc {
-                    font-size: 0.8rem;
-                    color: #64748b;
-                }
-
-                .btn-secondary {
-                    background-color: #1e293b;
-                    border: 1px solid #334155;
-                    color: #f8fafc;
-                    padding: 8px 16px;
-                    border-radius: 6px;
-                    font-size: 0.85rem;
-                    font-weight: 600;
-                    cursor: pointer;
-                }
-
-                .btn-secondary:hover {
-                    background-color: #334155;
-                }
-
-                @media (max-width: 1024px) {
-                    .settings-section {
-                        grid-template-columns: 1fr;
-                        gap: 24px;
-                    }
-                }
-            `}</style>
         </div>
     );
 }

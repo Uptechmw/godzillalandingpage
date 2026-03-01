@@ -88,7 +88,7 @@ export class BillingBroker {
      * Finalizes the transaction based on actual authoritative usage.
      * Refunds the reserved difference.
      */
-    static async commit(reservationId: string, actualInput: number, actualOutput: number, reason: string = 'COMMITTED') {
+    static async commit(reservationId: string, actualInput: number, actualOutput: number, reason: 'COMMITTED' | 'TIMEOUT' | 'CLIENT_DISCONNECT' | 'FAILED' = 'COMMITTED') {
         const status = reason === 'TIMEOUT' ? 'TIMEOUT' : reason === 'CLIENT_DISCONNECT' ? 'ABORTED' : reason === 'FAILED' ? 'FAILED' : 'COMMITTED';
 
         return await prisma.$transaction(async (tx) => {
@@ -150,7 +150,7 @@ export class BillingBroker {
     /**
      * Releases the entire reservation (Refund everything on early failure)
      */
-    static async release(reservationId: string, reason: string = 'RELEASED') {
+    static async release(reservationId: string, reason: 'RELEASED' | 'FAILED' | 'TIMEOUT' = 'RELEASED') {
         return await prisma.$transaction(async (tx) => {
             const reservation = await tx.tokenReservation.findUniqueOrThrow({ where: { id: reservationId } });
 

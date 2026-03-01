@@ -1,3 +1,4 @@
+import { createHash } from 'crypto';
 import { ModelKey, PricingSnapshot } from "../registry";
 import { BillingBroker } from "../broker/billing";
 import { AtomicBrokerError } from "../utils/normalizer";
@@ -19,10 +20,14 @@ export class WorkflowContext {
     /**
      * Initializes a workflow with a large upfront reservation.
      */
-    static async start(userId: string, modelKey: ModelKey, budgetTokens: number) {
-        // Note: In this simple implementation, we leverage the existing BillingBroker.reserve logic.
-        // For a complex workflow, we'd estimate the 'worst case' across all expected agents.
-        const reservation = await BillingBroker.reserve(userId, modelKey, 0, budgetTokens);
+    static async start(userId: string, modelKey: ModelKey, budgetTokens: number, idempotencyKey: string) {
+        // 1. Generate Request Hash for replay protection
+        const requestHash = createHash('sha256')
+            .update(JSON.stringify({ userId, modelKey, budgetTokens }))
+            .digest('hex');
+
+        // 2. Initialize budgeted context (reserve upfront)
+        const reservation = await BillingBroker.reserve(userId, modelKey, 0, budgetTokens, idempotencyKey, requestHash);
 
         return new WorkflowContext(
             userId,

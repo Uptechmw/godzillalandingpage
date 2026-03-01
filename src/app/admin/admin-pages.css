@@ -1,0 +1,184 @@
+/* Admin Page Styles */
+
+.admin-overview {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.page-header-container {
+    margin-bottom: 8px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+.stat-card {
+    background-color: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: transform 0.2s;
+}
+
+.stat-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.stat-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+}
+
+.dashboard-section {
+    background-color: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.section-title {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.view-all {
+    font-size: 0.8rem;
+    color: #3b82f6;
+    text-decoration: none;
+}
+
+.empty-state {
+    color: #64748b;
+    font-size: 0.9rem;
+    text-align: center;
+    padding: 40px 0;
+}
+
+.health-metrics {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.health-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: #94a3b8;
+}
+
+.health-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+.health-badge.success {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+}
+
+/* User/Billing/Models/Logs Table Generic Styles */
+.admin-users-page,
+.admin-billing-page,
+.admin-models-page,
+.admin-logs-page,
+.admin-settings-page {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #2563eb;
+}
+
+.btn-secondary {
+    background-color: #0f172a;
+    border: 1px solid #1e293b;
+    color: #94a3b8;
+}
+
+.btn-secondary:hover {
+    background-color: #1e293b;
+    color: #f8fafc;
+}
+
+/* Auth Page */
+.auth-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #020617;
+    padding: 24px;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 400px;
+    background-color: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 16px;
+    padding: 40px;
+}

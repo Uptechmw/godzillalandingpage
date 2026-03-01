@@ -20,7 +20,8 @@ export async function POST(req: NextRequest) {
         }
 
         // 1. Initialize budgeted context (e.g., reserve 20k tokens upfront)
-        const context = await WorkflowContext.start(user.id, modelKey || "claude-3-7-sonnet-thinking", 20000);
+        const idempotencyKey = req.headers.get('x-idempotency-key') || crypto.randomUUID();
+        const context = await WorkflowContext.start(user.id, modelKey || "claude-3-7-sonnet-thinking", 20000, idempotencyKey);
 
         // 2. Mock workflow execution (In production, this would call AgentOrchestrator)
         // Here we just return the reservation ID to prove the billing link

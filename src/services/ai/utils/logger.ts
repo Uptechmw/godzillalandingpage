@@ -9,7 +9,7 @@ export interface AuditLogEvent {
     modelKey: ModelKey;
     reservationId?: string;
 
-    action: 'RESERVATION_CREATED' | 'COMMITTED' | 'REFUNDED' | 'ABORTED' | 'TIMEOUT';
+    action: 'RESERVATION_CREATED' | 'PROVIDER_STARTED' | 'COMMITTED' | 'REFUNDED' | 'ABORTED' | 'TIMEOUT' | 'FAILED' | 'RELEASED';
 
     metrics?: {
         inputTokens: number;

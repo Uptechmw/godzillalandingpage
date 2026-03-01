@@ -18,6 +18,38 @@ export interface ChatRequest {
 
 export class ExecutionRouter {
     /**
+     * Orchestrates the hardened AI execution lifecycle and returns a ReadableStream.
+     */
+    static async execute(req: any, params: any): Promise<ReadableStream> {
+        const encoder = new TextEncoder();
+
+        return new ReadableStream({
+            async start(controller) {
+                try {
+                    const chatRequest: ChatRequest = {
+                        userId: params.userId,
+                        modelKey: params.modelKey,
+                        messages: params.prompt ? [{ role: 'user', content: params.prompt }] : params.messages,
+                        maxTokens: params.maxTokens,
+                        idempotencyKey: params.idempotencyKey
+                    };
+
+                    await ExecutionRouter.stream(chatRequest, (chunk) => {
+                        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ content: chunk })}\n\n`));
+                    });
+
+                    controller.enqueue(encoder.encode('data: [DONE]\n\n'));
+                    controller.close();
+                } catch (error: any) {
+                    const normalized = ErrorNormalizer.normalize(error);
+                    controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: normalized.message, code: normalized.code })}\n\n`));
+                    controller.close();
+                }
+            }
+        });
+    }
+
+    /**
      * Orchestrates the hardened AI execution lifecycle.
      */
     static async stream(req: ChatRequest, onChunk: (content: string) => void) {
