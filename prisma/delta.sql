@@ -127,12 +127,37 @@ CREATE TABLE IF NOT EXISTS "TokenProduct" (
     CONSTRAINT "TokenProduct_pkey" PRIMARY KEY ("id")
 );
 
--- 3. Create Indexes
+-- 3. AI Brokerage & Billing (New)
+CREATE TABLE IF NOT EXISTS "TokenReservation" (
+    "id" TEXT NOT NULL,
+    "idempotencyKey" TEXT NOT NULL,
+    "requestHash" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "modelKey" TEXT NOT NULL,
+    "status" TEXT NOT NULL,
+    "reservedAmount" INTEGER NOT NULL,
+    "actualCost" INTEGER,
+    "pricingSnapshot" JSONB NOT NULL,
+    "metadata" JSONB,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "expiresAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "TokenReservation_pkey" PRIMARY KEY ("id")
+);
+
+-- 4. Create Indexes
 CREATE UNIQUE INDEX IF NOT EXISTS "AdminUser_email_key" ON "AdminUser"("email");
 CREATE UNIQUE INDEX IF NOT EXISTS "AdminSession_token_key" ON "AdminSession"("token");
+CREATE UNIQUE INDEX IF NOT EXISTS "TokenReservation_idempotencyKey_key" ON "TokenReservation"("idempotencyKey");
 
--- 4. Add Foreign Keys
--- Check if constraints exist before adding to prevent errors on re-run
+-- 5. Update Existing Tables
+DO $$ BEGIN
+    IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Transaction' AND COLUMN_NAME = 'reservationId') THEN
+        ALTER TABLE "Transaction" ADD COLUMN "reservationId" TEXT;
+    END IF;
+END $$;
+
+-- 6. Add Foreign Keys
 DO $$ BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'AdminOTP_adminId_fkey') THEN
         ALTER TABLE "AdminOTP" ADD CONSTRAINT "AdminOTP_adminId_fkey" FOREIGN KEY ("adminId") REFERENCES "AdminUser"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -148,5 +173,13 @@ DO $$ BEGIN
     
     IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'SecretHistory_secretKey_fkey') THEN
         ALTER TABLE "SecretHistory" ADD CONSTRAINT "SecretHistory_secretKey_fkey" FOREIGN KEY ("secretKey") REFERENCES "SecretSetting"("key") ON DELETE CASCADE ON UPDATE CASCADE;
+    END IF;
+
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'TokenReservation_userId_fkey') THEN
+        ALTER TABLE "TokenReservation" ADD CONSTRAINT "TokenReservation_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+    END IF;
+    
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'Transaction_reservationId_fkey') THEN
+        ALTER TABLE "Transaction" ADD CONSTRAINT "Transaction_reservationId_fkey" FOREIGN KEY ("reservationId") REFERENCES "TokenReservation"("id") ON DELETE SET NULL ON UPDATE CASCADE;
     END IF;
 END $$;
