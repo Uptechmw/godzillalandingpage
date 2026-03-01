@@ -6,7 +6,7 @@ import { AdminAuthService } from '../security/auth.service';
  * Service for managing Administrative 2FA (Email OTP).
  */
 export class AdminOTPService {
-    private static readonly OTP_EXPIRY_MS = 5 * 60 * 1000; // 5 minutes
+    private static readonly OTP_EXPIRY_MS = 10 * 60 * 1000; // 10 minutes
     private static readonly MAX_ATTEMPTS = 5;
 
     /**

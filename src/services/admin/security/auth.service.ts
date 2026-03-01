@@ -110,10 +110,15 @@ export class AdminAuthService {
 
             const otpToken = await new SignJWT({ adminId: admin.id, email: admin.email, role: admin.role })
                 .setProtectedHeader({ alg: 'HS256' })
-                .setExpirationTime('5m')
+                .setExpirationTime('10m')
                 .sign(getAdminJwtSecret());
 
-            (await cookies()).set(OTP_PENDING_COOKIE, otpToken, { httpOnly: true, secure: true });
+            (await cookies()).set(OTP_PENDING_COOKIE, otpToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'lax',
+                path: '/'
+            });
 
             return { requires2FA: true, adminId: admin.id };
         }

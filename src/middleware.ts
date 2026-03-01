@@ -18,8 +18,15 @@ export async function middleware(request: NextRequest) {
 
   // 1. Protect Admin Routes (/admin/* and /api/admin/*)
   if (pathname.startsWith('/admin') || pathname.startsWith('/api/admin')) {
-    // Skip public admin routes
-    if (pathname === '/api/admin/auth/login' || pathname === '/admin/auth/verify-2fa' || pathname === '/admin/login') {
+    // Skip public admin routes and 2FA verification endpoints
+    const publicAdminPaths = [
+      '/api/admin/auth/login',
+      '/api/admin/auth/verify-2fa',
+      '/admin/auth/verify-2fa',
+      '/admin/login'
+    ];
+
+    if (publicAdminPaths.includes(pathname)) {
       return NextResponse.next();
     }
 
