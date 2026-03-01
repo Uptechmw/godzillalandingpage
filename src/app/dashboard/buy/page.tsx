@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import Sidebar from "@/components/dashboard/Sidebar";
 import { Coins, CheckCircle2, Zap, Trophy, Crown, Loader2, Package } from "lucide-react";
