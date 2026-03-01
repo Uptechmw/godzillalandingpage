@@ -1,5 +1,9 @@
+import fs from 'fs';
+import path from 'path';
 import { redis } from '@/lib/redis';
 import { AtomicBrokerError } from '../utils/normalizer';
+
+const RATE_LIMIT_SCRIPT = fs.readFileSync(path.join(process.cwd(), 'src/services/ai/broker/lua/rate_limit.lua'), 'utf8');
 
 export class RateLimiter {
     /**
@@ -12,26 +16,11 @@ export class RateLimiter {
         const windowStart = now - windowSizeMs;
         const requestId = crypto.randomUUID();
 
-        const script = `
-            local key = KEYS[1]
-            local now = tonumber(ARGV[1])
-            local windowStart = tonumber(ARGV[2])
-            local limit = tonumber(ARGV[3])
-            local requestId = ARGV[4]
-
-            redis.call('ZREMRANGEBYSCORE', key, 0, windowStart)
-            local count = redis.call('ZCARD', key)
-
-            if count < limit then
-                redis.call('ZADD', key, now, requestId)
-                redis.call('EXPIRE', key, 65)
-                return "OK"
-            else
-                return "LIMIT_REACHED"
-            end
-        `;
-
-        const result = await redis.eval(script, [key], [now, windowStart, targetRpm, requestId]) as string;
+        const result = await redis.eval(
+            RATE_LIMIT_SCRIPT,
+            [key],
+            [now, windowStart, targetRpm, requestId]
+        ) as string;
 
         if (result !== "OK") {
             throw new AtomicBrokerError(

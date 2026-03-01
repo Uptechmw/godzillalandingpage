@@ -1,6 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
-import { BaseProvider, ExecutionOptions, StreamChunk, ProviderUsage } from "./base.provider";
-import { ModelKey, MODEL_REGISTRY } from "../registry";
+import { BaseProvider, StreamOptions } from "./base.provider";
+import { MODEL_REGISTRY } from "../registry";
 
 export class ClaudeProvider extends BaseProvider {
     private client: Anthropic;
@@ -12,15 +12,10 @@ export class ClaudeProvider extends BaseProvider {
         });
     }
 
-    async *stream(
-        modelKey: ModelKey,
-        prompt: string,
-        options: ExecutionOptions
-    ): AsyncGenerator<StreamChunk, ProviderUsage | null> {
-        const config = MODEL_REGISTRY[modelKey];
-
-        // Configure thinking mode if the model supports it and we are on the thinking tier
+    async streamChat(messages: any[], options: StreamOptions): Promise<void> {
+        const config = MODEL_REGISTRY[options.modelKey];
         const isThinkingModel = config.capabilities.thinking;
+
         const thinkingConfig = isThinkingModel ? {
             type: "enabled" as const,
             budget_tokens: Math.min(options.maxTokens || 16000, 32000)
@@ -28,16 +23,15 @@ export class ClaudeProvider extends BaseProvider {
 
         try {
             const stream = await this.client.messages.create({
-                model: modelKey,
+                model: options.modelKey,
                 max_tokens: options.maxTokens || config.maxOutputTokens,
                 system: options.system,
-                messages: [{ role: "user", content: prompt }],
+                messages: messages,
                 temperature: options.temperature,
                 thinking: thinkingConfig as any,
                 stream: true,
             }, {
-                // Native AbortSignal support!
-                signal: options.signal,
+                signal: options.abortSignal,
             });
 
             let inputTokens = 0;
@@ -50,10 +44,11 @@ export class ClaudeProvider extends BaseProvider {
 
                 if (chunk.type === "content_block_delta") {
                     if (chunk.delta.type === "text_delta") {
-                        yield { text: chunk.delta.text };
+                        options.onChunk(chunk.delta.text);
                     }
                     if (chunk.delta.type === "thinking_delta") {
-                        yield { text: "", thinking: chunk.delta.thinking };
+                        // Thinking blocks are wrapped in custom markers for the UI
+                        options.onChunk(`<thinking>${chunk.delta.thinking}</thinking>`);
                     }
                 }
 
@@ -62,7 +57,8 @@ export class ClaudeProvider extends BaseProvider {
                 }
             }
 
-            return { input: inputTokens, output: outputTokens };
+            options.onUsage({ inputTokens, outputTokens });
+
         } catch (error: any) {
             // Anthropic SDK throws AbortError if signal is triggered
             throw error;

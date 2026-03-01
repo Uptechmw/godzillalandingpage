@@ -40,7 +40,7 @@ function AuthCallbackHandler() {
                     if (!response.ok) {
                         const errData = await response.json().catch(() => ({}));
                         console.error("[Provision Error]", errData.error);
-                        // Don't block login if provisioning fails — Supabase session is still valid
+                        // Don't block login if provisioning fails -- Supabase session is still valid
                     } else {
                         const data = await response.json();
                         if (data.success && data.token) {
@@ -51,7 +51,7 @@ function AuthCallbackHandler() {
                     }
                 } catch (provisionErr) {
                     console.error("[Provision Network Error]", provisionErr);
-                    // Continue — the user still has a valid Supabase session
+                    // Continue -- the user still has a valid Supabase session
                 }
 
                 // If the source is the desktop app, redirect using deep link

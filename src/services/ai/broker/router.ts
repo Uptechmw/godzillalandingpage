@@ -1,145 +1,126 @@
-import { NextRequest } from "next/server";
-import { MODEL_REGISTRY, ModelKey } from "../registry";
-import { BillingBroker } from "./billing";
-import { ConcurrencyManager } from "./concurrency";
-import { RateLimiter } from "./rate-limit";
-import { ProviderFactory } from "../providers/factory";
-import { FallbackTokenizer } from "../security/tokenizer";
-import { ErrorNormalizer, AtomicBrokerError } from "../utils/normalizer";
-import { AuditLogger } from "../utils/logger";
+import { createHash } from 'crypto';
+import { ModelKey, MODEL_REGISTRY } from '../registry';
+import { ProviderFactory } from '../providers/factory';
+import { BillingBroker } from './billing';
+import { ConcurrencyManager } from './concurrency';
+import { RateLimiter } from './rate-limit';
+import { AuditLogger } from '../utils/logger';
+import { ErrorNormalizer, AtomicBrokerError } from '../utils/normalizer';
+import { Tokenizer } from '../security/tokenizer';
 
-export interface ExecutionOptions {
+export interface ChatRequest {
     userId: string;
     modelKey: ModelKey;
-    prompt: string;
-    idempotencyKey?: string;
+    messages: any[];
     maxTokens?: number;
-    temperature?: number;
-    system?: string;
+    idempotencyKey?: string;
 }
 
-/**
- * The core orchestrator for AI model execution.
- * Handles the end-to-end lifecycle: Rate Limiting -> Concurrency -> Billing -> Execution -> Commit.
- */
 export class ExecutionRouter {
-    static async execute(req: NextRequest, options: ExecutionOptions) {
-        const { userId, modelKey, prompt, idempotencyKey, maxTokens, temperature, system } = options;
-        const config = MODEL_REGISTRY[modelKey];
-        const requestId = crypto.randomUUID();
+    /**
+     * Orchestrates the hardened AI execution lifecycle.
+     */
+    static async stream(req: ChatRequest, onChunk: (content: string) => void) {
+        const config = MODEL_REGISTRY[req.modelKey];
+        const ikey = req.idempotencyKey || crypto.randomUUID();
 
-        if (!config) {
-            throw new AtomicBrokerError("INVALID_MODEL_KEY", `Model ${modelKey} is not supported.`);
-        }
+        // 1. Generate Request Hash for replay protection
+        const requestHash = createHash('sha256')
+            .update(JSON.stringify({
+                userId: req.userId,
+                modelKey: req.modelKey,
+                messages: req.messages,
+                maxTokens: req.maxTokens
+            }))
+            .digest('hex');
 
-        // 1. Rate Limiting (Distributed Redis)
-        await RateLimiter.check(userId, config.rateLimitRpm);
+        // 2. Distributed Rate Limiting (Atomic Lua)
+        await RateLimiter.check(req.userId, config.rateLimits.requestsPerMinute);
 
-        // 2. Acquire Concurrency Lock (Distributed Redis)
+        // 3. Distributed Concurrency Lock (Atomic Lua)
         const lockId = await ConcurrencyManager.acquire(
-            userId,
-            modelKey,
-            config.concurrencyLimit,
+            req.userId,
+            req.modelKey,
+            config.rateLimits.concurrentRequests,
             config.timeoutMs
         );
 
-        let reservationId: string | null = null;
-        let concatenatedOutput = "";
-
-        // 3. Setup Abort Propagation (Timeout + Client Disconnect)
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => {
-            controller.abort("TIMEOUT");
-        }, config.timeoutMs);
-
-        // Monitor client disconnect
-        req.signal.addEventListener("abort", () => {
-            controller.abort("CLIENT_DISCONNECT");
-        });
+        let reservation;
+        let abortController = new AbortController();
+        let timeoutId: NodeJS.Timeout | null = null;
+        let estimatedInputTokens = 0;
 
         try {
-            // 4. Token Estimation & Reservation
-            const estimatedInput = FallbackTokenizer.count(prompt);
-            const reservation = await BillingBroker.reserve(
-                userId,
-                modelKey,
-                estimatedInput,
-                maxTokens,
-                idempotencyKey
+            // 4. Atomic Billing Reservation (Stripe-grade)
+            estimatedInputTokens = Tokenizer.countTokens(JSON.stringify(req.messages));
+            reservation = await BillingBroker.reserve(
+                req.userId,
+                req.modelKey,
+                estimatedInputTokens,
+                req.maxTokens || config.maxOutputTokens,
+                ikey,
+                requestHash
             );
-            reservationId = reservation.id;
 
-            // 5. Retrieve Provider & Start Stream
-            const provider = ProviderFactory.get(config.provider);
-            const stream = provider.stream(modelKey, prompt, {
-                system,
-                temperature,
-                maxTokens,
-                signal: controller.signal
-            });
+            // 5. Provider Execution
+            const provider = ProviderFactory.getProvider(config.provider);
 
-            // 6. Define the Streaming Bridge (Transform into SSE)
-            const encoder = new TextEncoder();
-            const sseStream = new ReadableStream({
-                async start(streamController) {
-                    try {
-                        for await (const chunk of stream) {
-                            if (chunk.text) {
-                                concatenatedOutput += chunk.text;
-                                streamController.enqueue(encoder.encode(`data: ${JSON.stringify({ text: chunk.text })}\n\n`));
-                            }
-                            if (chunk.thinking) {
-                                streamController.enqueue(encoder.encode(`data: ${JSON.stringify({ thinking: chunk.thinking })}\n\n`));
-                            }
-                        }
+            // Mark state: PROVIDER_STARTED (Atomic DB toggle)
+            await BillingBroker.markStarted(reservation.id);
 
-                        // Clean close
-                        clearTimeout(timeoutId);
+            // Hard timeout enforcement
+            timeoutId = setTimeout(() => {
+                abortController.abort();
+            }, config.timeoutMs);
 
-                        // Authoritative usage calculation
-                        const actualInput = estimatedInput; // Gemini/Claude SDK usage metadata is usually at the end
-                        const actualOutput = FallbackTokenizer.count(concatenatedOutput);
+            let streamedContent = "";
+            let usageMetadata: any = null;
 
-                        if (reservationId) {
-                            await BillingBroker.commit(reservationId, actualInput, actualOutput);
-                        }
-
-                        await ConcurrencyManager.release(userId, modelKey, lockId);
-                        streamController.enqueue(encoder.encode(`data: [DONE]\n\n`));
-                        streamController.close();
-
-                    } catch (err: any) {
-                        clearTimeout(timeoutId);
-                        await ConcurrencyManager.release(userId, modelKey, lockId);
-
-                        const reason = controller.signal.aborted ? controller.signal.reason : "ERROR";
-
-                        // Commit partial usage on abort/timeout
-                        if (reservationId && (reason === "TIMEOUT" || reason === "CLIENT_DISCONNECT")) {
-                            const partialOutput = FallbackTokenizer.count(concatenatedOutput);
-                            await BillingBroker.commit(reservationId, estimatedInput, partialOutput, reason);
-                        } else if (reservationId) {
-                            await BillingBroker.releaseFull(reservationId);
-                        }
-
-                        if (!controller.signal.aborted) {
-                            const normalized = ErrorNormalizer.normalize(err);
-                            streamController.enqueue(encoder.encode(`data: ${JSON.stringify({ error: normalized.message, code: normalized.code })}\n\n`));
-                        }
-                        streamController.close();
+            await provider.streamChat(
+                req.messages,
+                {
+                    modelKey: req.modelKey,
+                    maxTokens: req.maxTokens || config.maxOutputTokens,
+                    abortSignal: abortController.signal,
+                    onChunk: (chunk: string) => {
+                        streamedContent += chunk;
+                        onChunk(chunk);
+                    },
+                    onUsage: (usage: any) => {
+                        usageMetadata = usage;
                     }
                 }
-            });
+            );
 
-            return sseStream;
+            // 6. Authoritative Finalization (Commit)
+            if (timeoutId) clearTimeout(timeoutId);
+
+            const finalInput = usageMetadata?.inputTokens || estimatedInputTokens;
+            const finalOutput = usageMetadata?.outputTokens || Tokenizer.countTokens(streamedContent);
+
+            await BillingBroker.commit(reservation.id, finalInput, finalOutput, 'COMMITTED');
 
         } catch (error: any) {
-            // Immediate failure cleanup (before stream started)
-            clearTimeout(timeoutId);
-            await ConcurrencyManager.release(userId, modelKey, lockId);
-            if (reservationId) await BillingBroker.releaseFull(reservationId);
+            if (timeoutId) clearTimeout(timeoutId);
+
+            const isAbort = error.name === 'AbortError' || abortController.signal.aborted;
+
+            if (reservation) {
+                if (isAbort) {
+                    // Partial charge for what was already streamed
+                    // Note: In refined implementation, error could carry partial content
+                    const partialOutput = Tokenizer.countTokens(error.partialResponse || "");
+                    await BillingBroker.commit(reservation.id, estimatedInputTokens, partialOutput, 'TIMEOUT');
+                } else {
+                    // Fatal provider failure -> Full refund
+                    await BillingBroker.release(reservation.id, 'FAILED');
+                }
+            }
 
             throw ErrorNormalizer.normalize(error);
+        } finally {
+            // 7. Cleanup Concurrency Lock
+            await ConcurrencyManager.release(req.userId, req.modelKey, lockId);
         }
     }
 }

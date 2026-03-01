@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
                 name,
                 avatarUrl,
                 emailVerified: true,
-                // No passwordHash — this is an OAuth user
+                // No passwordHash -- this is an OAuth user
                 tokenBalance: {
                     create: { coins: SIGNUP_BONUS },
                 },
@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
                     create: {
                         type: 'SIGNUP_BONUS',
                         amount: SIGNUP_BONUS,
-                        description: 'Welcome bonus — 20 Godzilla Coins!',
+                        description: 'Welcome bonus -- 20 Godzilla Coins!',
                     },
                 },
             },

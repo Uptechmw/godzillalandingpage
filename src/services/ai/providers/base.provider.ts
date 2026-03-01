@@ -1,21 +1,13 @@
 import { ModelKey } from "../registry";
 
-export interface ProviderUsage {
-    input: number;
-    output: number;
-    metadata?: any;
-}
-
-export interface StreamChunk {
-    text: string;
-    thinking?: string; // For Claude thinking blocks
-}
-
-export interface ExecutionOptions {
-    system?: string;
-    temperature?: number;
+export interface StreamOptions {
+    modelKey: ModelKey;
     maxTokens?: number;
-    signal?: AbortSignal;
+    temperature?: number;
+    system?: string;
+    abortSignal?: AbortSignal;
+    onChunk: (chunk: string) => void;
+    onUsage: (usage: { inputTokens: number; outputTokens: number }) => void;
 }
 
 /**
@@ -24,12 +16,11 @@ export interface ExecutionOptions {
  */
 export abstract class BaseProvider {
     /**
-     * Generates a stream of content for a specific model.
-     * Must respect the AbortSignal to prevent wasted compute/tokens.
+     * Executes a streaming chat request with standard callbacks for usage and content.
+     * Implementations MUST respect the abortSignal.
      */
-    abstract stream(
-        modelKey: ModelKey,
-        prompt: string,
-        options: ExecutionOptions
-    ): AsyncGenerator<StreamChunk, ProviderUsage | null>;
+    abstract streamChat(
+        messages: any[],
+        options: StreamOptions
+    ): Promise<void>;
 }

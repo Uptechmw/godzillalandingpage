@@ -92,14 +92,14 @@ export default function HeroNew() {
               <div className="hidden sm:block w-64 border-r border-[#2A2A2A] bg-[#0A0A0A] p-4 font-mono text-xs text-gray-500">
                 <div className="mb-4 text-gray-400 font-medium tracking-wide text-[10px] uppercase">Explorer</div>
                 <div className="space-y-2">
-                  <div className="text-gray-300">📁 src</div>
-                  <div className="pl-4">📁 agents</div>
-                  <div className="pl-8 text-white">📄 orchestrator.ts</div>
-                  <div className="pl-8">📄 execute.ts</div>
-                  <div className="pl-4">📁 lib</div>
-                  <div className="pl-4">📁 ui</div>
-                  <div className="mt-4 text-gray-300">📁 test</div>
-                  <div className="text-gray-300">📄 package.json</div>
+                  <div className="text-gray-300">src</div>
+                  <div className="pl-4">agents</div>
+                  <div className="pl-8 text-white">orchestrator.ts</div>
+                  <div className="pl-8">execute.ts</div>
+                  <div className="pl-4">lib</div>
+                  <div className="pl-4">ui</div>
+                  <div className="mt-4 text-gray-300">test</div>
+                  <div className="text-gray-300">package.json</div>
                 </div>
               </div>
               {/* Main Workspace */}
@@ -125,7 +125,7 @@ export default function HeroNew() {
                 <div className="flex items-center gap-2 mt-8 pt-4 border-t border-[#2A2A2A]">
                   <div className="text-blue-400 font-bold">~</div> <div className="text-white">npm run test:agents</div>
                 </div>
-                <div className="text-gray-400 mt-2">[✓] Passing: 42/42</div>
+                <div className="text-gray-400 mt-2">[OK] Passing: 42/42</div>
               </div>
             </div>
           </div>

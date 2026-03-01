@@ -18,8 +18,10 @@ export interface ModelConfig {
     provider: ProviderName;
     maxOutputTokens: number;
     timeoutMs: number;
-    concurrencyLimit: number;
-    rateLimitRpm: number;
+    rateLimits: {
+        requestsPerMinute: number;
+        concurrentRequests: number;
+    };
     pricing: PricingSnapshot;
     capabilities: {
         thinking: boolean;
@@ -33,8 +35,7 @@ export const MODEL_REGISTRY: Readonly<Record<ModelKey, Readonly<ModelConfig>>> =
         provider: 'gemini',
         maxOutputTokens: 8192,
         timeoutMs: 60000,
-        concurrencyLimit: 2,
-        rateLimitRpm: 20,
+        rateLimits: { requestsPerMinute: 20, concurrentRequests: 2 },
         pricing: { version: 'v2026.03.01', baseInputMultiplier: 1.5, baseOutputMultiplier: 2.5 },
         capabilities: { thinking: false, streaming: true, functionCalling: true }
     }),
@@ -42,8 +43,7 @@ export const MODEL_REGISTRY: Readonly<Record<ModelKey, Readonly<ModelConfig>>> =
         provider: 'gemini',
         maxOutputTokens: 8192,
         timeoutMs: 45000,
-        concurrencyLimit: 4,
-        rateLimitRpm: 40,
+        rateLimits: { requestsPerMinute: 40, concurrentRequests: 4 },
         pricing: { version: 'v2026.03.01', baseInputMultiplier: 0.8, baseOutputMultiplier: 1.5 },
         capabilities: { thinking: false, streaming: true, functionCalling: true }
     }),
@@ -51,8 +51,7 @@ export const MODEL_REGISTRY: Readonly<Record<ModelKey, Readonly<ModelConfig>>> =
         provider: 'gemini',
         maxOutputTokens: 8192,
         timeoutMs: 30000,
-        concurrencyLimit: 10,
-        rateLimitRpm: 120,
+        rateLimits: { requestsPerMinute: 120, concurrentRequests: 10 },
         pricing: { version: 'v2026.03.01', baseInputMultiplier: 0.1, baseOutputMultiplier: 0.2 },
         capabilities: { thinking: false, streaming: true, functionCalling: true }
     }),
@@ -60,8 +59,7 @@ export const MODEL_REGISTRY: Readonly<Record<ModelKey, Readonly<ModelConfig>>> =
         provider: 'anthropic',
         maxOutputTokens: 64000,
         timeoutMs: 120000,
-        concurrencyLimit: 1,
-        rateLimitRpm: 10,
+        rateLimits: { requestsPerMinute: 10, concurrentRequests: 1 },
         pricing: { version: 'v2026.03.01', baseInputMultiplier: 3.0, baseOutputMultiplier: 15.0, thinkingMultiplier: 15.0 },
         capabilities: { thinking: true, streaming: true, functionCalling: true }
     }),
@@ -69,8 +67,7 @@ export const MODEL_REGISTRY: Readonly<Record<ModelKey, Readonly<ModelConfig>>> =
         provider: 'anthropic',
         maxOutputTokens: 64000,
         timeoutMs: 180000,
-        concurrencyLimit: 1,
-        rateLimitRpm: 5,
+        rateLimits: { requestsPerMinute: 5, concurrentRequests: 1 },
         pricing: { version: 'v2026.03.01', baseInputMultiplier: 15.0, baseOutputMultiplier: 75.0, thinkingMultiplier: 75.0 },
         capabilities: { thinking: true, streaming: true, functionCalling: true }
     }),

@@ -1,37 +1,26 @@
+import fs from 'fs';
+import path from 'path';
 import { redis } from '@/lib/redis';
 import { ModelKey } from '../registry';
 import { AtomicBrokerError } from '../utils/normalizer';
 
+const CONCURRENCY_SCRIPT = fs.readFileSync(path.join(process.cwd(), 'src/services/ai/broker/lua/concurrency.lua'), 'utf8');
+
 export class ConcurrencyManager {
     /**
-     * Acquires a concurrency lock for a specific user and model.
-     * Uses a Redis Lua script to ensure atomic check-and-set.
+     * Acquires a concurrency lock for a specific user and model using an atomic Lua script.
      */
     static async acquire(userId: string, modelKey: ModelKey, limit: number, timeoutMs: number): Promise<string> {
         const key = `concurrency:${userId}:${modelKey}`;
         const now = Date.now();
         const lockId = crypto.randomUUID();
 
-        const script = `
-            local key = KEYS[1]
-            local now = tonumber(ARGV[1])
-            local limit = tonumber(ARGV[2])
-            local timeout = tonumber(ARGV[3])
-            local lockId = ARGV[4]
-
-            redis.call('ZREMRANGEBYSCORE', key, 0, now)
-            local count = redis.call('ZCARD', key)
-
-            if count < limit then
-                redis.call('ZADD', key, now + timeout, lockId)
-                redis.call('EXPIRE', key, math.ceil(timeout / 1000) + 60)
-                return "OK"
-            else
-                return "LIMIT_REACHED"
-            end
-        `;
-
-        const result = await redis.eval(script, [key], [now, limit, timeoutMs, lockId]) as string;
+        // Atomic Lua script handles expiration-reap and concurrent-count-check
+        const result = await redis.eval(
+            CONCURRENCY_SCRIPT,
+            [key],
+            [now, limit, timeoutMs, lockId]
+        ) as string;
 
         if (result !== "OK") {
             throw new AtomicBrokerError(

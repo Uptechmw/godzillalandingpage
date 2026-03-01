@@ -3,9 +3,9 @@
  * Supports SMTP (via nodemailer), Resend, or SendGrid
  * 
  * Provider priority:
- * 1. If SMTP_HOST is set → use SMTP
- * 2. If EMAIL_PROVIDER is 'resend' and RESEND_API_KEY is set → use Resend
- * 3. If EMAIL_PROVIDER is 'sendgrid' and SENDGRID_API_KEY is set → use SendGrid
+ * 1. If SMTP_HOST is set -> use SMTP
+ * 2. If EMAIL_PROVIDER is 'resend' and RESEND_API_KEY is set -> use Resend
+ * 3. If EMAIL_PROVIDER is 'sendgrid' and SENDGRID_API_KEY is set -> use SendGrid
  */
 
 import nodemailer from 'nodemailer';

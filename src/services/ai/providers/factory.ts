@@ -9,7 +9,7 @@ export class ProviderFactory {
     /**
      * Retrieves the singleton instance for a specific provider.
      */
-    static get(providerName: ProviderName): BaseProvider {
+    static getProvider(providerName: ProviderName): BaseProvider {
         let instance = this.instances.get(providerName);
 
         if (!instance) {
@@ -37,6 +37,6 @@ export class ProviderFactory {
         if (!config) {
             throw new Error(`Model ${modelKey} not found in registry.`);
         }
-        return this.get(config.provider);
+        return this.getProvider(config.provider);
     }
 }

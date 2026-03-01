@@ -7,6 +7,7 @@ export type CanonicalErrorCode =
     | "UPSTREAM_PROVIDER_ERROR"
     | "INVALID_MODEL_KEY"
     | "IDEMPOTENCY_ERROR"
+    | "IDEMPOTENCY_MISMATCH"
     | "INTERNAL_BROKER_ERROR";
 
 export class AtomicBrokerError extends Error {

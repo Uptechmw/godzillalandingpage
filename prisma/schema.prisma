@@ -18,6 +18,7 @@ model User {
   provider           String               @default("local") // local | google | github
   providerId         String?
   emailVerified      Boolean              @default(false)
+  status             String               @default("ACTIVE") // ACTIVE | DISABLED | BANNED
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt
   tokenBalance       TokenBalance?
@@ -73,10 +74,11 @@ model EmailVerification {
 model TokenReservation {
   id              String   @id @default(cuid())
   idempotencyKey  String   @unique
+  requestHash     String   // SHA-256 of parameters to prevent replay attacks
   userId          String
   user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   modelKey        String
-  status          String   // PENDING, COMMITTED, REFUNDED, TIMEOUT, ABORTED
+  status          String   // PENDING, PROVIDER_STARTED, PROVIDER_COMPLETED, COMMITTED, RELEASED, TIMEOUT, ABORTED, FAILED
   reservedAmount  Int      // Max potential cost deducted upfront
   actualCost      Int?     // Filled on commit
   pricingSnapshot Json     // The exact PricingSnapshot used for this transaction
@@ -84,4 +86,123 @@ model TokenReservation {
   transactions    Transaction[]
   createdAt       DateTime @default(now())
   expiresAt       DateTime // For cleanup workers to catch zombies
+}
+
+// --- Admin & RBAC System ---
+
+enum AdminRole {
+  SUPER_ADMIN
+  ADMIN
+  SUPPORT
+  BILLING_ADMIN
+}
+
+model AdminUser {
+  id                  String         @id @default(cuid())
+  email               String         @unique
+  passwordHash        String
+  name                String?
+  role                AdminRole      @default(SUPPORT)
+  active              Boolean        @default(true)
+  lastLoginAt         DateTime?
+  lastLoginIP         String?
+  failedLoginAttempts Int            @default(0)
+  lockedUntil         DateTime?
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+  auditLogs           AuditLog[]
+  sessions            AdminSession[]
+  otps                AdminOTP[]
+}
+
+model AdminOTP {
+  id           String    @id @default(cuid())
+  adminId      String
+  admin        AdminUser @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  otpHash      String
+  expiresAt    DateTime
+  attemptCount Int       @default(0)
+  usedAt       DateTime?
+  createdAt    DateTime  @default(now())
+}
+
+model AdminSession {
+  id        String    @id @default(cuid())
+  adminId   String
+  admin     AdminUser @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  ipAddress String?
+  userAgent String?
+  token     String    @unique // Refresh token
+  createdAt DateTime  @default(now())
+  expiresAt DateTime
+  revokedAt DateTime?
+}
+
+model AuditLog {
+  id          String    @id @default(cuid())
+  adminId     String
+  admin       AdminUser @relation(fields: [adminId], references: [id])
+  action      String    // e.g., UPDATE_SECRET, DISABLE_USER, GRANT_TOKENS
+  module      String    // e.g., USERS, SETTINGS, BILLING
+  targetId    String?   // ID of the affected resource (user, setting, etc.)
+  oldValue    Json?
+  newValue    Json?
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime  @default(now())
+}
+
+// --- Configuration & Secrets Management ---
+
+model Setting {
+  key         String   @id
+  value       String
+  description String?
+  updatedAt   DateTime @updatedAt
+}
+
+model SecretSetting {
+  key               String          @id
+  ciphertext        String          // AES-256-GCM encrypted value
+  iv                String          // Initialization Vector (Hex)
+  authTag           String          // Authentication Tag (Hex)
+  encryptionVersion String          @default("v1")
+  lastUpdatedBy     String?
+  updatedAt         DateTime        @updatedAt
+  history           SecretHistory[]
+}
+
+model SecretHistory {
+  id                String        @id @default(cuid())
+  secretKey         String
+  setting           SecretSetting @relation(fields: [secretKey], references: [key], onDelete: Cascade)
+  ciphertext        String
+  iv                String
+  authTag           String
+  encryptionVersion String
+  createdAt         DateTime      @default(now())
+  createdBy         String?
+}
+
+model ModelOverride {
+  modelKey         String   @id
+  enabled          Boolean  @default(true)
+  maxOutputTokens  Int?
+  timeoutMs        Int?
+  concurrencyLimit Int?
+  rateLimitRpm     Int?
+  pricingModifiers Json?    // e.g., { "baseInputMultiplier": 1.2 }
+  updatedAt        DateTime @updatedAt
+}
+
+model TokenProduct {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  coins       Int
+  priceAmount Float
+  currency    String   @default("USD")
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
