@@ -118,64 +118,76 @@ function LoginForm() {
     };
 
     return (
-        <div className="min-h-screen bg-godzilla-bg flex items-center justify-center p-6 relative overflow-hidden">
-            {/* Background Glow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-godzilla-accent/10 blur-[120px] rounded-full -z-10" />
-
+        <div className="min-h-screen flex items-center justify-center p-6" style={{ background: 'var(--color-primary)' }}>
             <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="w-full max-w-md bg-godzilla-surface border border-godzilla-border p-10 rounded-3xl shadow-2xl relative"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="w-full max-w-md p-10 rounded-2xl shadow-2xl relative"
+                style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)' }}
             >
                 <div className="text-center mb-10">
                     <div className="flex justify-center mb-6">
-                        <Image src="/assets/logo.png" alt="Logo" width={64} height={64} className="w-16 h-16 drop-shadow-[0_0_15px_rgba(0,255,148,0.5)]" />
+                        <Image src="/assets/logo.png" alt="Godzilla Coder" width={56} height={56} className="w-14 h-14" />
                     </div>
-                    <h1 className="text-3xl font-black text-white uppercase tracking-tighter mb-2">
-                        {isSignUp ? "Atomic Sign Up" : "Atomic Login"}
+                    <h1 className="text-2xl font-bold tracking-tight mb-2" style={{ color: 'var(--color-text)' }}>
+                        {isSignUp ? "Create your account" : "Sign in to your account"}
                     </h1>
-                    <p className="text-godzilla-text-muted text-sm font-bold">Secure access to the Godzilla Coder ecosystem</p>
+                    <p className="text-sm" style={{ color: 'var(--color-muted)' }}>Secure access to Godzilla Coder</p>
                 </div>
 
                 <div className="space-y-4">
                     <button
                         onClick={() => handleOAuthLogin('github')}
                         disabled={loading || githubLoading || googleLoading}
-                        className="w-full flex items-center justify-center gap-3 bg-white/5 border border-white/10 py-4 rounded-xl font-bold text-white hover:bg-white/10 transition-all group disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full flex items-center justify-center gap-3 py-3.5 rounded-xl font-semibold transition-all group disabled:opacity-50 disabled:cursor-not-allowed"
+                        style={{ border: '1px solid var(--color-border)', background: 'var(--color-surface-2)', color: 'var(--color-text)' }}
+                        onMouseEnter={e => { e.currentTarget.style.background = 'var(--color-surface-3)'; }}
+                        onMouseLeave={e => { e.currentTarget.style.background = 'var(--color-surface-2)'; }}
                         type="button"
                     >
                         {githubLoading ? (
                             <Loader2 className="w-5 h-5 animate-spin" />
                         ) : (
-                            <Github className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                            <Github className="w-5 h-5 group-hover:scale-105 transition-transform" />
                         )}
                         Continue with GitHub
                     </button>
 
                     <div className="relative py-4">
-                        <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-godzilla-border"></div></div>
-                        <div className="relative flex justify-center text-xs uppercase"><span className="bg-godzilla-surface px-4 text-godzilla-text-muted font-black tracking-widest">Or Email</span></div>
+                        <div className="absolute inset-0 flex items-center"><div className="w-full" style={{ borderTop: '1px solid var(--color-border)' }}></div></div>
+                        <div className="relative flex justify-center text-[10px] uppercase font-bold tracking-widest"><span className="px-4" style={{ background: 'var(--color-surface)', color: 'var(--color-text-faint)' }}>Or email</span></div>
                     </div>
 
                     <form onSubmit={handleEmailAuth} className="space-y-4">
-                        <div className="relative">
-                            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-godzilla-text-muted" />
-                            <input
-                                type="email"
-                                placeholder="Email address"
-                                required
-                                className="w-full bg-black/50 border border-godzilla-border rounded-xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-godzilla-accent transition-all text-sm mb-4"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
+                        <div className="space-y-1.5">
+                            <label className="text-xs font-semibold px-1" style={{ color: 'var(--color-muted)' }}>Email Address</label>
+                            <div className="relative">
+                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: 'var(--color-text-faint)' }} />
+                                <input
+                                    type="email"
+                                    placeholder="name@example.com"
+                                    required
+                                    className="w-full rounded-xl py-3.5 pl-11 pr-4 outline-none transition-all text-sm"
+                                    style={{ background: 'var(--color-primary)', border: '1px solid var(--color-border)', color: 'var(--color-text)' }}
+                                    onFocus={e => { e.currentTarget.style.borderColor = 'var(--color-accent)'; e.currentTarget.style.boxShadow = '0 0 0 1px var(--color-accent)'; }}
+                                    onBlur={e => { e.currentTarget.style.borderColor = 'var(--color-border)'; e.currentTarget.style.boxShadow = 'none'; }}
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                />
+                            </div>
                         </div>
-                        <div className="relative">
+
+                        <div className="space-y-1.5">
+                            <label className="text-xs font-semibold px-1" style={{ color: 'var(--color-muted)' }}>Password</label>
                             <input
                                 type="password"
-                                placeholder="Password (min 8 characters)"
+                                placeholder="••••••••"
                                 required
                                 minLength={8}
-                                className="w-full bg-black/50 border border-godzilla-border rounded-xl py-4 px-4 text-white focus:outline-none focus:border-godzilla-accent transition-all text-sm"
+                                className="w-full rounded-xl py-3.5 px-4 outline-none transition-all text-sm"
+                                style={{ background: 'var(--color-primary)', border: '1px solid var(--color-border)', color: 'var(--color-text)' }}
+                                onFocus={e => { e.currentTarget.style.borderColor = 'var(--color-accent)'; e.currentTarget.style.boxShadow = '0 0 0 1px var(--color-accent)'; }}
+                                onBlur={e => { e.currentTarget.style.borderColor = 'var(--color-border)'; e.currentTarget.style.boxShadow = 'none'; }}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                             />
@@ -184,14 +196,17 @@ function LoginForm() {
                         <button
                             type="submit"
                             disabled={loading || githubLoading || googleLoading}
-                            className="w-full bg-godzilla-accent text-black py-4 rounded-xl font-black text-sm shadow-[0_0_20px_rgba(0,255,148,0.2)] hover:shadow-[0_0_30px_rgba(0,255,148,0.4)] transition-all flex items-center justify-center gap-2 mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-full py-4 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                            style={{ background: 'var(--color-accent)', color: '#fff' }}
+                            onMouseEnter={e => { e.currentTarget.style.opacity = '0.9'; }}
+                            onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}
                         >
                             {loading ? (
                                 <Loader2 className="w-5 h-5 animate-spin" />
                             ) : (
                                 <LogIn className="w-5 h-5" />
                             )}
-                            {isSignUp ? "Create Account" : "Sign In to Dashboard"}
+                            {isSignUp ? "Create account" : "Sign in"}
                         </button>
                     </form>
 
@@ -199,22 +214,26 @@ function LoginForm() {
                         <button
                             type="button"
                             onClick={() => setIsSignUp(!isSignUp)}
-                            className="text-godzilla-text-muted hover:text-white text-xs font-bold transition-colors"
+                            className="text-xs font-semibold transition-colors"
+                            style={{ color: 'var(--color-muted)' }}
+                            onMouseEnter={e => { e.currentTarget.style.color = 'var(--color-text)'; }}
+                            onMouseLeave={e => { e.currentTarget.style.color = 'var(--color-muted)'; }}
                         >
-                            {isSignUp ? "Already have an account? Sign In" : "Need an account? Sign Up"}
+                            {isSignUp ? "Already have an account? Sign in" : "Don't have an account? Create one"}
                         </button>
                     </div>
                 </div>
+
                 {source === "app" && (
-                    <div className="mt-8 p-4 bg-godzilla-accent/10 border border-godzilla-accent/20 rounded-xl text-center">
-                        <p className="text-[10px] font-black text-godzilla-accent uppercase tracking-widest">Authentication Source Identified</p>
-                        <p className="text-xs text-white/80 mt-1">You will be redirected back to the desktop app after login.</p>
+                    <div className="mt-8 p-4 rounded-xl text-center" style={{ background: 'rgba(37,99,235,0.08)', border: '1px solid rgba(37,99,235,0.15)' }}>
+                        <p className="text-[10px] uppercase font-bold tracking-widest" style={{ color: 'var(--color-accent)' }}>App Source Detected</p>
+                        <p className="text-xs mt-1" style={{ color: 'var(--color-muted)' }}>Redirecting back to desktop application after sign-in.</p>
                     </div>
                 )}
 
-                <p className="mt-10 text-center text-[10px] text-godzilla-text-muted font-bold uppercase tracking-widest">
-                    By continuing, you agree to the Godzilla Coder <br /> <a href="#" className="text-white hover:underline">Terms of Service</a> & <a href="#" className="text-white hover:underline">Privacy Policy</a>
-                </p>
+                <div className="mt-10 text-center text-[10px] font-bold uppercase tracking-widest leading-relaxed" style={{ color: 'var(--color-text-faint)' }}>
+                    By continuing, you agree to our <br /> <a href="#" className="hover:underline" style={{ color: 'var(--color-muted)' }}>Terms of Service</a> & <a href="#" className="hover:underline" style={{ color: 'var(--color-muted)' }}>Privacy Policy</a>
+                </div>
             </motion.div>
         </div>
     );
