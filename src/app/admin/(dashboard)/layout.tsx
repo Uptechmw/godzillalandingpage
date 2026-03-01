@@ -16,7 +16,7 @@ export default async function AdminLayout({
 
     // Secure the entire /admin route at the layout level (Node.js layer)
     if (!session) {
-        redirect('/auth/login?error=unauthorized_admin');
+        redirect('/admin/login?error=unauthorized_admin');
     }
 
     return (

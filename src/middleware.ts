@@ -11,8 +11,8 @@ export async function middleware(request: NextRequest) {
 
   // 1. Protect Admin Routes (/admin/* and /api/admin/*)
   if (pathname.startsWith('/admin') || pathname.startsWith('/api/admin')) {
-    // Skip public admin routes if any (e.g., login API is handled by the API itself or excluded here)
-    if (pathname === '/api/admin/auth/login' || pathname === '/admin/auth/verify-2fa') {
+    // Skip public admin routes
+    if (pathname === '/api/admin/auth/login' || pathname === '/admin/auth/verify-2fa' || pathname === '/admin/login') {
       return NextResponse.next();
     }
 
@@ -22,7 +22,7 @@ export async function middleware(request: NextRequest) {
       if (pathname.startsWith('/api/')) {
         return NextResponse.json({ error: 'Unauthorized admin access' }, { status: 401 });
       }
-      return NextResponse.redirect(new URL('/auth/login', request.url));
+      return NextResponse.redirect(new URL('/admin/login', request.url));
     }
 
     try {
@@ -46,7 +46,7 @@ export async function middleware(request: NextRequest) {
       if (pathname.startsWith('/api/')) {
         return NextResponse.json({ error: 'Invalid admin session' }, { status: 403 });
       }
-      return NextResponse.redirect(new URL('/auth/login', request.url));
+      return NextResponse.redirect(new URL('/admin/login', request.url));
     }
   }
 
