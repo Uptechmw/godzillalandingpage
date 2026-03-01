@@ -56,4 +56,85 @@ export class AdminBillingService {
             }
         });
     }
+
+    /**
+     * Creates a new token product.
+     */
+    static async createProduct(data: {
+        name: string;
+        coins: number;
+        priceAmount: number;
+        description?: string;
+        features?: string[];
+        active?: boolean;
+    }, adminId: string) {
+        const product = await (prisma.tokenProduct as any).create({
+            data: {
+                ...data,
+                features: data.features ? JSON.stringify(data.features) : undefined
+            }
+        });
+
+        await prisma.auditLog.create({
+            data: {
+                adminId,
+                action: 'CREATE_PRODUCT',
+                module: 'BILLING',
+                targetId: product.id,
+                newValue: data as any
+            }
+        });
+
+        return product;
+    }
+
+    /**
+     * Updates an existing token product.
+     */
+    static async updateProduct(productId: string, data: Partial<{
+        name: string;
+        coins: number;
+        priceAmount: number;
+        description?: string;
+        features?: string[];
+        active?: boolean;
+    }>, adminId: string) {
+        const product = await (prisma.tokenProduct as any).update({
+            where: { id: productId },
+            data: {
+                ...data,
+                features: data.features ? JSON.stringify(data.features) : undefined
+            }
+        });
+
+        await prisma.auditLog.create({
+            data: {
+                adminId,
+                action: 'UPDATE_PRODUCT',
+                module: 'BILLING',
+                targetId: productId,
+                newValue: data as any
+            }
+        });
+
+        return product;
+    }
+
+    /**
+     * Deletes a token product.
+     */
+    static async deleteProduct(productId: string, adminId: string) {
+        await prisma.tokenProduct.delete({
+            where: { id: productId }
+        });
+
+        await prisma.auditLog.create({
+            data: {
+                adminId,
+                action: 'DELETE_PRODUCT',
+                module: 'BILLING',
+                targetId: productId
+            }
+        });
+    }
 }

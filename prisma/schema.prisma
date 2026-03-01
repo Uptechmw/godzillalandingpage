@@ -201,6 +201,7 @@ model TokenProduct {
   coins       Int
   priceAmount Float
   currency    String   @default("USD")
+  features    Json?    // Array of feature strings or objects
   active      Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
