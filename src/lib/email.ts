@@ -122,11 +122,13 @@ async function sendEmail({ to, subject, html }: EmailOptions, customConfig?: any
 
   // Auto-detect: if SMTP credentials exist in env, use SMTP
   if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
+    console.log(`[Email] Using environment variables for SMTP delivery to ${to}`);
     await sendWithSMTP({ to, subject, html });
     return;
   }
 
   const provider = process.env.EMAIL_PROVIDER || 'resend';
+  console.log(`[Email] Falling back to provider: ${provider} for ${to}`);
 
   try {
     if (provider === 'resend') {

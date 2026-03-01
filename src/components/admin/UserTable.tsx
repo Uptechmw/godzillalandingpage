@@ -12,7 +12,7 @@ import {
 interface User {
     id: string;
     email: string;
-    status: string;
+    emailVerified: boolean;
     createdAt: Date;
     tokenBalance?: { coins: number } | null;
     _count: {
@@ -43,7 +43,7 @@ export function AdminUserTable({ users }: AdminUserTableProps) {
                 <thead>
                     <tr>
                         <th>User</th>
-                        <th>Status</th>
+                        <th>Verification</th>
                         <th>Balance</th>
                         <th>Activity</th>
                         <th>Joined</th>
@@ -70,8 +70,8 @@ export function AdminUserTable({ users }: AdminUserTableProps) {
                                     </div>
                                 </td>
                                 <td>
-                                    <span className={`status-badge ${user.status.toLowerCase()}`}>
-                                        {user.status}
+                                    <span className={`status-badge ${user.emailVerified ? 'active' : 'disabled'}`}>
+                                        {user.emailVerified ? 'Verified' : 'Pending'}
                                     </span>
                                 </td>
                                 <td>
