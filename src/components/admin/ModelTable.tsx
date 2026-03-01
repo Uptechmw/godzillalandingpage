@@ -32,191 +32,81 @@ interface AdminModelTableProps {
 
 export function AdminModelTable({ models }: AdminModelTableProps) {
     return (
-        <div className="admin-model-table-container">
-            <table className="admin-table">
-                <thead>
-                    <tr>
-                        <th>Model</th>
-                        <th>Provider</th>
-                        <th>Status</th>
-                        <th>Limits (RPM/Conn)</th>
-                        <th>Max Output</th>
-                        <th>Timeout</th>
-                        <th className="text-right">Manage</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {models.map((model) => (
-                        <tr key={model.key}>
-                            <td>
-                                <div className="model-cell">
-                                    <div className="model-icon">
-                                        <Zap size={16} />
-                                    </div>
-                                    <div className="model-meta">
-                                        <span className="model-name">{model.name}</span>
-                                        <span className="model-key">{model.key}</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <span className="provider-badge">
-                                    {model.provider.toUpperCase()}
-                                </span>
-                            </td>
-                            <td>
-                                <span className={`status-badge ${model.enabled ? 'active' : 'disabled'}`}>
-                                    {model.enabled ? 'ENABLED' : 'DISABLED'}
-                                </span>
-                                {model.hasOverride && <span className="override-indicator">Custom</span>}
-                            </td>
-                            <td>
-                                <div className="limit-cell">
-                                    <span>{model.effective.rateLimits.requestsPerMinute} / {model.effective.rateLimits.concurrentRequests}</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div className="limit-cell">
-                                    <Database size={14} />
-                                    <span>{model.effective.maxOutputTokens.toLocaleString()}</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div className="limit-cell">
-                                    <Clock size={14} />
-                                    <span>{model.effective.timeoutMs / 1000}s</span>
-                                </div>
-                            </td>
-                            <td className="text-right">
-                                <button className="settings-button">
-                                    <Settings2 size={18} />
-                                </button>
-                            </td>
+        <div className="model-table-wrapper relative overflow-hidden rounded-[2rem] bg-[#111827] border border-[#1F2937] shadow-2xl">
+            <div className="overflow-x-auto scrollbar-hide">
+                <table className="w-full border-collapse text-left">
+                    <thead>
+                        <tr className="border-b border-[#1F2937] bg-[#0B1220]/50">
+                            <th className="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Neural Architecture</th>
+                            <th className="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Provider</th>
+                            <th className="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">System Status</th>
+                            <th className="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Rate Limits</th>
+                            <th className="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Context Window</th>
+                            <th className="px-6 py-5 text-right text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Config</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody className="divide-y divide-[#1F2937]">
+                        {models.map((model) => (
+                            <tr key={model.key} className="hover:bg-[#1F2937]/30 transition-colors group">
+                                <td className="px-6 py-6 whitespace-nowrap">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-blue-500/20 flex items-center justify-center text-blue-400 shadow-lg shadow-blue-500/10 group-hover:scale-105 transition-transform">
+                                            <Zap size={18} />
+                                        </div>
+                                        <div>
+                                            <p className="text-sm font-bold text-white group-hover:text-blue-400 transition-colors tracking-tight">{model.name}</p>
+                                            <p className="text-[10px] font-mono text-slate-500">{model.key}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td className="px-6 py-6 whitespace-nowrap">
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-2 h-2 rounded-full bg-slate-600" />
+                                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.1em]">
+                                            {model.provider}
+                                        </span>
+                                    </div>
+                                </td>
+                                <td className="px-6 py-6 whitespace-nowrap">
+                                    <div className="flex items-center gap-3">
+                                        <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full border text-[10px] font-black tracking-widest uppercase ${model.enabled
+                                                ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
+                                                : 'bg-rose-500/10 border-rose-500/20 text-rose-400'
+                                            }`}>
+                                            <div className={`w-1 h-1 rounded-full ${model.enabled ? 'bg-emerald-400 animate-pulse' : 'bg-rose-400'}`} />
+                                            {model.enabled ? 'Live' : 'Offline'}
+                                        </div>
+                                        {model.hasOverride && (
+                                            <div className="w-5 h-5 rounded flex items-center justify-center bg-blue-500/10 text-blue-400 border border-blue-500/20" title="Custom Settings Active">
+                                                <Settings2 size={10} />
+                                            </div>
+                                        )}
+                                    </div>
+                                </td>
+                                <td className="px-6 py-6 whitespace-nowrap">
+                                    <div>
+                                        <p className="text-xs font-bold text-white tracking-widest">{model.effective.rateLimits.requestsPerMinute} <span className="text-[10px] text-slate-500 font-medium">RPM</span></p>
+                                        <p className="text-[10px] text-slate-500 font-medium">{model.effective.rateLimits.concurrentRequests} CONCURRENT</p>
+                                    </div>
+                                </td>
+                                <td className="px-6 py-6 whitespace-nowrap">
+                                    <div className="flex items-center gap-2">
+                                        <Database size={14} className="text-slate-500" />
+                                        <span className="text-xs font-bold text-white tracking-widest">{model.effective.maxOutputTokens.toLocaleString()}</span>
+                                    </div>
+                                </td>
+                                <td className="px-6 py-6 text-right whitespace-nowrap">
+                                    <button className="px-4 py-2 bg-[#0B1220] hover:bg-blue-500/10 border border-[#1F2937] hover:border-blue-500/50 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-white transition-all">
+                                        Override
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
 
-            <style jsx>{`
-                .admin-model-table-container {
-                    display: flex;
-                    flex-direction: column;
-                }
-
-                .admin-table {
-                    width: 100%;
-                    border-collapse: collapse;
-                    background-color: #0f172a;
-                    border: 1px solid #1e293b;
-                    border-radius: 12px;
-                    overflow: hidden;
-                }
-
-                th {
-                    text-align: left;
-                    padding: 12px 20px;
-                    background-color: #1e293b;
-                    color: #94a3b8;
-                    font-size: 0.75rem;
-                    font-weight: 600;
-                    text-transform: uppercase;
-                }
-
-                td {
-                    padding: 16px 20px;
-                    border-bottom: 1px solid #1e293b;
-                    font-size: 0.9rem;
-                }
-
-                .text-right { text-align: right; }
-
-                .model-cell {
-                    display: flex;
-                    align-items: center;
-                    gap: 12px;
-                }
-
-                .model-icon {
-                    width: 32px;
-                    height: 32px;
-                    background-color: #334155;
-                    border-radius: 8px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    color: #60a5fa;
-                }
-
-                .model-meta {
-                    display: flex;
-                    flex-direction: column;
-                }
-
-                .model-name {
-                    font-weight: 600;
-                    color: #f8fafc;
-                }
-
-                .model-key {
-                    font-size: 0.75rem;
-                    color: #64748b;
-                }
-
-                .provider-badge {
-                    font-size: 0.7rem;
-                    font-weight: 700;
-                    color: #94a3b8;
-                    padding: 4px 8px;
-                    border: 1px solid #334155;
-                    border-radius: 4px;
-                }
-
-                .status-badge {
-                    padding: 4px 8px;
-                    border-radius: 4px;
-                    font-size: 0.7rem;
-                    font-weight: 700;
-                }
-
-                .status-badge.active {
-                    background-color: #10b9811a;
-                    color: #10b981;
-                }
-
-                .status-badge.disabled {
-                    background-color: #ef44441a;
-                    color: #ef4444;
-                }
-
-                .override-indicator {
-                    margin-left: 8px;
-                    font-size: 0.65rem;
-                    color: #3b82f6;
-                    font-weight: 700;
-                    text-transform: uppercase;
-                }
-
-                .limit-cell {
-                    display: flex;
-                    align-items: center;
-                    gap: 8px;
-                    color: #f8fafc;
-                }
-
-                .settings-button {
-                    background: none;
-                    border: none;
-                    color: #64748b;
-                    cursor: pointer;
-                    padding: 4px;
-                    border-radius: 4px;
-                }
-
-                .settings-button:hover {
-                    background-color: #1e293b;
-                    color: #f8fafc;
-                }
-            `}</style>
+            <div className="absolute inset-0 pointer-events-none border border-white/5 rounded-[2rem]" />
         </div>
     );
 }

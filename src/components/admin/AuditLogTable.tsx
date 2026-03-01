@@ -30,148 +30,83 @@ interface AdminAuditLogTableProps {
 
 export function AdminAuditLogTable({ logs }: AdminAuditLogTableProps) {
     return (
-        <div className="audit-log-table-container">
-            <table className="admin-table">
-                <thead>
-                    <tr>
-                        <th>Timestamp</th>
-                        <th>Admin</th>
-                        <th>Action</th>
-                        <th>Module</th>
-                        <th>Target</th>
-                        <th className="text-right">Details</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {logs.length === 0 ? (
-                        <tr>
-                            <td colSpan={6} className="empty-row">No audit logs found.</td>
+        <div className="audit-table-wrapper relative overflow-hidden rounded-[2rem] bg-[#111827] border border-[#1F2937] shadow-2xl">
+            <div className="overflow-x-auto scrollbar-hide">
+                <table className="w-full border-collapse">
+                    <thead>
+                        <tr className="border-b border-[#1F2937] bg-[#0B1220]/50">
+                            <th className="px-6 py-5 text-left text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Timestamp</th>
+                            <th className="px-6 py-5 text-left text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Admin</th>
+                            <th className="px-6 py-5 text-left text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Action</th>
+                            <th className="px-6 py-5 text-left text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Module</th>
+                            <th className="px-6 py-5 text-left text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Target</th>
+                            <th className="px-6 py-5 text-right text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Details</th>
                         </tr>
-                    ) : (
-                        logs.map((log) => (
-                            <tr key={log.id}>
-                                <td>
-                                    <div className="time-cell">
-                                        <Clock size={14} className="text-slate-500" />
-                                        <span>{new Date(log.createdAt).toLocaleString()}</span>
+                    </thead>
+                    <tbody className="divide-y divide-[#1F2937]">
+                        {logs.length === 0 ? (
+                            <tr>
+                                <td colSpan={6} className="px-6 py-24 text-center">
+                                    <div className="flex flex-col items-center gap-3 opacity-20">
+                                        <Activity size={48} className="text-slate-400" />
+                                        <p className="text-sm font-bold uppercase tracking-widest text-slate-400">No events captured in ledger</p>
                                     </div>
-                                </td>
-                                <td>
-                                    <div className="admin-cell">
-                                        <User size={14} />
-                                        <span>{log.admin.email}</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span className="action-badge">{log.action}</span>
-                                </td>
-                                <td>
-                                    <span className="module-name">{log.module}</span>
-                                </td>
-                                <td>
-                                    <code className="target-id">{log.targetId || 'N/A'}</code>
-                                </td>
-                                <td className="text-right">
-                                    <button className="view-details-btn">
-                                        <Activity size={16} />
-                                    </button>
                                 </td>
                             </tr>
-                        ))
-                    )}
-                </tbody>
-            </table>
+                        ) : (
+                            logs.map((log) => (
+                                <tr key={log.id} className="hover:bg-[#1F2937]/30 transition-colors group">
+                                    <td className="px-6 py-6 whitespace-nowrap">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
+                                                <Clock size={14} />
+                                            </div>
+                                            <div>
+                                                <p className="text-xs font-bold text-white">{new Date(log.createdAt).toLocaleDateString()}</p>
+                                                <p className="text-[10px] text-slate-500 font-medium">{new Date(log.createdAt).toLocaleTimeString()}</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td className="px-6 py-6 whitespace-nowrap">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-8 h-8 rounded-lg bg-slate-500/10 border border-slate-500/20 flex items-center justify-center text-slate-400">
+                                                <User size={14} />
+                                            </div>
+                                            <div>
+                                                <p className="text-xs font-bold text-white uppercase tracking-tight">{log.admin.name || 'Admin'}</p>
+                                                <p className="text-[10px] text-slate-500 font-medium lowercase">{log.admin.email}</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td className="px-6 py-6 whitespace-nowrap">
+                                        <span className="px-3 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-full text-[10px] font-black uppercase tracking-wider">
+                                            {log.action.replace(/_/g, ' ')}
+                                        </span>
+                                    </td>
+                                    <td className="px-6 py-6 whitespace-nowrap">
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-slate-500" />
+                                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{log.module}</span>
+                                        </div>
+                                    </td>
+                                    <td className="px-6 py-6 whitespace-nowrap">
+                                        <code className="text-[10px] font-mono font-bold text-blue-400/70 bg-[#0B1220] px-2 py-1 rounded border border-[#1F2937]">
+                                            {log.targetId || 'SYSTEM_GLOBAL'}
+                                        </code>
+                                    </td>
+                                    <td className="px-6 py-6 text-right whitespace-nowrap">
+                                        <button className="w-8 h-8 rounded-lg bg-[#0B1220] border border-[#1F2937] flex items-center justify-center text-slate-500 hover:text-white hover:border-blue-500/50 transition-all group/btn">
+                                            <Activity size={14} className="group-hover/btn:scale-110 transition-transform" />
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
+                        )}
+                    </tbody>
+                </table>
+            </div>
 
-            <style jsx>{`
-                .audit-log-table-container {
-                    display: flex;
-                    flex-direction: column;
-                }
-
-                .admin-table {
-                    width: 100%;
-                    border-collapse: collapse;
-                    background-color: #0f172a;
-                    border: 1px solid #1e293b;
-                    border-radius: 12px;
-                    overflow: hidden;
-                }
-
-                th {
-                    text-align: left;
-                    padding: 12px 20px;
-                    background-color: #1e293b;
-                    color: #94a3b8;
-                    font-size: 0.75rem;
-                    font-weight: 600;
-                    text-transform: uppercase;
-                }
-
-                td {
-                    padding: 14px 20px;
-                    border-bottom: 1px solid #1e293b;
-                    font-size: 0.85rem;
-                }
-
-                .text-right { text-align: right; }
-
-                .time-cell, .admin-cell {
-                    display: flex;
-                    align-items: center;
-                    gap: 8px;
-                    color: #94a3b8;
-                }
-
-                .admin-cell span {
-                    color: #f8fafc;
-                    font-weight: 500;
-                }
-
-                .action-badge {
-                    background-color: #1e293b;
-                    color: #f8fafc;
-                    padding: 4px 8px;
-                    border-radius: 4px;
-                    font-size: 0.7rem;
-                    font-weight: 700;
-                    letter-spacing: 0.3px;
-                }
-
-                .module-name {
-                    color: #64748b;
-                    font-weight: 600;
-                    font-size: 0.8rem;
-                }
-
-                .target-id {
-                    font-family: monospace;
-                    background-color: #020617;
-                    padding: 2px 6px;
-                    border-radius: 4px;
-                    color: #3b82f6;
-                    font-size: 0.8rem;
-                }
-
-                .empty-row {
-                    text-align: center;
-                    padding: 48px;
-                    color: #64748b;
-                }
-
-                .view-details-btn {
-                    background: none;
-                    border: none;
-                    color: #64748b;
-                    cursor: pointer;
-                    padding: 4px;
-                    border-radius: 4px;
-                }
-
-                .view-details-btn:hover {
-                    background-color: #1e293b;
-                    color: #f8fafc;
-                }
-            `}</style>
+            <div className="absolute inset-0 pointer-events-none border border-white/5 rounded-[2rem]" />
         </div>
     );
 }
