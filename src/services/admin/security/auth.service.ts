@@ -7,6 +7,7 @@ import { prisma as prismaClient } from '@/lib/db';
 const prisma = prismaClient as any;
 import { AdminOTPService } from './otp.service';
 import { RateLimiterService } from './rate-limiter.service';
+import { verifyPassword } from '@/lib/hash';
 
 // Local type fallback for AdminRole
 export type AdminRole = 'SUPER_ADMIN' | 'ADMIN' | 'SUPPORT' | 'BILLING_ADMIN';
@@ -38,7 +39,7 @@ export class AdminAuthService {
     /**
      * Initializes a login flow. If SUPER_ADMIN, requires OTP.
      */
-    static async login(email: string, passwordHash: string, ip: string, userAgent: string): Promise<{ requires2FA: boolean; adminId?: string }> {
+    static async login(email: string, password: string, ip: string, userAgent: string): Promise<{ requires2FA: boolean; adminId?: string }> {
         // 1. Rate Limiting
         const isAllowed = await RateLimiterService.checkLoginAttempt(ip);
         if (!isAllowed) {
@@ -47,7 +48,9 @@ export class AdminAuthService {
 
         const admin = await prisma.adminUser.findUnique({ where: { email } });
 
-        if (!admin || !admin.active || admin.passwordHash !== passwordHash) {
+        const isPasswordValid = admin ? await verifyPassword(password, admin.passwordHash) : false;
+
+        if (!admin || !admin.active || !isPasswordValid) {
             if (admin) {
                 const newAttempts = admin.failedLoginAttempts + 1;
                 await prisma.adminUser.update({

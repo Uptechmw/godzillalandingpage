@@ -1,12 +1,29 @@
 import { Redis } from '@upstash/redis';
 
-if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
-    // If not provided, we might be in a local development environment without Redis.
-    // In production, these are MANDATORY.
-    console.warn("UPSTASH_REDIS_REST_URL or UPSTASH_REDIS_REST_TOKEN missing. Rate limiting will be disabled.");
+const url = process.env.UPSTASH_REDIS_REST_URL;
+const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+
+let redisInstance: Redis | null = null;
+
+export function getRedisClient(): Redis | null {
+    if (redisInstance) return redisInstance;
+
+    if (!url || !token) {
+        if (process.env.NODE_ENV === 'production') {
+            console.error("CRITICAL: Redis credentials missing in production!");
+        } else {
+            console.warn("Redis credentials missing. Rate limiting will be disabled.");
+        }
+        return null;
+    }
+
+    redisInstance = new Redis({
+        url: url,
+        token: token,
+    });
+
+    return redisInstance;
 }
 
-export const redis = new Redis({
-    url: process.env.UPSTASH_REDIS_REST_URL || '',
-    token: process.env.UPSTASH_REDIS_REST_TOKEN || '',
-});
+// For backward compatibility while we refactor usages
+export const redis = (url && token) ? new Redis({ url, token }) : null as unknown as Redis;
