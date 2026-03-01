@@ -43,7 +43,12 @@ export async function apiRequest(endpoint: string, options: RequestInit = {}) {
             if (data.details) {
                 console.error('[API Error Details]:', data.details);
             }
-            throw new Error(data.details ? `${data.error} | Details: ${data.details}` : (data.error || 'API Request Failed'));
+            const errorMsg = data.details ? `${data.error} | Details: ${data.details}` : (data.error || 'API Request Failed');
+
+            // Create a custom error with the API response data attached
+            const error: any = new Error(errorMsg);
+            error.data = data;
+            throw error;
         }
 
         return data;

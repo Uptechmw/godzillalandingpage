@@ -34,14 +34,14 @@ function LoginForm() {
         } else {
             setGoogleLoading(true);
         }
-        
+
         const { error } = await supabase.auth.signInWithOAuth({
             provider,
             options: {
                 redirectTo: `${window.location.origin}/auth/callback${source ? `?source=${source}` : ''}`,
             },
         });
-        
+
         if (error) {
             toast.error(error.message);
             setGithubLoading(false);
@@ -62,7 +62,7 @@ function LoginForm() {
                     password,
                     name: email.split('@')[0], // Use email prefix as default name
                 });
-                
+
                 if (data.success) {
                     toast.success("Account Created!", {
                         description: "Check your email for verification code."
@@ -76,11 +76,11 @@ function LoginForm() {
                     email,
                     password,
                 });
-                
+
                 if (data.success && data.token) {
                     // Store token in localStorage or handle as needed
                     localStorage.setItem('auth_token', data.token);
-                    
+
                     toast.success("Access Granted", {
                         description: "Redirecting to your command center..."
                     });
@@ -89,6 +89,16 @@ function LoginForm() {
             }
         } catch (error: any) {
             console.error('[Auth Error]', error);
+
+            // Check if this is an unverified user error
+            if (error.data?.requiresVerification) {
+                toast.error("Verification Required", {
+                    description: "Please verify your email address first."
+                });
+                router.push(`/auth/verify-email?email=${encodeURIComponent(email)}`);
+                return;
+            }
+
             toast.error(error.message || 'Authentication failed');
         } finally {
             setLoading(false);
