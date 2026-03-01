@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { LogIn, LayoutDashboard, LogOut } from "lucide-react";
+import { LayoutDashboard, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function Navbar() {
@@ -33,7 +33,10 @@ export default function Navbar() {
     };
 
     return (
-        <nav className="fixed top-0 w-full z-[1000] bg-[#0A0A0A]/80 backdrop-blur-md border-b border-[#2A2A2A] h-16 flex items-center">
+        <nav className="fixed top-0 w-full z-[1000] h-16 flex items-center backdrop-blur-md" style={{
+            background: 'rgba(11, 18, 32, 0.85)',
+            borderBottom: '1px solid var(--color-border)'
+        }}>
             <div className="container mx-auto px-6 flex justify-between items-center w-full max-w-7xl">
                 <Link href="/" className="flex items-center gap-3 group">
                     <Image
@@ -41,35 +44,58 @@ export default function Navbar() {
                         alt="Godzilla Coder"
                         width={28}
                         height={28}
-                        className="w-7 h-7 grayscale opacity-90 group-hover:grayscale-0 transition-all duration-300"
+                        className="w-7 h-7"
                     />
-                    <span className="font-semibold text-sm text-white tracking-tight">
+                    <span className="font-semibold text-sm tracking-tight" style={{ color: 'var(--color-text)' }}>
                         Godzilla Coder
                     </span>
                 </Link>
 
                 <div className="hidden md:flex gap-8 items-center">
-                    <Link href="#capabilities" className="text-gray-400 hover:text-white text-sm transition-colors">
-                        Capabilities
+                    <Link href="#capabilities" className="text-sm transition-colors" style={{ color: 'var(--color-muted)' }}
+                        onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-text)')}
+                        onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-muted)')}
+                    >
+                        Features
                     </Link>
-                    <Link href="#pricing" className="text-gray-400 hover:text-white text-sm transition-colors">
+                    <Link href="#pricing" className="text-sm transition-colors" style={{ color: 'var(--color-muted)' }}
+                        onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-text)')}
+                        onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-muted)')}
+                    >
                         Pricing
                     </Link>
+                    <Link href="#" className="text-sm transition-colors" style={{ color: 'var(--color-muted)' }}
+                        onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-text)')}
+                        onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-muted)')}
+                    >
+                        AI Models
+                    </Link>
+                    <Link href="#" className="text-sm transition-colors" style={{ color: 'var(--color-muted)' }}
+                        onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-text)')}
+                        onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-muted)')}
+                    >
+                        Resources
+                    </Link>
 
-                    <div className="h-4 w-px bg-white/10 mx-2" />
+                    <div className="h-4 w-px mx-2" style={{ background: 'var(--color-border)' }} />
 
                     {user ? (
                         <div className="flex items-center gap-4">
                             <Link href="/dashboard">
-                                <button className="flex items-center gap-2 text-white px-4 py-2 hover:bg-white/5 rounded-md text-sm transition-all border border-transparent hover:border-[#2A2A2A]">
-                                    <LayoutDashboard className="w-4 h-4 text-gray-400" />
+                                <button className="flex items-center gap-2 px-4 py-2 rounded-md text-sm transition-all" style={{ color: 'var(--color-text)', border: '1px solid transparent' }}
+                                    onMouseEnter={e => (e.currentTarget.style.border = '1px solid var(--color-border)')}
+                                    onMouseLeave={e => (e.currentTarget.style.border = '1px solid transparent')}
+                                >
+                                    <LayoutDashboard className="w-4 h-4" style={{ color: 'var(--color-muted)' } as any} />
                                     Dashboard
                                 </button>
                             </Link>
-
                             <button
                                 onClick={handleLogout}
-                                className="flex items-center gap-2 text-gray-400 hover:text-white px-4 py-2 rounded-md text-sm transition-all"
+                                className="flex items-center gap-2 px-4 py-2 rounded-md text-sm transition-all"
+                                style={{ color: 'var(--color-muted)' }}
+                                onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-text)')}
+                                onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-muted)')}
                             >
                                 <LogOut className="w-4 h-4" />
                                 Sign Out
@@ -77,11 +103,17 @@ export default function Navbar() {
                         </div>
                     ) : (
                         <div className="flex items-center gap-4">
-                            <Link href="/auth/login" className="text-gray-400 hover:text-white px-4 py-2 text-sm transition-colors flex items-center gap-2">
+                            <Link href="/auth/login" className="px-4 py-2 text-sm transition-colors" style={{ color: 'var(--color-muted)' }}
+                                onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-text)')}
+                                onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-muted)')}
+                            >
                                 Sign In
                             </Link>
                             <Link href="/auth/signup">
-                                <button className="bg-white text-black px-4 py-2 rounded-md font-medium text-sm hover:bg-gray-200 transition-all">
+                                <button className="px-4 py-2 rounded-md font-semibold text-sm transition-all" style={{ background: 'var(--color-accent)', color: '#fff' }}
+                                    onMouseEnter={e => (e.currentTarget.style.opacity = '0.9')}
+                                    onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
+                                >
                                     Get Started
                                 </button>
                             </Link>

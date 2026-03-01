@@ -8,7 +8,7 @@ import Footer from "@/components/landing/Footer";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[#0A0A0A] text-white selection:bg-white selection:text-black">
+    <main className="min-h-screen text-white" style={{ background: 'var(--color-primary)' }}>
       <Navbar />
       <HeroNew />
       <ValueProposition />

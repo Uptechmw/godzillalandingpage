@@ -20,15 +20,10 @@ export default function DashboardPage() {
         const fetchUserData = async () => {
             try {
                 const { data: { session } } = await supabase.auth.getSession();
-
-                // Fetch full user profile from our API 
-                // (apiRequest will automatically use the JWT from cookies if session is missing)
                 const userData = await api.get("/auth/me");
-                setUser(userData.user || userData); // Match backend response format
+                setUser(userData.user || userData);
             } catch (err: any) {
                 console.error("Dashboard Fetch Error:", err);
-
-                // If we get here, it means both Supabase session and our JWT are invalid/missing
                 router.push("/auth/login?error=" + encodeURIComponent("Please log in to access your dashboard."));
                 return;
             } finally {
@@ -41,29 +36,30 @@ export default function DashboardPage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-godzilla-bg flex items-center justify-center">
-                <Loader2 className="w-12 h-12 text-godzilla-accent animate-spin" />
+            <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--color-primary)' }}>
+                <Loader2 className="w-10 h-10 animate-spin" style={{ color: 'var(--color-accent)' }} />
             </div>
         );
     }
 
     if (error) {
         return (
-            <div className="min-h-screen bg-godzilla-bg flex flex-col items-center justify-center p-6 text-center">
-                <h2 className="text-2xl font-black text-white mb-4">Sync Error</h2>
-                <p className="text-godzilla-text-muted mb-8">{error}</p>
+            <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center" style={{ background: 'var(--color-primary)' }}>
+                <h2 className="text-2xl font-bold mb-4" style={{ color: 'var(--color-text)' }}>Unable to Load Dashboard</h2>
+                <p className="mb-8" style={{ color: 'var(--color-muted)' }}>{error}</p>
                 <button
                     onClick={() => window.location.reload()}
-                    className="bg-godzilla-accent text-black px-8 py-3 rounded-xl font-bold"
+                    className="px-8 py-3 rounded-lg font-semibold"
+                    style={{ background: 'var(--color-accent)', color: '#fff' }}
                 >
-                    Retry Connection
+                    Retry
                 </button>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-godzilla-bg">
+        <div className="min-h-screen" style={{ background: 'var(--color-primary)' }}>
             <Sidebar />
 
             <main className="lg:ml-64 p-4 lg:p-8">
@@ -71,19 +67,19 @@ export default function DashboardPage() {
                 <header className="flex flex-col lg:flex-row justify-between lg:items-center gap-6 mb-10">
                     <div className="flex justify-between items-start w-full lg:w-auto">
                         <div>
-                            <h1 className="text-2xl md:text-3xl font-black text-white mb-2 tracking-tighter uppercase">
-                                Commander <span className="text-godzilla-accent">{user.name || "Benjamin"}</span>
+                            <h1 className="text-2xl md:text-3xl font-bold mb-1" style={{ color: 'var(--color-text)' }}>
+                                Welcome back, <span style={{ color: 'var(--color-accent)' }}>{user?.name || "there"}</span>
                             </h1>
-                            <p className="text-godzilla-text-muted font-bold text-[10px] md:text-sm tracking-tight italic">Status: System Online // Atomic Link Active</p>
+                            <p className="text-sm" style={{ color: 'var(--color-muted)' }}>
+                                Here's what's happening with your account today.
+                            </p>
                         </div>
 
-                        {/* Mobile Logout */}
+                        {/* Mobile sign out */}
                         <button
-                            onClick={async () => {
-                                await supabase.auth.signOut();
-                                router.push("/");
-                            }}
-                            className="lg:hidden p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-500 hover:bg-red-500/20 transition-all"
+                            onClick={async () => { await supabase.auth.signOut(); router.push("/"); }}
+                            className="lg:hidden p-3 rounded-xl transition-all"
+                            style={{ background: 'rgba(220,38,38,0.08)', border: '1px solid rgba(220,38,38,0.15)', color: 'var(--color-danger)' }}
                         >
                             <LogOut className="w-5 h-5" />
                         </button>
@@ -91,49 +87,71 @@ export default function DashboardPage() {
 
                     <div className="flex items-center gap-4 md:gap-6">
                         <div className="relative group hidden md:block">
-                            <Search className="w-5 h-5 text-godzilla-text-muted group-focus-within:text-godzilla-accent transition-colors absolute left-3 top-1/2 -translate-y-1/2" />
+                            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 transition-colors" style={{ color: 'var(--color-muted)' }} />
                             <input
                                 type="text"
-                                placeholder="Search atomic resources..."
-                                className="bg-godzilla-surface border border-godzilla-border rounded-xl py-3 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-godzilla-accent transition-all w-64"
+                                placeholder="Search..."
+                                className="py-2.5 pl-10 pr-4 text-sm rounded-lg w-56 outline-none transition-all"
+                                style={{
+                                    background: 'var(--color-surface)',
+                                    border: '1px solid var(--color-border)',
+                                    color: 'var(--color-text)',
+                                }}
+                                onFocus={e => (e.currentTarget.style.border = '1px solid var(--color-accent)')}
+                                onBlur={e => (e.currentTarget.style.border = '1px solid var(--color-border)')}
                             />
                         </div>
-                        <button className="relative p-3 bg-godzilla-surface border border-godzilla-border rounded-xl text-godzilla-text-muted hover:text-white transition-all">
+
+                        <button className="relative p-2.5 rounded-lg transition-all" style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', color: 'var(--color-muted)' }}>
                             <Bell className="w-5 h-5" />
-                            <div className="absolute top-3 right-3 w-2 h-2 bg-godzilla-accent rounded-full border-2 border-godzilla-surface" />
+                            <div className="absolute top-2 right-2 w-2 h-2 rounded-full" style={{ background: 'var(--color-accent)' }} />
                         </button>
-                        <div className="flex items-center gap-3 md:pl-6 md:border-l border-godzilla-border">
+
+                        <div className="flex items-center gap-3 pl-4" style={{ borderLeft: '1px solid var(--color-border)' }}>
                             <div className="text-right hidden sm:block">
-                                <p className="text-sm font-black text-white leading-none mb-1 uppercase tracking-tighter">{user.name || "Benjamin"}</p>
-                                <p className="text-[10px] font-black text-godzilla-accent uppercase tracking-widest leading-none">Atomic Elite</p>
+                                <p className="text-sm font-semibold leading-none mb-1" style={{ color: 'var(--color-text)' }}>{user?.name || "User"}</p>
+                                <p className="text-xs" style={{ color: 'var(--color-accent)' }}>Pro Member</p>
                             </div>
-                            <UserCircle className="w-10 h-10 text-godzilla-text-muted" />
+                            <UserCircle className="w-9 h-9" style={{ color: 'var(--color-muted)' }} />
                         </div>
                     </div>
                 </header>
 
-                {/* Dashboard Content */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                {/* Main Content */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
                     <div className="lg:col-span-1">
-                        <CoinCard balance={user.coins || 0} />
+                        <CoinCard balance={user?.coins || 0} />
                     </div>
-
                     <div className="lg:col-span-2">
                         <TransactionHistory />
                     </div>
                 </div>
 
-                {/* AI Agent Status */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {["GPT-4o", "Claude 3.5", "Gemini 1.5", "DeepSeek"].map((agent) => (
-                        <div key={agent} className="bg-godzilla-surface p-6 rounded-2xl border border-dotted border-godzilla-border flex items-center justify-between group hover:border-godzilla-accent transition-all cursor-pointer">
-                            <div>
-                                <p className="text-[10px] font-black text-godzilla-text-muted uppercase tracking-widest mb-1">Neural Node</p>
-                                <p className="text-white font-black">{agent}</p>
+                {/* AI Models Status */}
+                <div>
+                    <h2 className="text-sm font-semibold mb-4 uppercase tracking-wide" style={{ color: 'var(--color-muted)' }}>Available AI Models</h2>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        {[
+                            { name: "GPT-4o", provider: "OpenAI" },
+                            { name: "Claude 3.5", provider: "Anthropic" },
+                            { name: "Gemini 1.5", provider: "Google" },
+                            { name: "DeepSeek", provider: "DeepSeek" },
+                        ].map((model) => (
+                            <div
+                                key={model.name}
+                                className="p-4 rounded-xl flex items-center justify-between cursor-pointer transition-all"
+                                style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)' }}
+                                onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--color-accent)')}
+                                onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--color-border)')}
+                            >
+                                <div>
+                                    <p className="text-xs mb-0.5" style={{ color: 'var(--color-muted)' }}>{model.provider}</p>
+                                    <p className="text-sm font-semibold" style={{ color: 'var(--color-text)' }}>{model.name}</p>
+                                </div>
+                                <div className="w-2.5 h-2.5 rounded-full" style={{ background: 'var(--color-success)', boxShadow: '0 0 8px rgba(22,163,74,0.5)' }} />
                             </div>
-                            <div className="w-3 h-3 bg-godzilla-accent rounded-full shadow-[0_0_10px_#00ff94]" />
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
             </main>
         </div>

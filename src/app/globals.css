@@ -3,37 +3,59 @@
 /* ============================================================
    GODZILLA AI — GLOBAL DESIGN TOKEN SYSTEM
    One source of truth for all colors across the project.
-   Landing Page, User Dashboard, and Admin all use these vars.
    ============================================================ */
 
 :root {
-  /* --- Professional Palette (Admin + Landing) --- */
-  --color-primary: #0F172A;
+  /* --- Primary Brand Palette --- */
+  --color-primary: #0B1220;
+  /* Deep Slate — page primary bg */
+  --color-surface: #111827;
+  /* Surface — cards, panels */
   --color-accent: #2563EB;
-  --color-bg: #F8FAFC;
-  --color-surface: #FFFFFF;
-  --color-border: #E2E8F0;
-  --color-text: #0F172A;
-  --color-muted: #64748B;
+  /* Accent Blue — buttons, links, active states */
+  --color-muted: #94A3B8;
+  /* Muted Text — secondary text */
+  --color-border: #1F2937;
+  /* Borders — dividers, card edges */
   --color-success: #16A34A;
-  --color-warning: #F59E0B;
+  /* Success — positive badges */
   --color-danger: #DC2626;
+  /* Danger — error/warning badges */
 
-  /* --- Admin-Specific Dark Surface Tokens --- */
-  --color-admin-bg: #020617;
-  --color-admin-surface: #0F172A;
-  --color-admin-surface-2: #1E293B;
-  --color-admin-border: #1E293B;
-  --color-admin-text: #F8FAFC;
-  --color-admin-muted: #94A3B8;
-  --color-admin-subtle: #64748B;
+  /* --- Text Tokens --- */
+  --color-text: #F1F5F9;
+  /* Primary text (on dark) */
+  --color-text-subtle: #94A3B8;
+  /* Muted / secondary */
+  --color-text-faint: #475569;
+  /* Placeholder / timestamps */
 
-  /* --- Godzilla Brand (User Auth Pages — keep as-is) --- */
+  /* --- Surface Variants --- */
+  --color-surface-2: #1F2937;
+  /* Slightly raised surface */
+  --color-surface-3: #374151;
+  /* Active / hover state surface */
+
+  /* --- Landing Page Dark Shell (same palette) --- */
+  --color-landing-bg: var(--color-primary);
+  --color-landing-surface: var(--color-surface);
+  --color-landing-border: var(--color-border);
+
+  /* --- Godzilla Brand (User Auth Pages — preserved) --- */
   --color-godzilla-bg: #0A0A0A;
   --color-godzilla-surface: #111111;
   --color-godzilla-border: #2A2A2A;
   --color-godzilla-accent: #00FF94;
   --color-godzilla-text-muted: #6B6B6B;
+
+  /* --- Admin Surface Tokens (dark blue-slate shell) --- */
+  --color-admin-bg: var(--color-primary);
+  --color-admin-surface: var(--color-surface);
+  --color-admin-surface-2: var(--color-surface-2);
+  --color-admin-border: var(--color-border);
+  --color-admin-text: var(--color-text);
+  --color-admin-muted: var(--color-muted);
+  --color-admin-subtle: var(--color-text-faint);
 
   /* --- Typography --- */
   --font-outfit: "Outfit", sans-serif;
@@ -45,34 +67,34 @@
   /* Expose to Tailwind */
   --color-primary-white: #FFFFFF;
   --color-primary-black: #000000;
-  --color-bg-base: var(--color-admin-bg);
-  --color-bg-surface-1: var(--color-admin-surface);
-  --color-bg-surface-2: var(--color-admin-surface-2);
-  --color-border-subtle: var(--color-admin-border);
-  --color-border-strong: #444444;
-  --color-godzilla-bg: var(--color-godzilla-bg);
-  --color-godzilla-surface: var(--color-godzilla-surface);
-  --color-godzilla-border: var(--color-godzilla-border);
-  --color-godzilla-accent: var(--color-godzilla-accent);
-  --color-godzilla-text-muted: var(--color-godzilla-text-muted);
+  --color-bg-base: var(--color-primary);
+  --color-bg-surface-1: var(--color-surface);
+  --color-bg-surface-2: var(--color-surface-2);
+  --color-border-subtle: var(--color-border);
+  --color-border-strong: var(--color-surface-3);
+  --color-godzilla-bg: #0A0A0A;
+  --color-godzilla-surface: #111111;
+  --color-godzilla-border: #2A2A2A;
+  --color-godzilla-accent: #00FF94;
+  --color-godzilla-text-muted: #6B6B6B;
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
 }
 
 body {
-  background-color: var(--color-admin-bg);
-  color: var(--color-admin-text);
+  background-color: var(--color-primary);
+  color: var(--color-text);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 @layer utilities {
-  .glass-minimal {
-    background: rgba(18, 18, 18, 0.7);
+  .glass-card {
+    background: rgba(17, 24, 39, 0.7);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid var(--color-admin-border);
+    border: 1px solid var(--color-border);
   }
 }
 
@@ -81,18 +103,18 @@ html {
 }
 
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-admin-bg);
+  background: var(--color-primary);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-admin-border);
+  background: var(--color-border);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-admin-surface-2);
+  background: var(--color-surface-2);
 }
