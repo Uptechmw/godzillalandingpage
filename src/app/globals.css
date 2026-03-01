@@ -63,23 +63,6 @@
   --font-mono: "JetBrains Mono", "Fira Code", monospace;
 }
 
-@theme {
-  /* Expose to Tailwind */
-  --color-primary-white: #FFFFFF;
-  --color-primary-black: #000000;
-  --color-bg-base: var(--color-primary);
-  --color-bg-surface-1: var(--color-surface);
-  --color-bg-surface-2: var(--color-surface-2);
-  --color-border-subtle: var(--color-border);
-  --color-border-strong: var(--color-surface-3);
-  --color-godzilla-bg: #0A0A0A;
-  --color-godzilla-surface: #111111;
-  --color-godzilla-border: #2A2A2A;
-  --color-godzilla-accent: #00FF94;
-  --color-godzilla-text-muted: #6B6B6B;
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-mono);
-}
 
 body {
   background-color: var(--color-primary);
