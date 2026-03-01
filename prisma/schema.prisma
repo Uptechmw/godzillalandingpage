@@ -22,6 +22,7 @@ model User {
   updatedAt          DateTime             @updatedAt
   tokenBalance       TokenBalance?
   transactions       Transaction[]
+  tokenReservations  TokenReservation[]
   preferences        Preferences?
   emailVerifications EmailVerification[]
 }
@@ -41,8 +42,10 @@ model Transaction {
   type        String   // SIGNUP_BONUS, PURCHASE, AI_AUTOCOMPLETE, etc.
   amount      Int      // positive = credit, negative = debit
   description String
-  metadata    String?  // JSON string for extra data
-  createdAt   DateTime @default(now())
+  metadata      String?  // JSON string for extra data
+  reservationId String?
+  reservation   TokenReservation? @relation(fields: [reservationId], references: [id])
+  createdAt     DateTime @default(now())
 }
 
 model Preferences {
@@ -65,4 +68,20 @@ model EmailVerification {
   expiresAt DateTime
   verified  Boolean  @default(false)
   createdAt DateTime @default(now())
+}
+
+model TokenReservation {
+  id              String   @id @default(cuid())
+  idempotencyKey  String   @unique
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  modelKey        String
+  status          String   // PENDING, COMMITTED, REFUNDED, TIMEOUT, ABORTED
+  reservedAmount  Int      // Max potential cost deducted upfront
+  actualCost      Int?     // Filled on commit
+  pricingSnapshot Json     // The exact PricingSnapshot used for this transaction
+  metadata        Json?    // input/output tokens
+  transactions    Transaction[]
+  createdAt       DateTime @default(now())
+  expiresAt       DateTime // For cleanup workers to catch zombies
 }
