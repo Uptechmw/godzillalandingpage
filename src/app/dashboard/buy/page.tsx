@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Sidebar from "@/components/dashboard/Sidebar";
-import { Coins, CheckCircle2, Zap, Trophy, Crown, Loader2, Package } from "lucide-react";
+import { Coins, CheckCircle2, Zap, Trophy, Crown, Loader2, Package, Menu } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
 
@@ -11,6 +11,7 @@ export default function BuyCoinsPage() {
     const [loading, setLoading] = useState(true);
     const [selected, setSelected] = useState<string | null>(null);
     const [isProcessing, setIsProcessing] = useState(false);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     useEffect(() => {
         api.get('/billing/products')
@@ -53,11 +54,19 @@ export default function BuyCoinsPage() {
 
     return (
         <div className="min-h-screen bg-[#0B1220]">
-            <Sidebar />
+            <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
             <main className="lg:ml-64 p-8">
-                <header className="mb-10">
-                    <h1 className="text-3xl font-bold text-white mb-2">Buy Coins</h1>
-                    <p className="text-slate-400">Choose a package to power up your interactions.</p>
+                <header className="mb-10 flex items-center gap-4">
+                    <button
+                        onClick={() => setIsSidebarOpen(true)}
+                        className="lg:hidden p-2 -ml-2 text-slate-400 hover:text-white transition-colors"
+                    >
+                        <Menu size={24} />
+                    </button>
+                    <div>
+                        <h1 className="text-3xl font-bold text-white mb-2">Buy Coins</h1>
+                        <p className="text-slate-400">Choose a package to power up your interactions.</p>
+                    </div>
                 </header>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">

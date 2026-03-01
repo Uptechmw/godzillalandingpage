@@ -50,6 +50,7 @@ export default function DashboardPage() {
     const [user, setUser] = useState<any>(null);
     const [stats, setStats] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
@@ -84,16 +85,30 @@ export default function DashboardPage() {
 
     return (
         <div className="min-h-screen bg-[#0B1220] font-outfit">
-            <Sidebar />
+            <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
             <main className="lg:ml-64 p-4 lg:p-8">
                 {/* Modern Header */}
                 <header className="flex flex-col lg:flex-row justify-between lg:items-center gap-6 mb-8 bg-[#111827] p-6 rounded-2xl border border-[#1F2937]">
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center justify-between w-full lg:w-auto">
                         <div className="flex items-center gap-4">
+                            <button
+                                onClick={() => setIsSidebarOpen(true)}
+                                className="lg:hidden p-2 -ml-2 text-slate-400 hover:text-white transition-colors"
+                            >
+                                <Menu size={24} />
+                            </button>
                             <div>
                                 <h1 className="text-xl font-extrabold text-white tracking-tight">WORKSPACE</h1>
                                 <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Personal Compute & Token Metrics</p>
+                            </div>
+                        </div>
+
+                        {/* Mobile Profile Trigger (Optional, but good for symmetry) */}
+                        <div className="flex lg:hidden items-center gap-3">
+                            <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-500/10 border border-blue-500/20 rounded-xl">
+                                <Zap className="w-4 h-4 text-blue-500 fill-blue-500" />
+                                <span className="text-sm font-bold text-white">{(stats?.balance || user?.coins || 0).toLocaleString()}</span>
                             </div>
                         </div>
                     </div>
@@ -107,7 +122,7 @@ export default function DashboardPage() {
                                 className="py-2.5 pl-10 pr-4 text-xs rounded-xl w-64 bg-[#0B1220] border border-[#1F2937] text-white outline-none focus:border-blue-500 transition-all"
                             />
                         </div>
-                        <div className="flex items-center gap-4">
+                        <div className="hidden lg:flex items-center gap-4">
                             <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-500/10 border border-blue-500/20 rounded-xl">
                                 <Zap className="w-4 h-4 text-blue-500 fill-blue-500" />
                                 <span className="text-sm font-bold text-white">{(stats?.balance || user?.coins || 0).toLocaleString()} <span className="text-[10px] text-slate-500">COINS</span></span>

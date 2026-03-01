@@ -10,7 +10,8 @@ import {
     Settings,
     ShieldCheck,
     LogOut,
-    Activity
+    Activity,
+    X
 } from 'lucide-react';
 import { toast } from 'sonner';
 import './sidebar.css';
@@ -58,8 +59,18 @@ export function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
             />
             <aside className={`admin-sidebar ${isOpen ? 'mobile-open' : ''}`}>
                 <div className="sidebar-header">
-                    <span className="logo-text">GODZILLA</span>
-                    <span className="logo-subtext">CORE ADMIN</span>
+                    <div className="flex justify-between items-center w-full">
+                        <div className="flex flex-col">
+                            <span className="logo-text">GODZILLA</span>
+                            <span className="logo-subtext">CORE ADMIN</span>
+                        </div>
+                        <button
+                            className="lg:hidden p-2 text-slate-500 hover:text-white transition-colors"
+                            onClick={onClose}
+                        >
+                            <X size={20} />
+                        </button>
+                    </div>
                 </div>
 
                 <nav className="sidebar-nav">

@@ -2,12 +2,13 @@
 
 import { useState, useEffect } from "react";
 import Sidebar from "@/components/dashboard/Sidebar";
-import { History, Search, Filter, ArrowUpRight, ArrowDownLeft, Clock, Loader2 } from "lucide-react";
+import { History, Search, Filter, ArrowUpRight, ArrowDownLeft, Clock, Loader2, Menu } from "lucide-react";
 import { api } from "@/lib/api";
 
 export default function TransactionsPage() {
     const [transactions, setTransactions] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     useEffect(() => {
         const fetchHistory = async () => {
@@ -40,12 +41,20 @@ export default function TransactionsPage() {
 
     return (
         <div className="min-h-screen bg-[#0B1220]">
-            <Sidebar />
+            <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
             <main className="lg:ml-64 p-8">
                 <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
-                    <div>
-                        <h1 className="text-3xl font-bold text-white mb-2">Transaction History</h1>
-                        <p className="text-slate-400">Track your coin purchases and usage across models.</p>
+                    <div className="flex items-center gap-4">
+                        <button
+                            onClick={() => setIsSidebarOpen(true)}
+                            className="lg:hidden p-2 -ml-2 text-slate-400 hover:text-white transition-colors"
+                        >
+                            <Menu size={24} />
+                        </button>
+                        <div>
+                            <h1 className="text-3xl font-bold text-white mb-2">Transaction History</h1>
+                            <p className="text-slate-400">Track your coin purchases and usage across models.</p>
+                        </div>
                     </div>
                 </header>
 
