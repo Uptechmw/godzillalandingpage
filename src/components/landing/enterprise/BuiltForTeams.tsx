@@ -3,10 +3,11 @@ import React from 'react';
 const BuiltForTeams = () => {
     const points = [
         { title: 'Repository-Wide Reasoning', desc: 'Perform deep analysis across millions of lines of code with zero-latency local context.' },
-        { title: 'Model Orchestration', desc: 'Smart routing across Claude, Gemini, and Llama 3 based on task complexity and cost optimization.' },
-        { title: 'Deterministic Billing', desc: 'Transparent usage-based economy integrated directly into the development workflow.' },
-        { title: 'Secure Runtime', desc: 'Execute and test generated code in isolated, secure local environments.' },
-        { title: 'Distributed Concurrency', desc: 'Manage massive codebases with architecture-level lock-step synchronization.' },
+        { title: 'Model Orchestration (Gemini + Claude)', desc: 'Smart routing across world-class models based on task complexity and cost optimization.' },
+        { title: 'Deterministic Token Billing', desc: 'Transparent usage-based economy integrated directly into the development workflow.' },
+        { title: 'Secure Runtime Environment', desc: 'Execute and test generated code in isolated, secure local environments.' },
+        { title: 'Distributed Concurrency Management', desc: 'Manage massive codebases with architecture-level lock-step synchronization.' },
+        { title: 'Production-Safe Streaming', desc: 'High-availability data pipelines designed for industrial-scale engineering.' },
     ];
 
     return (
@@ -17,8 +18,8 @@ const BuiltForTeams = () => {
                     <div className="absolute -inset-8 bg-emerald/5 blur-[100px] opacity-0 group-hover:opacity-40 transition-opacity"></div>
                     <div className="relative border border-border p-2 bg-black/40 backdrop-blur-sm rounded-lg overflow-hidden shadow-2xl">
                         <img
-                            src="/Users/macbookair/.gemini/antigravity/brain/4339a5b1-ce14-4317-a791-b8b186413c7f/engineers_collaboration_professional_1772479701988.png"
-                            alt="Engineers collaborating"
+                            src="/images/enterprise/engineers.png"
+                            alt="Professional engineering team collaborating on Godzilla AI infrastructure"
                             className="w-full h-auto object-cover border border-border rounded-md"
                         />
                     </div>
@@ -26,10 +27,14 @@ const BuiltForTeams = () => {
 
                 {/* Right Side: Technical Specs */}
                 <div>
-                    <span className="label-micro text-emerald mb-6 inline-block">Infrastructure for Code</span>
+                    <span className="label-micro text-emerald mb-6 inline-block">AI Infrastructure for Code</span>
                     <h2 className="h2 mb-10">
-                        Built for Real, Production-Grade Codebases
+                        AI Infrastructure Built for Production Codebases
                     </h2>
+
+                    <p className="text-text-muted mb-12 text-[17px] leading-relaxed max-w-xl">
+                        Unlike browser-based AI tools, Godzilla AI operates at repository scale. It understands system architecture, multi-file dependencies, and real-world engineering constraints.
+                    </p>
 
                     <div className="space-y-8 text-left">
                         {points.map((point, idx) => (

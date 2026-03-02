@@ -2,10 +2,10 @@ import React from 'react';
 
 const Pricing = () => {
     const tiers = [
-        { name: 'Starter', price: '$0', desc: 'For individual exploration and rapid prototyping.', features: ['Multi-Model Orchestration', 'Local Execution', 'Basic Support'] },
-        { name: 'Developer', price: '$29', desc: 'For professional engineers and complex workflows.', features: ['Full Model Garden', 'Advanced RAG', 'Priority Local Runtime'] },
-        { name: 'Standard', price: '$99', desc: 'For engineering teams and scaling projects.', features: ['Shared Context Store', 'Team Admin Panel', 'Audit Logs (30 days)'] },
-        { name: 'Enterprise', price: 'Custom', desc: 'For massive infrastructure and guaranteed uptime.', features: ['SLA Guarantees', 'On-Premise Runtime', 'Unlimited Audit Logs'] },
+        { name: 'Developer', price: '$0', desc: 'Professional local runtime with bring-your-own-API-key support.', features: ['BYOK Integration', 'Native Local Execution', 'Core Context Processing'] },
+        { name: 'Standard', price: '$29', desc: 'Predictable infrastructure with coin-based usage modeling.', features: ['Unified Model Orchestration', 'Token Consumption Audit', 'Priority Local Runtime'] },
+        { name: 'Team', price: '$99', desc: 'Centralized management for professional engineering teams.', features: ['Admin Control Panel', 'Audit Logging & Compliance', 'Shared Context Store'] },
+        { name: 'Enterprise', price: 'Custom', desc: 'Industrial-grade infrastructure with guaranteed throughput.', features: ['Transparent Token Billing', 'Custom Model Integration', 'SLA Infrastructure Support'] },
     ];
 
     return (

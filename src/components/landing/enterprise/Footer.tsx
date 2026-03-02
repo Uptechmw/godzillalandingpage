@@ -49,8 +49,8 @@ const Footer = () => {
                         <ul className="space-y-5 text-[14px] font-medium text-text-muted">
                             <li className="hover:text-text cursor-pointer transition-colors font-mono lowercase">support@godzillaai.dev</li>
                             <li className="hover:text-text cursor-pointer transition-colors font-mono lowercase">enterprise@godzillaai.dev</li>
-                            <li className="hover:text-text cursor-pointer transition-colors">GitHub</li>
-                            <li className="hover:text-text cursor-pointer transition-colors">Twitter</li>
+                            <li className="hover:text-text cursor-pointer transition-colors font-mono lowercase">security@godzillaai.dev</li>
+                            <li className="hover:text-text cursor-pointer transition-colors">GitHub Repository</li>
                         </ul>
                     </div>
                 </div>

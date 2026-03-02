@@ -9,8 +9,31 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "Godzilla | The AI-Powered Future of Coding",
-  description: "The world's most advanced AI-first desktop code editor. Powered by Godzilla AI.",
+  title: "Godzilla AI – Multi-Model AI Development Platform for Production Software",
+  description: "Godzilla AI is a secure multi-model AI coding platform built for production software engineering teams. Local execution, enterprise-grade authentication, and deterministic billing.",
+  keywords: "AI development platform, AI coding platform, Multi-model AI, AI software engineering tool, AI code assistant for developers, Production-grade AI coding",
+  openGraph: {
+    title: "Godzilla AI – Multi-Model AI Development Platform",
+    description: "The secure infrastructure for production-grade AI coding.",
+    url: "https://godzillaai.dev",
+    siteName: "Godzilla AI",
+    images: [
+      {
+        url: "/images/enterprise/hero.png",
+        width: 1200,
+        height: 630,
+        alt: "Godzilla AI Workstation",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Godzilla AI – Multi-Model AI Development Platform",
+    description: "Secure infrastructure for production-grade AI coding.",
+    images: ["/images/enterprise/hero.png"],
+  },
 };
 
 import { ToastProvider, ToastInitializer } from "@/components/ui/toast";
@@ -20,8 +43,33 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Godzilla AI",
+    "operatingSystem": "macOS, Windows, Linux",
+    "applicationCategory": "DeveloperApplication",
+    "description": "Multi-Model AI Development Platform for Production Software Engineering",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Godzilla Infrastructure AI",
+      "logo": "https://godzillaai.dev/images/enterprise/godzilla_icon.png"
+    }
+  };
+
   return (
     <html lang="en" className="dark">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body className={`${outfit.variable} font-outfit antialiased`}>
         <ToastProvider>
           <ToastInitializer />

@@ -2,12 +2,12 @@ import React from 'react';
 
 const SecurityPrivacy = () => {
     const features = [
-        { title: 'HttpOnly Sessions', desc: 'Strict cookie security with zero-access client-side scripts.' },
-        { title: 'DB-Verified Revocation', desc: 'Real-time session invalidation across all Edge nodes.' },
-        { title: 'Admin 2FA Authorization', desc: 'Mandatory clinical authorization for all system-level changes.' },
-        { title: 'Secure Local Execution', desc: 'Isolated sandbox for native code generation and testing.' },
-        { title: 'Canonical Error Architecture', desc: 'Standardized security response patterns for audit compliance.' },
-        { title: 'Role-Based Access Control', desc: 'Granular permissions for teams and infrastructure management.' },
+        { title: 'HttpOnly Session Cookies', desc: 'Secure server-side cookies with Zero-Trust browser access.' },
+        { title: 'DB-Verified Revocation', desc: 'Real-time session invalidation with immediate global propagation.' },
+        { title: 'Admin MFA (OTP)', desc: 'Mandatory multi-factor authentication for all administrative control.' },
+        { title: 'Secure Local Access', desc: 'Isolated sandbox runtime for native code reasoning and execution.' },
+        { title: 'Canonical API Contracts', desc: 'Standardized error handling and audit-ready communication protocols.' },
+        { title: 'Role-Based Permissions', desc: 'Granular access control designed for industrial engineering teams.' },
     ];
 
     return (

@@ -2,11 +2,11 @@ import React from 'react';
 
 const TrustStrip = () => {
     const items = [
-        { label: 'Multi-Model Engine', detail: 'Native orchestration' },
-        { label: 'Secure Local Context', detail: 'Privacy-first reasoning' },
-        { label: 'Autonomous Agents', detail: 'Distributed concurrency' },
-        { label: 'Enterprise Controls', detail: 'RBAC & Audit logs' },
-        { label: 'Deterministic Billing', detail: 'Usage-based economy' },
+        { label: 'Multi-Model Orchestration', detail: 'Native intelligence' },
+        { label: 'Secure Local Execution', detail: 'Privacy-first reasoning' },
+        { label: 'Repository-Wide Context', detail: 'System awareness' },
+        { label: 'Enterprise Authentication', detail: 'RBAC & Audit logs' },
+        { label: 'Infrastructure Billing', detail: 'Usage-based economy' },
     ];
 
     return (

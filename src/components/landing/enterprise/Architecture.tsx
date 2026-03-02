@@ -21,7 +21,7 @@ const Architecture = () => {
                     <div className="relative border border-border p-4 bg-black/40 backdrop-blur-xl rounded-lg overflow-hidden shadow-2xl">
                         <img
                             src="/images/enterprise/architecture.png"
-                            alt="Infrastructure Architecture"
+                            alt="Godzilla AI Enterprise Infrastructure Architecture Diagram"
                             className="w-full h-auto object-cover border border-border rounded-md"
                         />
 
@@ -42,21 +42,21 @@ const Architecture = () => {
                 {/* System Pillars */}
                 <div className="grid md:grid-cols-3 gap-8 mt-16 max-w-5xl mx-auto">
                     <div className="enterprise-card border-l-4 border-emerald text-left">
-                        <h4 className="label-micro text-emerald mb-4">Core Orchestrator</h4>
+                        <h4 className="label-micro text-emerald mb-4">Identity & Access</h4>
                         <p className="text-[16px] font-medium leading-relaxed">
-                            Multi-model routing with deterministic latency guarantees and context window optimization.
+                            DB-verified session validation with immediate revocation and Admin 2FA authentication.
                         </p>
                     </div>
                     <div className="enterprise-card border-l-4 border-enterprise-blue text-left">
-                        <h4 className="label-micro text-enterprise-blue mb-4">Billing Engine</h4>
+                        <h4 className="label-micro text-enterprise-blue mb-4">Economy Engine</h4>
                         <p className="text-[16px] font-medium leading-relaxed">
-                            Usage-based token management with real-time audit logs and cost-center allocation.
+                            Token-level accounting with granular cost-center allocation and usage-based transparency.
                         </p>
                     </div>
                     <div className="enterprise-card border-l-4 border-text-faint text-left">
-                        <h4 className="label-micro text-text-faint mb-4">Secure Execution</h4>
+                        <h4 className="label-micro text-text-faint mb-4">Secure Runtime</h4>
                         <p className="text-[16px] font-medium leading-relaxed">
-                            High-isolation runtime for native code execution and autonomous agent reasoning.
+                            Hardened streaming pipelines and role-based access control for industrial scale.
                         </p>
                     </div>
                 </div>

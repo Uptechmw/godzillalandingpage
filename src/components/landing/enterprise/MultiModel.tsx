@@ -4,20 +4,20 @@ const MultiModel = () => {
     const models = [
         {
             name: 'Gemini 3.1 Pro',
-            type: 'UI & Frontend Orchestration',
-            strength: 'Optimized for high-concurrency UI generation and complex frontend reasoning.',
+            type: 'Optimization Engine',
+            strength: 'Optimized for high-concurrency UI generation and complex frontend engineering workflows.',
             accent: 'border-emerald'
         },
         {
             name: 'Claude Sonnet 4.6',
-            type: 'Backend & Architecture',
-            strength: 'Maximum performance for system-level architecture and backend engineering flows.',
+            type: 'Systems Engineering',
+            strength: 'Maximum performance for backend systems and architectural reasoning flows.',
             accent: 'border-enterprise-blue'
         },
         {
             name: 'Claude Opus 4.6',
             type: 'Advanced Reasoning',
-            strength: 'The enterprise-grade standard for autonomous logical deduction and complex refactors.',
+            strength: 'The industrial standard for complex reasoning and production-scale problems.',
             accent: 'border-text-faint'
         }
     ];
@@ -27,11 +27,11 @@ const MultiModel = () => {
             <div className="enterprise-container">
                 <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-12 text-left">
                     <div>
-                        <span className="label-micro text-emerald mb-6 inline-block">Intelligence Layer</span>
-                        <h2 className="h2 uppercase">Multi-Model Intelligence</h2>
+                        <span className="label-micro text-emerald mb-6 inline-block">Intelligence Infrastructure</span>
+                        <h2 className="h2 uppercase">Multi-Model Orchestration</h2>
                     </div>
                     <p className="text-text-muted max-w-content text-[17px] leading-relaxed">
-                        Godzilla AI orchestrates the world's most capable models, automatically selecting the optimal engine for every development task.
+                        Godzilla AI dynamically routes tasks through the appropriate AI model while maintaining unified context and billing transparency across Claude and Gemini.
                     </p>
                 </div>
 

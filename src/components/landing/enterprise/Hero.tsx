@@ -13,11 +13,11 @@ const Hero = () => {
                     </div>
 
                     <h1 className="h1 text-glow-emerald mb-6">
-                        The Multi-Model Development Platform for Serious Software Engineering
+                        The Multi-Model AI Development Platform for Production Software Engineering
                     </h1>
 
                     <p className="body-lg text-text-muted mb-8 max-w-content">
-                        Secure local execution. Multi-model orchestration. Enterprise-grade control. Godzilla AI is the definitive infrastructure for modern AI-driven development.
+                        Godzilla AI is a secure, multi-model AI coding platform designed for serious developers building real-world applications. Local execution, model orchestration, and enterprise-grade infrastructure.
                     </p>
 
                     <div className="flex flex-wrap gap-4 mb-8">
@@ -46,7 +46,7 @@ const Hero = () => {
                     <div className="relative border border-border p-2 bg-black/40 backdrop-blur-sm rounded-lg overflow-hidden shadow-2xl">
                         <img
                             src="/images/enterprise/hero.png"
-                            alt="Godzilla AI Workstation"
+                            alt="Godzilla AI Production-Grade Multi-Model Development Platform"
                             className="w-full h-auto object-cover border border-border rounded-md"
                         />
                     </div>
