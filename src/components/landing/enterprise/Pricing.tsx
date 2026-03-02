@@ -46,7 +46,7 @@ const Pricing = async () => {
                             <div
                                 key={plan.id}
                                 className={`enterprise-card flex flex-col items-start h-full transition-all relative ${isLast
-                                    ? 'bg-accent-blue border-accent-blue shadow-xl shadow-accent-blue/20'
+                                    ? '!bg-accent-blue !border-accent-blue shadow-xl shadow-accent-blue/20'
                                     : isPopular
                                         ? 'border-accent-blue ring-1 ring-accent-blue/20 bg-surface/80'
                                         : 'border-border/50 bg-surface/40'
@@ -54,7 +54,7 @@ const Pricing = async () => {
                             >
                                 {isPopular && (
                                     <div className={`absolute -top-3 left-6 px-3 py-1 border label-micro !text-[10px] rounded-full font-bold ${isLast
-                                        ? 'bg-white/20 border-white text-white'
+                                        ? 'bg-white/20 !border-white text-white'
                                         : 'bg-[rgba(37,99,235,0.18)] border-accent-blue text-accent-blue'
                                         }`}>
                                         Most Popular
