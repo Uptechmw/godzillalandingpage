@@ -10,7 +10,7 @@ const Hero = () => {
     const { openModal } = useDownloadModal();
 
     return (
-        <section className="relative overflow-hidden section-hero border-b border-border bg-primary pt-32 pb-24">
+        <section className="relative overflow-hidden section-hero border-b border-border bg-primary pt-32 pb-24 ambient-glow">
             <div className="enterprise-container grid lg:grid-cols-2 gap-16 items-center">
                 {/* Left Side: Content */}
                 <div className="z-10">

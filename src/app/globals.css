@@ -7,14 +7,14 @@
   --color-surface: #0F1B2E;
   /* Card background */
   --color-surface-soft: #161B22;
-  --color-surface-alt: #0A1633;
-  /* Blue tint for section variety */
+  --color-surface-alt: #101C3F;
+  /* Intensified Blue tint for section variety */
 
   --color-accent-blue: #2563EB;
   /* Enterprise Blue — primary brand color */
   --color-accent-blue-hover: #1D4ED8;
   /* Deep Blue - active/hover states */
-  --color-accent-blue-glow: rgba(37, 99, 235, 0.18);
+  --color-accent-blue-glow: rgba(37, 99, 235, 0.25);
 
   --color-success: #00C27A;
   /* Emerald — only for success states/metrics */
