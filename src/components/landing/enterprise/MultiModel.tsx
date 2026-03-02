@@ -3,19 +3,19 @@ import React from 'react';
 const MultiModel = () => {
     const models = [
         {
-            name: 'Gemini 1.5 Pro',
+            name: 'Gemini 3.1 Pro',
             type: 'Frontend & UI',
             strength: 'High-performance generation for complex UI components and frontend architecture.',
             accent: 'border-accent-blue'
         },
         {
-            name: 'Claude 3.5 Sonnet',
+            name: 'Claude 4.6',
             type: 'Systems & Logic',
-            strength: 'Exceptional reasoning for backend systems, API design, and data structures.',
+            strength: 'Exceptional reasoning across Sonnet & Opus architectures for backend systems and API design.',
             accent: 'border-accent-blue'
         },
         {
-            name: 'GPT-4o',
+            name: 'ChatGPT 5.2',
             type: 'General Engineering',
             strength: 'Versatile performance across full-stack development and rapid prototyping.',
             accent: 'border-accent-blue'

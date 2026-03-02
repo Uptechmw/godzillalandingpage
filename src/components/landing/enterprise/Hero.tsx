@@ -61,18 +61,20 @@ const Hero = () => {
                 {/* Right Side: Infrastructure Visual */}
                 <div className="relative group">
                     <div className="absolute -inset-10 bg-accent-blue/10 blur-[120px] opacity-20 pointer-events-none"></div>
-                    <div className="relative border border-border/50 p-2 bg-black/60 backdrop-blur-sm rounded-lg overflow-hidden shadow-[0_0_50px_rgba(37,99,235,0.1)]">
-                        <img
-                            src="/images/enterprise/hero.png"
-                            alt="Godzilla AI Production Infrastructure Interface"
-                            className="w-full h-auto object-cover border border-border/50 rounded-md"
-                        />
-                        <div className="absolute bottom-4 left-4 right-4 p-4 border border-border/50 bg-[#070A11]/80 backdrop-blur-md rounded flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                                <div className="w-2 h-2 bg-success rounded-full"></div>
-                                <span className="label-micro text-text uppercase">Secure Runtime Active</span>
+                    <div className="animated-border-container shadow-[0_0_50px_rgba(37,99,235,0.15)]">
+                        <div className="animated-border-inner">
+                            <img
+                                src="/images/enterprise/hero.png"
+                                alt="Godzilla AI Production Infrastructure Interface"
+                                className="w-full h-auto object-cover opacity-90 transition-opacity duration-1000 group-hover:opacity-100"
+                            />
+                            <div className="absolute bottom-4 left-4 right-4 p-4 border border-border/50 bg-[#070A11]/80 backdrop-blur-md rounded flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-2 h-2 bg-success rounded-full"></div>
+                                    <span className="label-micro text-text uppercase">Secure Runtime Active</span>
+                                </div>
+                                <span className="label-micro text-text-faint">v2.4.1-STABLE</span>
                             </div>
-                            <span className="label-micro text-text-faint">v2.4.1-STABLE</span>
                         </div>
                     </div>
                 </div>

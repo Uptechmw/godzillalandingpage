@@ -230,6 +230,49 @@ h3,
     z-index: 1;
   }
 
+  /* --- Advanced Animations --- */
+  @keyframes border-spin {
+    from {
+      transform: rotate(0deg);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .animated-border-container {
+    position: relative;
+    padding: 2px;
+    background: var(--color-border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .animated-border-container::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(transparent,
+        transparent,
+        transparent,
+        var(--color-accent-blue));
+    animation: border-spin 4s linear infinite;
+    z-index: 0;
+  }
+
+  .animated-border-inner {
+    position: relative;
+    z-index: 1;
+    background: black;
+    border-radius: 10px;
+    overflow: hidden;
+    display: block;
+  }
+
   .bg-tinted-gradient {
     background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-surface-alt) 100%);
   }

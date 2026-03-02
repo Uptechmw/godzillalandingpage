@@ -27,7 +27,8 @@ const Pricing = async () => {
                 </div>
 
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {Array.isArray(plans) && plans.map((plan) => {
+                    {Array.isArray(plans) && plans.map((plan, index) => {
+                        const isLast = index === plans.length - 1;
                         // Dev/Pro plans often marked as popular
                         const isPopular = plan.name.toLowerCase().includes('dev') ||
                             plan.name.toLowerCase().includes('pro') ||
@@ -44,41 +45,48 @@ const Pricing = async () => {
                         return (
                             <div
                                 key={plan.id}
-                                className={`enterprise-card flex flex-col items-start h-full transition-all relative ${isPopular
-                                    ? 'border-accent-blue ring-1 ring-accent-blue/20 bg-surface/80'
-                                    : 'border-border/50 bg-surface/40'
+                                className={`enterprise-card flex flex-col items-start h-full transition-all relative ${isLast
+                                    ? 'bg-accent-blue border-accent-blue shadow-xl shadow-accent-blue/20'
+                                    : isPopular
+                                        ? 'border-accent-blue ring-1 ring-accent-blue/20 bg-surface/80'
+                                        : 'border-border/50 bg-surface/40'
                                     }`}
                             >
                                 {isPopular && (
-                                    <div className="absolute -top-3 left-6 px-3 py-1 bg-[rgba(37,99,235,0.18)] border border-accent-blue text-accent-blue label-micro !text-[10px] rounded-full font-bold">
+                                    <div className={`absolute -top-3 left-6 px-3 py-1 border label-micro !text-[10px] rounded-full font-bold ${isLast
+                                        ? 'bg-white/20 border-white text-white'
+                                        : 'bg-[rgba(37,99,235,0.18)] border-accent-blue text-accent-blue'
+                                        }`}>
                                         Most Popular
                                     </div>
                                 )}
 
-                                <h3 className="text-xl font-bold mb-2 text-text">{plan.name}</h3>
+                                <h3 className={`text-xl font-bold mb-2 ${isLast ? 'text-white' : 'text-text'}`}>{plan.name}</h3>
                                 <div className="mb-8 flex items-baseline gap-1">
-                                    <span className="text-4xl font-display font-light tracking-tight text-text">${plan.priceAmount}</span>
-                                    <span className="label-micro text-text-muted lowercase">/one-time</span>
+                                    <span className={`text-4xl font-display font-light tracking-tight ${isLast ? 'text-white' : 'text-text'}`}>${plan.priceAmount}</span>
+                                    <span className={`label-micro lowercase ${isLast ? 'text-white/70' : 'text-text-muted'}`}>/one-time</span>
                                 </div>
 
-                                <p className="text-[14px] text-text-body mb-8 leading-relaxed font-medium">
+                                <p className={`text-[14px] mb-8 leading-relaxed font-medium ${isLast ? 'text-white/90' : 'text-text-body'}`}>
                                     {plan.description || `${plan.coins} AI Coins for infrastructure access.`}
                                 </p>
 
                                 <div className="w-full space-y-4 mb-10 flex-grow">
                                     {features.map((f, i) => (
                                         <div key={i} className="flex gap-3 items-center text-[13px]">
-                                            <Check className="w-4 h-4 text-accent-blue flex-shrink-0" />
-                                            <span className="text-text-body font-medium">{f}</span>
+                                            <Check className={`w-4 h-4 flex-shrink-0 ${isLast ? 'text-white' : 'text-accent-blue'}`} />
+                                            <span className={`font-medium ${isLast ? 'text-white/95' : 'text-text-body'}`}>{f}</span>
                                         </div>
                                     ))}
                                 </div>
 
                                 <Link
                                     href={ctaHref}
-                                    className={`w-full flex items-center justify-center h-12 rounded-md label-micro transition-all ${isPopular
-                                        ? 'bg-accent-blue text-white hover:bg-accent-blue-hover shadow-lg shadow-accent-blue/20'
-                                        : 'bg-transparent border border-border text-text-body hover:border-accent-blue/50 hover:text-text'
+                                    className={`w-full flex items-center justify-center h-12 rounded-md label-micro transition-all ${isLast
+                                        ? 'bg-white text-accent-blue hover:bg-white/90 shadow-xl'
+                                        : isPopular
+                                            ? 'bg-accent-blue text-white hover:bg-accent-blue-hover shadow-lg shadow-accent-blue/20'
+                                            : 'bg-transparent border border-border text-text-body hover:border-accent-blue/50 hover:text-text'
                                         }`}
                                 >
                                     {isLoggedIn ? 'Buy Credits' : 'Choose Plan'}

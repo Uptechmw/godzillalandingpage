@@ -36,10 +36,10 @@ const BuiltForTeams = () => {
                     </p>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-px bg-border border border-border overflow-hidden rounded-lg">
+                <div className="grid md:grid-cols-2 gap-px bg-accent-blue border border-accent-blue/30 overflow-hidden rounded-xl">
                     {features.map((f, idx) => (
-                        <div key={idx} className="bg-primary p-12 hover:bg-surface transition-colors group">
-                            <div className="w-12 h-12 rounded bg-surface-soft border border-border flex items-center justify-center text-accent-blue mb-8 group-hover:border-accent-blue/50 transition-colors">
+                        <div key={idx} className="bg-primary/95 p-12 hover:bg-surface transition-all duration-300 group">
+                            <div className="w-12 h-12 rounded bg-accent-blue/10 border border-accent-blue/20 flex items-center justify-center text-accent-blue mb-8 group-hover:border-accent-blue transition-colors">
                                 {f.icon}
                             </div>
                             <h3 className="text-xl font-bold text-text mb-4">{f.title}</h3>

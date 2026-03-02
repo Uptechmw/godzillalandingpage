@@ -9,7 +9,6 @@ import MultiModel from '@/components/landing/enterprise/MultiModel';
 import SecurityPrivacy from '@/components/landing/enterprise/SecurityPrivacy';
 import BuiltForTeamsManagement from '@/components/landing/enterprise/BuiltForTeamsManagement';
 import Pricing from '@/components/landing/enterprise/Pricing';
-import RealEngineers from '@/components/landing/enterprise/RealEngineers';
 import Contact from '@/components/landing/enterprise/Contact';
 import Footer from '@/components/landing/enterprise/Footer';
 
@@ -43,7 +42,6 @@ export default function Home() {
           <Pricing />
         </div>
 
-        <RealEngineers />
         <Contact />
       </div>
 
