@@ -1,9 +1,14 @@
+'use client';
+
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Download, ChevronRight, CheckCircle2 } from 'lucide-react';
+import { useDownloadModal } from '@/hooks/useDownloadModal';
 
 const Hero = () => {
+    const { openModal } = useDownloadModal();
+
     return (
         <section className="relative overflow-hidden section-hero border-b border-border bg-primary pt-32 pb-24">
             <div className="enterprise-container grid lg:grid-cols-2 gap-16 items-center">
@@ -15,25 +20,28 @@ const Hero = () => {
                     </div>
 
                     <h1 className="h1 text-glow-blue mb-8 leading-[1.1]">
-                        The Multi-Model AI Development Platform for Production Systems
+                        The Multi-Model AI Development Platform for Production Software
                     </h1>
 
                     <div className="space-y-4 mb-10">
                         <div className="flex items-start gap-3">
                             <CheckCircle2 className="w-5 h-5 text-accent-blue mt-0.5" />
-                            <p className="text-body-lg text-text font-medium">Local execution context with zero-latency repository reasoning.</p>
+                            <p className="text-body-lg text-text-body font-medium">Enterprise infrastructure for secure, multi-model AI coding.</p>
                         </div>
                         <div className="flex items-start gap-3">
                             <CheckCircle2 className="w-5 h-5 text-accent-blue mt-0.5" />
-                            <p className="text-body-lg text-text font-medium">Smart model orchestration across Gemini, Claude, and GPT-4.</p>
+                            <p className="text-body-lg text-text-body font-medium">Unified context across Gemini, Claude, and GPT-4.</p>
                         </div>
                     </div>
 
                     <div className="flex flex-wrap gap-4 mb-12">
-                        <Link href="/download" className="btn-primary gap-3 px-10 !h-[56px] text-[15px]">
+                        <button
+                            onClick={openModal}
+                            className="btn-primary gap-3 px-10 !h-[56px] text-[15px]"
+                        >
                             <Download className="w-5 h-5" />
                             <span>Download Godzilla</span>
-                        </Link>
+                        </button>
                         <Link href="/docs" className="btn-secondary gap-2 px-8 !h-[56px] text-[15px]">
                             <span>Read Technical Docs</span>
                             <ChevronRight className="w-4 h-4" />

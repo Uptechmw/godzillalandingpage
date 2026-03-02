@@ -8,9 +8,14 @@ const outfit = Outfit({
   variable: "--font-outfit",
 });
 
+import { ToastProvider, ToastInitializer } from "@/components/ui/toast";
+import SeoJsonLd from "@/components/seo/SeoJsonLd";
+import { DownloadModalProvider } from "@/hooks/useDownloadModal";
+import DownloadModalRoot from "./DownloadModalRoot";
+
 export const metadata: Metadata = {
   title: "Godzilla AI – Multi-Model AI Development Platform for Production Software",
-  description: "Godzilla AI is a secure multi-model AI coding platform built for production software engineering teams. Local execution, enterprise-grade authentication, and deterministic billing.",
+  description: "Godzilla AI is a multi-model AI development platform available for macOS, Windows, and Linux. Secure, production-ready AI coding infrastructure for serious software engineering teams.",
   keywords: "AI development platform, AI coding platform, Multi-model AI, AI software engineering tool, AI code assistant for developers, Production-grade AI coding",
   openGraph: {
     title: "Godzilla AI – Multi-Model AI Development Platform",
@@ -36,9 +41,6 @@ export const metadata: Metadata = {
   },
 };
 
-import { ToastProvider, ToastInitializer } from "@/components/ui/toast";
-import SeoJsonLd from "@/components/seo/SeoJsonLd";
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -50,10 +52,13 @@ export default function RootLayout({
         <SeoJsonLd />
       </head>
       <body className={`${outfit.variable} font-outfit antialiased`}>
-        <ToastProvider>
-          <ToastInitializer />
-          {children}
-        </ToastProvider>
+        <DownloadModalProvider>
+          <ToastProvider>
+            <ToastInitializer />
+            {children}
+            <DownloadModalRoot />
+          </ToastProvider>
+        </DownloadModalProvider>
       </body>
     </html>
   );

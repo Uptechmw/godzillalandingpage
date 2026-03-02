@@ -2,6 +2,7 @@ import React from 'react';
 import Navbar from '@/components/landing/enterprise/Navbar';
 import Hero from '@/components/landing/enterprise/Hero';
 import TrustStrip from '@/components/landing/enterprise/TrustStrip';
+import OsSupportSection from '@/components/landing/enterprise/OsSupportSection';
 import BuiltForTeams from '@/components/landing/enterprise/BuiltForTeams';
 import Architecture from '@/components/landing/enterprise/Architecture';
 import MultiModel from '@/components/landing/enterprise/MultiModel';
@@ -20,6 +21,7 @@ export default function Home() {
       <div className="pt-20">
         <Hero />
         <TrustStrip />
+        <OsSupportSection />
 
         <div id="architecture">
           <Architecture />

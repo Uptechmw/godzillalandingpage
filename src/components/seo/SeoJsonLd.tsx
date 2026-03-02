@@ -18,14 +18,19 @@ const SeoJsonLd = () => {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
         "name": "Godzilla AI",
-        "operatingSystem": "Universal",
+        "operatingSystem": "macOS, Windows, Linux",
         "applicationCategory": "DeveloperApplication",
-        "description": "Multi-Model AI Development Platform for Production Systems.",
+        "description": "Multi-Model AI Development Platform for Production Systems. Build secure, scalable applications with unified context.",
         "offers": {
             "@type": "AggregateOffer",
             "lowPrice": "0",
             "highPrice": "99",
-            "priceCurrency": "USD"
+            "priceCurrency": "USD",
+            "availability": "https://schema.org/InStock",
+            "seller": {
+                "@type": "Organization",
+                "name": "Godzilla Infrastructure AI"
+            }
         }
     };
 

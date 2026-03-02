@@ -2,48 +2,50 @@
 
 :root {
   /* --- Enterprise Brand Palette (Deep Slate + Blue) --- */
-  --color-primary: #0B0F14;
+  --color-primary: #0B1220;
   /* Deep Slate — page base */
-  --color-surface: #0E1218;
-  /* Lifted Slate — main surface */
+  --color-surface: #0F1B2E;
+  /* Card background */
   --color-surface-soft: #161B22;
-  /* Technical Gray — cards, lifted areas */
+  --color-surface-alt: #0A1633;
+  /* Blue tint for section variety */
 
   --color-accent-blue: #2563EB;
   /* Enterprise Blue — primary brand color */
   --color-accent-blue-hover: #1D4ED8;
   /* Deep Blue - active/hover states */
-  --color-accent-blue-glow: rgba(37, 99, 235, 0.2);
+  --color-accent-blue-glow: rgba(37, 99, 235, 0.18);
 
   --color-success: #00C27A;
   /* Emerald — only for success states/metrics */
 
-  --color-text: #F3F4F6;
-  /* High Contrast White */
-  --color-text-muted: #9CA3AF;
+  --color-text: #F9FAFB;
+  /* Heading White */
+  --color-text-body: #CBD5E1;
+  /* Primary Body Gray */
+  --color-text-muted: #94A3B8;
   /* Soft Neutral Gray */
   --color-text-faint: #4B5563;
   /* Subdued UI elements */
 
-  --color-border: #1F2937;
+  --color-border: #1F2A44;
   /* Structured dividers */
   --color-border-subtle: #111827;
 
-  /* --- 8px Grid Spacing Tokens (Industrial Scale) --- */
+  /* --- Spacing Tokens (Industrial Scale) --- */
   --space-1: 8px;
   --space-2: 16px;
   --space-3: 24px;
   --space-4: 32px;
   --space-6: 48px;
   --space-8: 64px;
-  --space-12: 120px;
-  /* Increased for whitespace */
+  --space-12: 100px;
+  /* Standard section padding */
   --space-16: 160px;
 
   /* --- Type Scale (Enterprise Hierarchy) --- */
-  --font-size-h1: clamp(48px, 5vw, 64px);
-  /* Slightly smaller/controlled */
-  --font-size-h2: clamp(32px, 3.5vw, 40px);
+  --font-size-h1: clamp(48px, 5vw, 60px);
+  --font-size-h2: clamp(32px, 3.5vw, 38px);
   --font-size-h3: 24px;
   --font-size-body-lg: 18px;
   --font-size-body: 16px;
@@ -209,6 +211,23 @@ h3,
 
   .text-glow-blue {
     text-shadow: 0 0 15px var(--color-accent-blue-glow);
+  }
+
+  .ambient-glow {
+    position: relative;
+  }
+
+  .ambient-glow::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(60% 60% at 50% 0%, rgba(37, 99, 235, 0.12), transparent 60%);
+    pointer-events: none;
+    z-index: 1;
   }
 }
 
