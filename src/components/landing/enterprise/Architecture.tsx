@@ -2,7 +2,7 @@ import React from 'react';
 
 const Architecture = () => {
     return (
-        <section className="section-arch border-y border-border bg-surface-alt relative overflow-hidden ambient-glow">
+        <section className="section-arch border-y border-border bg-tinted-gradient relative overflow-hidden ambient-glow">
             <div className="enterprise-container relative z-10 text-left lg:text-center">
                 <div className="mb-16 max-w-content mx-auto">
                     <span className="label-micro text-accent-blue mb-6 inline-block tracking-widest">Platform Design</span>

@@ -16,7 +16,7 @@ const Pricing = async () => {
     });
 
     return (
-        <section id="pricing" className="section-standard border-y border-border bg-surface-alt relative overflow-hidden ambient-glow">
+        <section id="pricing" className="section-standard border-y border-border bg-tinted-gradient relative overflow-hidden ambient-glow">
             <div className="enterprise-container relative z-10">
                 <div className="text-left mb-16 max-w-2xl">
                     <span className="label-micro text-accent-blue mb-6 inline-block tracking-widest">Pricing Strategy</span>

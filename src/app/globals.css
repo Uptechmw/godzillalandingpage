@@ -7,8 +7,8 @@
   --color-surface: #0F1B2E;
   /* Card background */
   --color-surface-soft: #161B22;
-  --color-surface-alt: #101C3F;
-  /* Intensified Blue tint for section variety */
+  --color-surface-alt: #142145;
+  /* Rich Blue Slate for section variety */
 
   --color-accent-blue: #2563EB;
   /* Enterprise Blue — primary brand color */
@@ -228,6 +228,10 @@ h3,
     background: radial-gradient(60% 60% at 50% 0%, rgba(37, 99, 235, 0.12), transparent 60%);
     pointer-events: none;
     z-index: 1;
+  }
+
+  .bg-tinted-gradient {
+    background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-surface-alt) 100%);
   }
 }
 

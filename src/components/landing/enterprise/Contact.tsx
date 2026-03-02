@@ -2,7 +2,7 @@ import React from 'react';
 
 const Contact = () => {
     return (
-        <section id="contact" className="section-standard border-t border-border bg-surface-alt relative overflow-hidden ambient-glow">
+        <section id="contact" className="section-standard border-t border-border bg-tinted-gradient relative overflow-hidden ambient-glow">
             <div className="enterprise-container relative z-10">
                 <div className="grid lg:grid-cols-2 gap-20 items-center">
                     <div>
