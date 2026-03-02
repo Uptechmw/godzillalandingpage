@@ -1,60 +1,41 @@
 import React from 'react';
 
 const RealEngineers = () => {
-    const testimonials = [
-        {
-            quote: "Godzilla AI isn't just a tool; it's a fundamental architectural shift. The local execution context combined with multi-model routing has halved our architectural refactor cycles.",
-            author: "Marcus Thorne",
-            role: "Lead Infrastructure Engineer, Velo Dynamics"
-        },
-        {
-            quote: "Finally, an AI platform that understands the security requirements of a regulated industry. HttpOnly session protection and local runtime isolation are non-negotiable for us.",
-            author: "Elena Vance",
-            role: "Chief Technology Officer, CipherSafe"
-        }
+    const team = [
+        { name: 'Marcus Chen', role: 'Lead Infrastructure Architect', img: '/images/team/eng1.png' },
+        { name: 'Sarah Vance', role: 'Security Engineering', img: '/images/team/eng2.png' },
+        { name: 'David Okafor', role: 'Distributed Systems', img: '/images/team/eng3.png' },
+        { name: 'Elena Rossi', role: 'Model Orchestration', img: '/images/team/eng4.png' },
     ];
 
     return (
-        <section className="section-standard border-b border-border bg-primary relative overflow-hidden">
+        <section className="section-standard border-b border-border bg-primary py-32">
             <div className="enterprise-container">
-                <div className="grid lg:grid-cols-2 gap-20 items-center">
-                    {/* Images Grid */}
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="border border-border p-1 bg-surface-soft h-64 overflow-hidden relative grayscale hover:grayscale-0 transition-all duration-500 rounded-sm">
-                            <img
-                                src="/images/enterprise/engineers.png"
-                                alt="Team collaboration"
-                                className="w-full h-full object-cover"
-                            />
-                        </div>
-                        <div className="border border-border p-1 bg-surface-soft h-64 overflow-hidden relative translate-y-12 grayscale hover:grayscale-0 transition-all duration-500 rounded-sm">
-                            <img
-                                src="/images/enterprise/godzilla_icon.png"
-                                alt="Godzilla Identity"
-                                className="w-full h-full object-contain opacity-20 p-8"
-                            />
-                            <div className="absolute inset-x-0 bottom-0 p-4 bg-black/60 backdrop-blur-md">
-                                <p className="label-micro text-accent-blue">Authored by humans</p>
-                            </div>
-                        </div>
+                <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-20">
+                    <div className="max-w-2xl">
+                        <span className="label-micro text-accent-blue mb-6 inline-block">Built by Engineers</span>
+                        <h2 className="h2 mb-6">Designed for Production Engineering</h2>
+                        <p className="body-lg text-text-muted">
+                            Meet the architects behind Godzilla AI. We are focused on building secure, scalable infrastructure for the next generation of software development.
+                        </p>
                     </div>
+                </div>
 
-                    {/* Quotes */}
-                    <div className="space-y-16">
-                        <span className="label-micro text-accent-blue mb-6 inline-block">Trusted by Leaders</span>
-                        {testimonials.map((t, idx) => (
-                            <div key={idx} className="relative">
-                                <div className="text-5xl font-serif text-accent-blue opacity-20 absolute -top-8 -left-8">"</div>
-                                <blockquote className="text-[20px] font-medium leading-relaxed text-text italic mb-6">
-                                    {t.quote}
-                                </blockquote>
-                                <div>
-                                    <p className="font-bold text-[16px] text-text">{t.author}</p>
-                                    <p className="label-micro text-text-faint mt-2">{t.role}</p>
-                                </div>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    {team.map((member, idx) => (
+                        <div key={idx} className="group">
+                            <div className="relative aspect-[4/5] mb-6 overflow-hidden rounded-lg border border-border bg-surface-soft">
+                                <img
+                                    src={member.img}
+                                    alt={member.name}
+                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent opacity-60"></div>
                             </div>
-                        ))}
-                    </div>
+                            <h3 className="text-[18px] font-bold text-text mb-1">{member.name}</h3>
+                            <p className="label-micro text-text-faint">{member.role}</p>
+                        </div>
+                    ))}
                 </div>
             </div>
         </section>

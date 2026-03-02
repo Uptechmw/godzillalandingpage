@@ -53,50 +53,50 @@ function AdminLoginContent() {
     };
 
     return (
-        <div className="min-h-screen bg-[#0B1220] flex items-center justify-center p-6">
+        <div className="min-h-screen bg-[#111827] flex items-center justify-center p-6">
             <motion.div
                 initial={{ opacity: 0, scale: 0.98 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="w-full max-w-md bg-[#111827] border border-[#1F2937] rounded-xl shadow-2xl p-8 lg:p-10"
+                className="w-full max-w-[440px] bg-[#0B1220] border border-[#1F2937] rounded-xl shadow-2xl p-10 lg:p-12"
             >
-                <div className="text-center mb-8">
-                    <div className="flex justify-center mb-4">
-                        <div className="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center border border-slate-700">
-                            <Shield className="text-blue-500 w-7 h-7" />
+                <div className="text-center mb-10">
+                    <div className="flex justify-center mb-6">
+                        <div className="w-14 h-14 bg-[#0F172A] rounded-lg flex items-center justify-center border border-[#1F2937]">
+                            <Shield className="text-accent-blue w-8 h-8" />
                         </div>
                     </div>
-                    <h1 className="text-2xl font-bold text-[#F1F5F9] tracking-tight">Management Portal</h1>
-                    <p className="text-sm text-[#94A3B8] mt-1 font-medium italic">SECURE GATEWAY ALPHA</p>
+                    <h1 className="text-2xl font-bold text-[#F9FAFB] tracking-tight">Management Portal</h1>
+                    <p className="text-[#9CA3AF] text-sm font-medium mt-2">Sign in to your administrative account</p>
                 </div>
 
                 <form className="space-y-6" onSubmit={handleSubmit}>
                     {error && (
-                        <div className="flex items-center gap-3 p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-xs font-semibold">
+                        <div className="flex items-center gap-3 p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-xs font-semibold font-sans">
                             <AlertCircle size={14} />
                             <span>{error}</span>
                         </div>
                     )}
 
-                    <div className="space-y-1.5">
-                        <label className="text-xs font-bold uppercase tracking-widest text-[#475569] px-1">Identity Identifier</label>
+                    <div className="space-y-2">
+                        <label className="text-xs font-bold text-[#9CA3AF] px-1">Email Address</label>
                         <div className="relative">
-                            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#475569]" />
+                            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#4B5563]" />
                             <input
                                 type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                placeholder="name@domain.com"
+                                placeholder="name@company.com"
                                 required
                                 disabled={isLoading}
-                                className="w-full bg-[#0B1220] border border-[#1F2937] rounded-lg py-3.5 pl-11 pr-4 outline-none transition-all text-sm text-[#F1F5F9] placeholder:text-[#475569] focus:border-blue-500/50"
+                                className="w-full h-[48px] bg-[#0F172A] border border-[#1F2937] rounded-lg pl-12 pr-4 outline-none transition-all text-sm text-[#F9FAFB] placeholder:text-[#4B5563] focus:border-accent-blue focus:ring-4 focus:ring-accent-blue/10"
                             />
                         </div>
                     </div>
 
-                    <div className="space-y-1.5">
-                        <label className="text-xs font-bold uppercase tracking-widest text-[#475569] px-1">Authorization Cipher</label>
+                    <div className="space-y-2">
+                        <label className="text-xs font-bold text-[#9CA3AF] px-1">Password</label>
                         <div className="relative">
-                            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#475569]" />
+                            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#4B5563]" />
                             <input
                                 type="password"
                                 value={password}
@@ -104,7 +104,7 @@ function AdminLoginContent() {
                                 placeholder="••••••••"
                                 required
                                 disabled={isLoading}
-                                className="w-full bg-[#0B1220] border border-[#1F2937] rounded-lg py-3.5 pl-11 pr-4 outline-none transition-all text-sm text-[#F1F5F9] placeholder:text-[#475569] focus:border-blue-500/50"
+                                className="w-full h-[48px] bg-[#0F172A] border border-[#1F2937] rounded-lg pl-12 pr-4 outline-none transition-all text-sm text-[#F9FAFB] placeholder:text-[#4B5563] focus:border-accent-blue focus:ring-4 focus:ring-accent-blue/10"
                             />
                         </div>
                     </div>
@@ -112,20 +112,20 @@ function AdminLoginContent() {
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className="w-full py-4 rounded-lg bg-slate-800 border border-slate-700 font-bold text-xs uppercase tracking-widest text-[#F1F5F9] hover:bg-slate-750 hover:border-blue-500/50 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                        className="w-full h-[48px] rounded-lg bg-accent-blue font-bold text-sm text-white hover:bg-[#1D4ED8] transition-all flex items-center justify-center gap-2 disabled:opacity-50 shadow-lg shadow-accent-blue/20"
                     >
                         {isLoading ? (
                             <Loader2 className="w-4 h-4 animate-spin" />
                         ) : (
-                            'Authorize Session'
+                            'Sign In'
                         )}
                     </button>
                 </form>
 
-                <div className="mt-8 pt-8 border-t border-[#1F2937] text-center">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#475569] leading-6">
-                        Godzilla Hardening Protocol v2.1 <br />
-                        <span className="text-blue-500/50">Restricted Environmental Access</span>
+                <div className="mt-10 pt-8 border-t border-[#1F2937] text-center">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#4B5563] leading-6">
+                        GODZILLA INFRASTRUCTURE v2.1 <br />
+                        <span className="text-accent-blue/50">Restricted Access Portal</span>
                     </p>
                 </div>
             </motion.div>
@@ -136,8 +136,8 @@ function AdminLoginContent() {
 export default function AdminLoginPage() {
     return (
         <Suspense fallback={
-            <div className="min-h-screen bg-[#0B1220] flex items-center justify-center">
-                <div className="w-8 h-8 border-2 border-slate-700 border-t-blue-500 rounded-full animate-spin" />
+            <div className="min-h-screen bg-primary flex items-center justify-center">
+                <div className="w-8 h-8 border-2 border-border border-t-accent-blue rounded-full animate-spin" />
             </div>
         }>
             <AdminLoginContent />

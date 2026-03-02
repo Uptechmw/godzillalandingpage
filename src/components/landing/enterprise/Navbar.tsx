@@ -1,14 +1,31 @@
-import React from 'react';
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 const Navbar = () => {
+    const [scrolled, setScrolled] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setScrolled(window.scrollY > 20);
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     return (
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-black/40 backdrop-blur-md border-b border-border/50">
-            <div className="enterprise-container flex items-center justify-between h-[80px]">
+        <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
+                ? 'bg-primary/80 backdrop-blur-md h-[64px] border-b border-border shadow-lg'
+                : 'bg-transparent h-[80px]'
+            }`}>
+            <div className="enterprise-container flex items-center justify-between h-full">
                 <div className="flex items-center gap-12">
-                    <div className="text-[22px] font-display font-black tracking-tighter text-glow-blue uppercase">
-                        GODZILLA AI
-                    </div>
+                    <Link href="/" className="group">
+                        <div className="text-[20px] font-display font-black tracking-tighter text-glow-blue uppercase transition-transform group-hover:scale-[0.98]">
+                            GODZILLA AI
+                        </div>
+                    </Link>
                     <div className="hidden lg:flex items-center gap-8">
                         <Link href="#architecture" className="label-micro text-text-muted hover:text-text transition-colors">Architecture</Link>
                         <Link href="#models" className="label-micro text-text-muted hover:text-text transition-colors">Models</Link>
@@ -18,8 +35,8 @@ const Navbar = () => {
                 </div>
 
                 <div className="flex items-center gap-6">
-                    <Link href="/auth/login" className="hidden sm:block label-micro text-text-muted hover:text-text">Sign In</Link>
-                    <Link href="/auth/signup" className="btn-primary label-micro px-8">Get Started</Link>
+                    <Link href="/auth/login" className="hidden sm:block label-micro text-text-muted hover:text-text transition-colors">Sign In</Link>
+                    <Link href="/auth/signup" className="btn-primary label-micro px-8 !h-[40px]">Get Started</Link>
                 </div>
             </div>
         </nav>

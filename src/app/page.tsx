@@ -14,7 +14,7 @@ import Footer from '@/components/landing/enterprise/Footer';
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-primary text-text font-sans antialiased text-base selection:bg-emerald/30">
+    <main className="min-h-screen bg-primary text-text font-sans antialiased text-base selection:bg-accent-blue/30">
       <Navbar />
 
       <div className="pt-20">

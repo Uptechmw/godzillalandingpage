@@ -37,38 +37,17 @@ export const metadata: Metadata = {
 };
 
 import { ToastProvider, ToastInitializer } from "@/components/ui/toast";
+import SeoJsonLd from "@/components/seo/SeoJsonLd";
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "Godzilla AI",
-    "operatingSystem": "macOS, Windows, Linux",
-    "applicationCategory": "DeveloperApplication",
-    "description": "Multi-Model AI Development Platform for Production Software Engineering",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
-    "publisher": {
-      "@type": "Organization",
-      "name": "Godzilla Infrastructure AI",
-      "logo": "https://godzillaai.dev/images/enterprise/godzilla_icon.png"
-    }
-  };
-
   return (
     <html lang="en" className="dark">
       <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
+        <SeoJsonLd />
       </head>
       <body className={`${outfit.variable} font-outfit antialiased`}>
         <ToastProvider>

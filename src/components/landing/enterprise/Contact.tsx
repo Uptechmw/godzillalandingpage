@@ -6,25 +6,25 @@ const Contact = () => {
             <div className="enterprise-container">
                 <div className="grid lg:grid-cols-2 gap-20 items-center">
                     <div>
-                        <span className="label-micro text-accent-blue mb-6 inline-block">Engineering Support</span>
-                        <h2 className="h2 mb-8">Talk to Our Engineering Team</h2>
+                        <span className="label-micro text-accent-blue mb-6 inline-block">Direct Engineering Access</span>
+                        <h2 className="h2 mb-8">Infrastructure Technical Support</h2>
                         <p className="body-lg text-text-muted mb-12 max-w-md">
-                            Direct technical access for production scaling, security audits, and infrastructure integration.
+                            Direct technical access for production scaling, secure audits, and infrastructure integration. Reach our engineering team directly.
                         </p>
 
-                        <div className="space-y-6">
-                            <div className="flex items-center gap-6 p-4 border border-border bg-surface-soft rounded-sm">
-                                <div className="label-micro text-text-faint w-24">General</div>
-                                <a href="mailto:support@godzillaai.dev" className="text-[17px] font-mono text-accent-blue hover:underline">support@godzillaai.dev</a>
-                            </div>
-                            <div className="flex items-center gap-6 p-4 border border-border bg-surface-soft rounded-sm">
-                                <div className="label-micro text-text-faint w-24">Enterprise</div>
-                                <a href="mailto:enterprise@godzillaai.dev" className="text-[17px] font-mono text-accent-blue hover:underline">enterprise@godzillaai.dev</a>
-                            </div>
-                            <div className="flex items-center gap-6 p-4 border border-border bg-surface-soft rounded-sm">
-                                <div className="label-micro text-text-faint w-24">Security</div>
-                                <a href="mailto:security@godzillaai.dev" className="text-[17px] font-mono text-accent-blue hover:underline">security@godzillaai.dev</a>
-                            </div>
+                        <div className="space-y-4">
+                            {[
+                                { label: 'Infrastucture', email: 'support@godzillaai.dev' },
+                                { label: 'Auth & Security', email: 'security@godzillaai.dev' },
+                                { label: 'Enterprise Ops', email: 'enterprise@godzillaai.dev' }
+                            ].map((item, idx) => (
+                                <div key={idx} className="flex items-center gap-6 p-5 border border-border bg-surface rounded-md hover:border-accent-blue/30 transition-colors">
+                                    <div className="label-micro text-text-muted w-24 border-r border-border/50">{item.label}</div>
+                                    <a href={`mailto:${item.email}`} className="text-[15px] font-mono text-text hover:text-accent-blue transition-colors font-bold tracking-tight">
+                                        {item.email}
+                                    </a>
+                                </div>
+                            ))}
                         </div>
                     </div>
 

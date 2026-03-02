@@ -79,8 +79,8 @@ export default function Verify2FAPage() {
     return (
         <div className="min-h-screen bg-primary flex flex-col lg:flex-row overflow-hidden">
             {/* Left Panel: Brand Authority (Unified with User Auth) */}
-            <div className="hidden lg:flex lg:w-1/2 relative bg-[#070A11] flex-col justify-between p-16 border-r border-border overflow-hidden">
-                <div className="absolute inset-0 bg-[linear-gradient(rgba(37,99,235,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(37,99,235,0.05)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none"></div>
+            <div className="hidden lg:flex lg:w-1/2 relative bg-[#0F172A] flex-col justify-between p-16 border-r border-border overflow-hidden">
+                <div className="absolute inset-0 bg-[linear-gradient(rgba(37,99,235,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(37,99,235,0.03)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none"></div>
 
                 <div className="relative z-10">
                     <Link href="/" className="inline-block mb-24">
@@ -90,21 +90,21 @@ export default function Verify2FAPage() {
                     </Link>
 
                     <div className="max-w-md">
-                        <h2 className="text-4xl font-display font-extrabold tracking-tight text-white mb-6 leading-tight">
-                            Elevated Access Verification
+                        <h2 className="text-4xl font-display font-extrabold tracking-tight text-[#F9FAFB] mb-6 leading-tight">
+                            Identity Verification
                         </h2>
-                        <p className="text-lg text-text-muted mb-12 leading-relaxed">
-                            Administrative entry detected. Restricted environment access requires secondary hardware-backed or multi-factor authorization.
+                        <p className="text-lg text-[#E5E7EB] mb-12 leading-relaxed">
+                            To protect your account, a second layer of verification is required for administrative access.
                         </p>
 
                         <div className="flex flex-col gap-6">
                             <div className="flex items-center gap-3">
                                 <CheckCircle2 className="w-5 h-5 text-accent-blue" />
-                                <span className="label-micro text-text-muted">Administrator MFA Gate</span>
+                                <span className="text-sm font-medium text-[#9CA3AF]">Multi-factor authentication</span>
                             </div>
                             <div className="flex items-center gap-3">
                                 <CheckCircle2 className="w-5 h-5 text-accent-blue" />
-                                <span className="label-micro text-text-muted">Session Token Isolation</span>
+                                <span className="text-sm font-medium text-[#9CA3AF]">Zero-trust session isolation</span>
                             </div>
                         </div>
                     </div>
@@ -115,51 +115,51 @@ export default function Verify2FAPage() {
                     <div className="flex items-center gap-12 opacity-60">
                         <div className="flex flex-col">
                             <span className="label-micro text-text-faint mb-1">Access Level</span>
-                            <span className="text-xs font-mono font-bold text-accent-blue">SYSTEM_ADMIN_ROOT</span>
+                            <span className="text-xs font-mono font-bold text-accent-blue">SYSTEM_ADMIN</span>
                         </div>
                         <div className="flex flex-col">
-                            <span className="label-micro text-text-faint mb-1">Gate ID</span>
-                            <span className="text-xs font-mono font-bold text-accent-blue">GATE-ROOT-A2</span>
+                            <span className="label-micro text-text-faint mb-1">Status</span>
+                            <span className="text-xs font-mono font-bold text-accent-blue">PENDING_VERIFICATION</span>
                         </div>
                     </div>
                 </div>
 
-                <div className="absolute bottom-0 right-0 w-2/3 h-1/2 opacity-10 pointer-events-none translate-x-1/4 translate-y-1/4 grayscale invert">
+                <div className="absolute bottom-0 right-0 w-2/3 h-1/2 opacity-5 pointer-events-none translate-x-1/4 translate-y-1/4 grayscale invert">
                     <img src="/images/enterprise/architecture.png" alt="" className="w-full h-full object-contain" />
                 </div>
             </div>
 
             {/* Right Panel: 2FA Form */}
-            <div className="flex-1 flex items-center justify-center p-8 bg-primary">
+            <div className="flex-1 flex items-center justify-center p-8 bg-[#111827]">
                 <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="w-full max-w-[420px]"
+                    className="w-full max-w-[440px] bg-[#0B1220] p-10 rounded-xl border border-[#1F2937] shadow-2xl"
                 >
-                    <div className="mb-12">
-                        <div className="lg:hidden text-[22px] font-display font-black tracking-tighter text-glow-blue uppercase mb-12">
+                    <div className="mb-10">
+                        <div className="lg:hidden text-[22px] font-display font-black tracking-tighter text-glow-blue uppercase mb-10">
                             GODZILLA AI
                         </div>
-                        <div className="flex items-center gap-4 mb-3">
-                            <div className="w-10 h-10 bg-surface-soft border border-border flex items-center justify-center rounded-md text-accent-blue">
+                        <div className="flex items-center gap-4 mb-4">
+                            <div className="w-10 h-10 bg-[#0F172A] border border-[#1F2937] flex items-center justify-center rounded-lg text-accent-blue">
                                 <Shield className="w-5 h-5" />
                             </div>
-                            <h1 className="h2 translate-y-[2px]">Admin Auth</h1>
+                            <h1 className="text-2xl font-bold text-[#F9FAFB] tracking-tight">Verification</h1>
                         </div>
-                        <p className="text-text-muted text-[15px] font-medium leading-relaxed">
-                            Controlled session. Please enter your root administrative authorization code to proceed to management portal.
+                        <p className="text-[#9CA3AF] text-sm font-medium leading-relaxed font-sans">
+                            A verification code has been sent to your email. Please enter it below to confirm your identity.
                         </p>
                     </div>
 
                     <form className="space-y-8" onSubmit={handleSubmit}>
                         {error && (
-                            <div className="flex items-center gap-3 p-4 bg-red-400/5 border border-red-400/20 rounded-md text-red-400 text-xs font-semibold">
+                            <div className="flex items-center gap-3 p-4 bg-red-400/5 border border-red-400/20 rounded-md text-red-400 text-xs font-semibold font-sans">
                                 <AlertCircle size={14} />
                                 <span>{error}</span>
                             </div>
                         )}
 
-                        <div className="flex justify-between gap-2">
+                        <div className="flex justify-between gap-3">
                             {otp.map((digit, i) => (
                                 <input
                                     key={i}
@@ -169,7 +169,7 @@ export default function Verify2FAPage() {
                                     value={digit}
                                     onChange={(e) => handleChange(i, e.target.value)}
                                     onKeyDown={(e) => handleKeyDown(i, e)}
-                                    className="w-12 h-14 bg-[#070A11] border border-border rounded-md text-center text-xl font-bold text-white focus:outline-none focus:border-accent-blue/50 focus:ring-1 focus:ring-accent-blue/20 transition-all shadow-inner"
+                                    className="w-full h-14 bg-[#0F172A] border border-[#1F2937] rounded-lg text-center text-xl font-bold text-[#F9FAFB] focus:outline-none focus:border-accent-blue focus:ring-4 focus:ring-accent-blue/10 transition-all shadow-inner"
                                     autoComplete="off"
                                 />
                             ))}
@@ -179,31 +179,31 @@ export default function Verify2FAPage() {
                             <button
                                 type="submit"
                                 disabled={isLoading}
-                                className="w-full py-4 rounded-md bg-accent-blue text-white font-bold text-sm transition-all flex items-center justify-center gap-2 mt-4 disabled:opacity-50 shadow-lg shadow-accent-blue/20"
+                                className="w-full h-[48px] rounded-lg bg-accent-blue text-white font-bold text-sm transition-all flex items-center justify-center gap-2 mt-4 disabled:opacity-50 shadow-lg shadow-accent-blue/20"
                             >
                                 {isLoading ? (
                                     <Loader2 className="w-4 h-4 animate-spin" />
                                 ) : (
-                                    'CONFIRM ADMIN IDENTITY'
+                                    'Confirm code'
                                 )}
                             </button>
 
                             <button
                                 type="button"
                                 onClick={() => router.push('/auth/login')}
-                                className="w-full flex items-center justify-center gap-2 text-[11px] font-bold uppercase tracking-widest text-text-faint hover:text-text transition-colors"
+                                className="w-full flex items-center justify-center gap-2 text-xs font-bold text-[#4B5563] hover:text-[#E5E7EB] transition-colors"
                             >
-                                <ArrowLeft size={12} />
-                                Terminate & Return
+                                <ArrowLeft size={14} />
+                                Back to login
                             </button>
                         </div>
                     </form>
 
-                    <div className="mt-16 pt-8 border-t border-border flex justify-between items-center text-[10px] uppercase font-bold tracking-widest text-text-faint">
-                        <span>GODZILLA ROOT SECURITY</span>
-                        <span className="flex items-center gap-2 text-success">
-                            <span className="w-1.5 h-1.5 bg-success rounded-full animate-pulse"></span>
-                            ISOLATED SESSION
+                    <div className="mt-12 pt-8 border-t border-[#1F2937] flex justify-between items-center text-[10px] uppercase font-bold tracking-widest text-[#4B5563]">
+                        <span>GODZILLA INFRASTRUCTURE</span>
+                        <span className="flex items-center gap-2">
+                            <span className="w-1.5 h-1.5 bg-success rounded-full"></span>
+                            SECURE SESSION
                         </span>
                     </div>
                 </motion.div>

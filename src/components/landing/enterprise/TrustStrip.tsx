@@ -1,29 +1,15 @@
 import React from 'react';
 
 const TrustStrip = () => {
-    const items = [
-        { label: 'Multi-Model Orchestration', detail: 'Native intelligence' },
-        { label: 'Secure Local Execution', detail: 'Privacy-first reasoning' },
-        { label: 'Repository-Wide Context', detail: 'System awareness' },
-        { label: 'Enterprise Authentication', detail: 'RBAC & Audit logs' },
-        { label: 'Infrastructure Billing', detail: 'Usage-based economy' },
-    ];
-
     return (
-        <div className="border-b border-border bg-black/20">
-            <div className="enterprise-container py-10">
-                <div className="flex flex-wrap justify-between items-center gap-8 lg:gap-0">
-                    {items.map((item, idx) => (
-                        <React.Fragment key={idx}>
-                            <div className="flex flex-col">
-                                <span className="label-micro text-accent-blue mb-2">{item.detail}</span>
-                                <span className="text-sm font-bold tracking-tight text-text whitespace-nowrap">{item.label}</span>
-                            </div>
-                            {idx < items.length - 1 && (
-                                <div className="hidden lg:block w-px h-8 bg-border"></div>
-                            )}
-                        </React.Fragment>
-                    ))}
+        <div className="border-b border-border bg-surface-soft py-10">
+            <div className="enterprise-container flex flex-wrap items-center justify-between gap-8 opacity-40 grayscale contrast-125">
+                <span className="label-micro text-text-muted">Trusted by Infrastructures at:</span>
+                <div className="flex flex-wrap items-center gap-12 lg:gap-20">
+                    <span className="text-[18px] font-black tracking-tighter uppercase">Vertex Systems</span>
+                    <span className="text-[18px] font-black tracking-tighter uppercase">Cipher Global</span>
+                    <span className="text-[18px] font-black tracking-tighter uppercase">Luminous Corp</span>
+                    <span className="text-[18px] font-black tracking-tighter uppercase">Apex Engineering</span>
                 </div>
             </div>
         </div>

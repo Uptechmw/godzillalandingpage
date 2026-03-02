@@ -1,36 +1,49 @@
 import React from 'react';
+import { Shield, Lock, EyeOff, Globe } from 'lucide-react';
 
 const SecurityPrivacy = () => {
-    const features = [
-        { title: 'HttpOnly Session Cookies', desc: 'Secure server-side cookies with Zero-Trust browser access.' },
-        { title: 'DB-Verified Revocation', desc: 'Real-time session invalidation with immediate global propagation.' },
-        { title: 'Admin MFA (OTP)', desc: 'Mandatory multi-factor authentication for all administrative control.' },
-        { title: 'Secure Local Access', desc: 'Isolated sandbox runtime for native code reasoning and execution.' },
-        { title: 'Canonical API Contracts', desc: 'Standardized error handling and audit-ready communication protocols.' },
-        { title: 'Role-Based Permissions', desc: 'Granular access control designed for industrial engineering teams.' },
+    const guards = [
+        {
+            title: 'Isolated Execution',
+            desc: 'Code runs in ephemeral, secure local runtimes with zero external exposure.',
+            icon: <Lock className="w-5 h-5" />
+        },
+        {
+            title: 'HttpOnly Protocol',
+            desc: 'Session security via encrypted, system-level cookie synchronization.',
+            icon: <Shield className="w-5 h-5" />
+        },
+        {
+            title: 'Zero-Persistence Law',
+            desc: 'We never store your proprietary source code or repository context.',
+            icon: <EyeOff className="w-5 h-5" />
+        },
+        {
+            title: 'Compliance Ready',
+            desc: 'SOC2 Type II and GDPR compliant infrastructure for global teams.',
+            icon: <Globe className="w-5 h-5" />
+        },
     ];
 
     return (
-        <section className="section-standard border-b border-border bg-primary">
-            <div className="enterprise-container text-left">
-                <div className="mb-16">
-                    <span className="label-micro text-accent-blue mb-6 inline-block">Security Infrastructure</span>
-                    <h2 className="h2 mb-8">Uncompromising Privacy and Security</h2>
-                    <p className="body-lg text-text-muted max-w-content">
-                        Godzilla AI is engineered with a "Defense in Depth" philosophy, ensuring that your code, credentials, and context remain within your secure environment.
+        <section className="section-standard border-b border-border bg-primary py-32">
+            <div className="enterprise-container">
+                <div className="text-center mb-24 max-w-2xl mx-auto">
+                    <span className="label-micro text-accent-blue mb-6 inline-block">Security First</span>
+                    <h2 className="h2 mb-6 text-glow-blue">Industrial-Grade Protection</h2>
+                    <p className="body-lg text-text-muted">
+                        Godzilla AI is engineered for the most sensitive production environments. Your code never leaves your infrastructure.
                     </p>
                 </div>
 
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16">
-                    {features.map((feature, idx) => (
-                        <div key={idx} className="flex flex-col group">
-                            <div className="w-12 h-12 border border-border bg-surface-soft flex items-center justify-center mb-6 group-hover:border-accent-blue transition-colors rounded-sm">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-accent-blue"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0110 0v4" /></svg>
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    {guards.map((guard, idx) => (
+                        <div key={idx} className="group p-8 border border-border bg-surface-soft rounded-lg hover:border-accent-blue/50 transition-colors">
+                            <div className="w-10 h-10 rounded bg-primary border border-border flex items-center justify-center text-accent-blue mb-6 group-hover:scale-110 transition-transform">
+                                {guard.icon}
                             </div>
-                            <h3 className="text-[19px] font-bold mb-4">{feature.title}</h3>
-                            <p className="text-[16px] text-text-muted leading-relaxed">
-                                {feature.desc}
-                            </p>
+                            <h3 className="text-lg font-bold text-text mb-3">{guard.title}</h3>
+                            <p className="text-[14px] text-text-muted leading-relaxed font-medium">{guard.desc}</p>
                         </div>
                     ))}
                 </div>

@@ -104,9 +104,9 @@ function LoginForm() {
     return (
         <div className="min-h-screen bg-primary flex flex-col lg:flex-row overflow-hidden">
             {/* Left Panel: Brand Authority & Visuals */}
-            <div className="hidden lg:flex lg:w-1/2 relative bg-[#070A11] flex-col justify-between p-16 border-r border-border overflow-hidden">
+            <div className="hidden lg:flex lg:w-1/2 relative bg-[#0F172A] flex-col justify-between p-16 border-r border-border overflow-hidden">
                 {/* Background Blueprint Grid */}
-                <div className="absolute inset-0 bg-[linear-gradient(rgba(37,99,235,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(37,99,235,0.05)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none"></div>
+                <div className="absolute inset-0 bg-[linear-gradient(rgba(37,99,235,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(37,99,235,0.03)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none"></div>
 
                 <div className="relative z-10">
                     <Link href="/" className="inline-block mb-24">
@@ -116,23 +116,23 @@ function LoginForm() {
                     </Link>
 
                     <div className="max-w-md">
-                        <h2 className="text-4xl font-display font-extrabold tracking-tight text-white mb-6 leading-tight">
-                            Secure Access to Godzilla AI Infrastructure
+                        <h2 className="text-4xl font-display font-extrabold tracking-tight text-[#F9FAFB] mb-6 leading-tight">
+                            Sign in to Godzilla AI
                         </h2>
-                        <p className="text-lg text-text-muted mb-12 leading-relaxed">
-                            Access the mission-critical development platform for multi-model AI orchestration and production software engineering.
+                        <p className="text-lg text-[#E5E7EB] mb-12 leading-relaxed">
+                            Access your workspace and continue building with AI.
                         </p>
 
                         <div className="space-y-6">
                             {[
                                 "Multi-model AI Orchestration",
-                                "Production-grade Authentication",
-                                "Deterministic Billing Engine",
-                                "Enterprise-level Runtime Security"
+                                "Isolated secure local runtimes",
+                                "Transparent infrastructure billing",
+                                "Zero-persistence source privacy"
                             ].map((item, idx) => (
                                 <div key={idx} className="flex items-center gap-3">
                                     <CheckCircle2 className="w-5 h-5 text-accent-blue" />
-                                    <span className="label-micro text-text-muted">{item}</span>
+                                    <span className="text-sm font-medium text-[#9CA3AF]">{item}</span>
                                 </div>
                             ))}
                         </div>
@@ -143,37 +143,37 @@ function LoginForm() {
                     <div className="flex items-center gap-12 opacity-60">
                         <div className="flex flex-col">
                             <span className="label-micro text-text-faint mb-1">Environment</span>
-                            <span className="text-xs font-mono font-bold text-accent-blue">PRODUCTION_SERVER_V1</span>
+                            <span className="text-xs font-mono font-bold text-accent-blue">STABLE_PRODUCTION</span>
                         </div>
                         <div className="flex flex-col">
                             <span className="label-micro text-text-faint mb-1">Version</span>
-                            <span className="text-xs font-mono font-bold text-accent-blue">v1.2.0-STABLE</span>
+                            <span className="text-xs font-mono font-bold text-accent-blue">v1.2.0</span>
                         </div>
                     </div>
                 </div>
 
                 {/* Faint architecture graphic in background */}
-                <div className="absolute bottom-0 right-0 w-2/3 h-1/2 opacity-10 pointer-events-none translate-x-1/4 translate-y-1/4 grayscale invert">
+                <div className="absolute bottom-0 right-0 w-2/3 h-1/2 opacity-5 pointer-events-none translate-x-1/4 translate-y-1/4 grayscale invert">
                     <img src="/images/enterprise/architecture.png" alt="" className="w-full h-full object-contain" />
                 </div>
             </div>
 
             {/* Right Panel: Auth Form */}
-            <div className="flex-1 flex items-center justify-center p-8 bg-primary">
+            <div className="flex-1 flex items-center justify-center p-8 bg-[#111827]">
                 <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="w-full max-w-[420px]"
+                    className="w-full max-w-[440px] bg-[#0B1220] p-10 rounded-xl border border-[#1F2937] shadow-2xl"
                 >
-                    <div className="mb-12">
-                        <div className="lg:hidden text-[22px] font-display font-black tracking-tighter text-glow-blue uppercase mb-12">
+                    <div className="mb-10">
+                        <div className="lg:hidden text-[22px] font-display font-black tracking-tighter text-glow-blue uppercase mb-10">
                             GODZILLA AI
                         </div>
-                        <h1 className="h2 mb-3">
-                            {isSignUp ? "Initialize Workspace" : "Sign in to Workspace"}
+                        <h1 className="text-2xl font-bold text-[#F9FAFB] mb-2">
+                            {isSignUp ? "Create your account" : "Sign in"}
                         </h1>
-                        <p className="text-text-muted text-[15px] font-medium">
-                            Authorized personnel only. Secure session protocol enforced.
+                        <p className="text-[#9CA3AF] text-sm font-medium font-sans">
+                            Use your account credentials to access your workspace.
                         </p>
                     </div>
 
@@ -181,7 +181,7 @@ function LoginForm() {
                         <button
                             onClick={() => handleOAuthLogin('github')}
                             disabled={loading || githubLoading}
-                            className="w-full flex items-center justify-center gap-3 py-3 rounded-md border border-border bg-surface hover:bg-surface-soft text-white font-bold text-sm transition-all disabled:opacity-50"
+                            className="w-full flex items-center justify-center gap-3 h-[48px] rounded-lg border border-[#1F2937] bg-transparent hover:bg-[#161B22] text-[#E5E7EB] font-semibold text-sm transition-all disabled:opacity-50"
                         >
                             {githubLoading ? (
                                 <Loader2 className="w-4 h-4 animate-spin text-accent-blue" />
@@ -191,25 +191,25 @@ function LoginForm() {
                             Continue with GitHub
                         </button>
 
-                        <div className="relative py-4">
+                        <div className="relative py-2">
                             <div className="absolute inset-0 flex items-center">
-                                <div className="w-full border-t border-border"></div>
+                                <div className="w-full border-t border-[#1F2937]"></div>
                             </div>
-                            <div className="relative flex justify-center text-[10px] uppercase font-bold tracking-widest text-text-faint">
-                                <span className="px-4 bg-primary uppercase">Identity Access Management</span>
+                            <div className="relative flex justify-center text-[10px] uppercase font-bold tracking-widest text-[#4B5563]">
+                                <span className="px-4 bg-[#0B1220]">OR CONTINUE WITH EMAIL</span>
                             </div>
                         </div>
 
-                        <form onSubmit={handleEmailAuth} className="space-y-6">
+                        <form onSubmit={handleEmailAuth} className="space-y-5">
                             <div className="space-y-2">
-                                <label className="label-micro text-text-muted px-1">Work Email</label>
+                                <label className="text-xs font-bold text-[#9CA3AF] px-1">Email Address</label>
                                 <div className="relative">
-                                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-faint" />
+                                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#4B5563]" />
                                     <input
                                         type="email"
-                                        placeholder="name@organization.com"
+                                        placeholder="name@company.com"
                                         required
-                                        className="w-full bg-[#070A11] border border-border rounded-md py-3.5 pl-12 pr-4 outline-none transition-all text-sm text-white placeholder:text-text-faint focus:border-accent-blue/50 focus:ring-1 focus:ring-accent-blue/20"
+                                        className="w-full h-[48px] bg-[#0F172A] border border-[#1F2937] rounded-lg pl-12 pr-4 outline-none transition-all text-sm text-[#F9FAFB] placeholder:text-[#4B5563] focus:border-accent-blue focus:ring-4 focus:ring-accent-blue/10"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                     />
@@ -218,21 +218,21 @@ function LoginForm() {
 
                             <div className="space-y-2">
                                 <div className="flex justify-between items-center px-1">
-                                    <label className="label-micro text-text-muted">Password</label>
+                                    <label className="text-xs font-bold text-[#9CA3AF]">Password</label>
                                     {!isSignUp && (
-                                        <Link href="/auth/reset-password" title="Recover Access" className="text-[11px] font-bold text-text-faint hover:text-accent-blue transition-colors uppercase tracking-wider">
-                                            Recover Access
+                                        <Link href="/auth/reset-password" title="Recover Access" className="text-xs font-semibold text-[#4B5563] hover:text-accent-blue transition-colors">
+                                            Forgot password?
                                         </Link>
                                     )}
                                 </div>
                                 <div className="relative">
-                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-faint" />
+                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#4B5563]" />
                                     <input
                                         type="password"
                                         placeholder="••••••••"
                                         required
                                         minLength={8}
-                                        className="w-full bg-[#070A11] border border-border rounded-md py-3.5 pl-12 pr-4 outline-none transition-all text-sm text-white placeholder:text-text-faint focus:border-accent-blue/50 focus:ring-1 focus:ring-accent-blue/20"
+                                        className="w-full h-[48px] bg-[#0F172A] border border-[#1F2937] rounded-lg pl-12 pr-4 outline-none transition-all text-sm text-[#F9FAFB] placeholder:text-[#4B5563] focus:border-accent-blue focus:ring-4 focus:ring-accent-blue/10"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                     />
@@ -242,33 +242,33 @@ function LoginForm() {
                             <button
                                 type="submit"
                                 disabled={loading || githubLoading}
-                                className="w-full py-4 rounded-md bg-accent-blue font-bold text-sm text-white hover:bg-accent-blue-hover active:scale-[0.99] transition-all flex items-center justify-center gap-2 mt-4 disabled:opacity-50 shadow-lg shadow-accent-blue/20"
+                                className="w-full h-[48px] rounded-lg bg-accent-blue font-bold text-sm text-white hover:bg-[#1D4ED8] active:scale-[0.99] transition-all flex items-center justify-center gap-2 mt-2 disabled:opacity-50 shadow-lg shadow-accent-blue/20"
                             >
                                 {loading ? (
                                     <Loader2 className="w-4 h-4 animate-spin" />
                                 ) : (
-                                    isSignUp ? <UserPlus className="w-4 h-4" /> : <Shield className="w-4 h-4" />
+                                    isSignUp ? <UserPlus className="w-4 h-4" /> : <LogIn className="w-4 h-4" />
                                 )}
-                                {isSignUp ? "Initialize Workspace" : "Access Workspace"}
+                                {isSignUp ? "Create account" : "Sign in"}
                             </button>
                         </form>
 
-                        <div className="text-center mt-8">
+                        <div className="text-center mt-6">
                             <button
                                 type="button"
                                 onClick={() => setIsSignUp(!isSignUp)}
-                                className="text-xs font-bold text-text-faint hover:text-text transition-colors uppercase tracking-widest"
+                                className="text-xs font-bold text-[#4B5563] hover:text-[#E5E7EB] transition-colors"
                             >
-                                {isSignUp ? "Existing Personnel? Sign In" : "New Authorization? Request Access"}
+                                {isSignUp ? "Already have an account? Sign in" : "Don’t have an account? Create one"}
                             </button>
                         </div>
                     </div>
 
-                    <div className="mt-16 pt-8 border-t border-border flex justify-between items-center text-[10px] uppercase font-bold tracking-widest text-text-faint">
-                        <span>Godzilla Security V1.2</span>
+                    <div className="mt-12 pt-8 border-t border-[#1F2937] flex justify-between items-center text-[10px] uppercase font-bold tracking-widest text-[#4B5563]">
+                        <span>GODZILLA INFRASTRUCTURE</span>
                         <span className="flex items-center gap-2">
-                            <span className="w-1.5 h-1.5 bg-success rounded-full animate-pulse"></span>
-                            System Operational
+                            <span className="w-1.5 h-1.5 bg-success rounded-full"></span>
+                            SYSTEM OPERATIONAL
                         </span>
                     </div>
                 </motion.div>

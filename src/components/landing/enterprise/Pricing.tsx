@@ -1,46 +1,84 @@
 import React from 'react';
+import { prisma } from '@/lib/db';
+import { supabase } from '@/lib/supabase';
+import { Check } from 'lucide-react';
+import Link from 'next/link';
 
-const Pricing = () => {
-    const tiers = [
-        { name: 'Developer', price: '$0', desc: 'Professional local runtime with bring-your-own-API-key support.', features: ['BYOK Integration', 'Native Local Execution', 'Core Context Processing'] },
-        { name: 'Standard', price: '$29', desc: 'Predictable infrastructure with coin-based usage modeling.', features: ['Unified Model Orchestration', 'Token Consumption Audit', 'Priority Local Runtime'] },
-        { name: 'Team', price: '$99', desc: 'Centralized management for professional engineering teams.', features: ['Admin Control Panel', 'Audit Logging & Compliance', 'Shared Context Store'] },
-        { name: 'Enterprise', price: 'Custom', desc: 'Industrial-grade infrastructure with guaranteed throughput.', features: ['Transparent Token Billing', 'Custom Model Integration', 'SLA Infrastructure Support'] },
-    ];
+const Pricing = async () => {
+    // Fetch user session to determine routing
+    const { data: { session } } = await supabase.auth.getSession();
+    const isLoggedIn = !!session;
+
+    // Fetch active plans from DB
+    const plans = await prisma.tokenProduct.findMany({
+        where: { active: true },
+        orderBy: { priceAmount: 'asc' },
+    });
 
     return (
-        <section className="section-standard border-b border-border bg-primary">
+        <section className="section-standard border-b border-border bg-primary py-32">
             <div className="enterprise-container">
-                <div className="text-left mb-16">
-                    <span className="label-micro text-accent-blue mb-6 inline-block">Subscription Model</span>
-                    <h2 className="h2 mb-8">Predictable Infrastructure Pricing</h2>
+                <div className="text-left mb-16 max-w-2xl">
+                    <span className="label-micro text-accent-blue mb-6 inline-block">Infrastructure Economy</span>
+                    <h2 className="h2 mb-6">Predictable Token-Based Pricing</h2>
+                    <p className="body-lg text-text-muted">
+                        Scalable access to world-class AI models through a transparent usage-based economy. Control your infrastructure spend with surgical precision.
+                    </p>
                 </div>
 
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {tiers.map((tier, idx) => (
-                        <div key={idx} className="enterprise-card flex flex-col items-start h-full border-border/50 hover:border-accent-blue/40 transition-all">
-                            <h3 className="text-[20px] font-bold mb-2">{tier.name}</h3>
-                            <p className="text-[14px] text-text-muted mb-8 leading-relaxed h-12">{tier.desc}</p>
+                    {plans.map((plan) => {
+                        const isPopular = plan.name.toLowerCase().includes('pro') || plan.name.toLowerCase().includes('popular');
+                        const features = (plan.features as string[]) || [];
 
-                            <div className="mb-10 flex items-baseline gap-1">
-                                <span className="text-4xl font-display font-light tracking-tight">{tier.price}</span>
-                                {tier.price !== 'Custom' && <span className="label-micro text-text-faint lowercase">/mo</span>}
-                            </div>
+                        // Decide routing
+                        const ctaHref = isLoggedIn
+                            ? `/dashboard/buy?planId=${plan.id}`
+                            : `/auth/signup?planId=${plan.id}`;
 
-                            <div className="w-full space-y-5 mb-12 flex-grow">
-                                {tier.features.map((f, i) => (
-                                    <div key={i} className="flex gap-3 items-center text-[13px]">
-                                        <div className="w-1.5 h-1.5 bg-emerald opacity-60"></div>
-                                        <span className="text-text-muted">{f}</span>
+                        return (
+                            <div
+                                key={plan.id}
+                                className={`enterprise-card flex flex-col items-start h-full transition-all relative ${isPopular ? 'border-accent-blue ring-1 ring-accent-blue/20' : 'border-border/50'
+                                    }`}
+                            >
+                                {isPopular && (
+                                    <div className="absolute -top-3 left-6 px-3 py-1 bg-accent-blue text-white label-micro !text-[10px] rounded-full">
+                                        Most Popular
                                     </div>
-                                ))}
-                            </div>
+                                )}
 
-                            <button className={`w-full ${idx === 3 ? 'btn-primary' : 'btn-secondary'} label-micro px-0`}>
-                                {idx === 3 ? 'Contact Sales' : 'Select Plan'}
-                            </button>
-                        </div>
-                    ))}
+                                <h3 className="text-xl font-bold mb-2 text-text">{plan.name}</h3>
+                                <div className="mb-8 flex items-baseline gap-1">
+                                    <span className="text-4xl font-display font-light tracking-tight text-text">${plan.priceAmount}</span>
+                                    <span className="label-micro text-text-faint lowercase">/{plan.currency}</span>
+                                </div>
+
+                                <p className="text-[14px] text-text-muted mb-8 leading-relaxed font-medium">
+                                    {plan.description || `Industrial access with ${plan.coins} infrastructure tokens.`}
+                                </p>
+
+                                <div className="w-full space-y-4 mb-10 flex-grow">
+                                    {features.map((f, i) => (
+                                        <div key={i} className="flex gap-3 items-center text-[13px]">
+                                            <Check className="w-4 h-4 text-accent-blue" />
+                                            <span className="text-text-muted font-medium">{f}</span>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <Link
+                                    href={ctaHref}
+                                    className={`w-full flex items-center justify-center py-4 rounded-md label-micro transition-all ${isPopular
+                                            ? 'bg-accent-blue text-white hover:bg-accent-blue-hover shadow-lg shadow-accent-blue/20'
+                                            : 'bg-surface-soft border border-border text-text hover:border-accent-blue/50'
+                                        }`}
+                                >
+                                    Select Infrastructure
+                                </Link>
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
         </section>
