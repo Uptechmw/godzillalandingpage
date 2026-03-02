@@ -27,9 +27,10 @@ const Pricing = async () => {
                 </div>
 
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {plans.map((plan) => {
+                    {Array.isArray(plans) && plans.map((plan) => {
                         const isPopular = plan.name.toLowerCase().includes('pro') || plan.name.toLowerCase().includes('popular');
-                        const features = (plan.features as string[]) || [];
+                        const rawFeatures = plan.features;
+                        const features = Array.isArray(rawFeatures) ? (rawFeatures as string[]) : [];
 
                         // Decide routing
                         const ctaHref = isLoggedIn
@@ -70,8 +71,8 @@ const Pricing = async () => {
                                 <Link
                                     href={ctaHref}
                                     className={`w-full flex items-center justify-center py-4 rounded-md label-micro transition-all ${isPopular
-                                            ? 'bg-accent-blue text-white hover:bg-accent-blue-hover shadow-lg shadow-accent-blue/20'
-                                            : 'bg-surface-soft border border-border text-text hover:border-accent-blue/50'
+                                        ? 'bg-accent-blue text-white hover:bg-accent-blue-hover shadow-lg shadow-accent-blue/20'
+                                        : 'bg-surface-soft border border-border text-text hover:border-accent-blue/50'
                                         }`}
                                 >
                                     Select Infrastructure
