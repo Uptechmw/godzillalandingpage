@@ -38,7 +38,7 @@ const BuiltForTeamsManagement = () => {
                         <div className="absolute -inset-10 bg-emerald/5 blur-[100px] opacity-20 pointer-events-none"></div>
                         <div className="relative border border-border p-2 bg-black/40 backdrop-blur-sm rounded-lg overflow-hidden shadow-2xl skew-y-3 lg:-rotate-3 translate-x-4 lg:translate-x-12 transition-transform duration-700 group-hover:rotate-0 group-hover:skew-y-0 group-hover:translate-x-0">
                             <img
-                                src="/Users/macbookair/.gemini/antigravity/brain/4339a5b1-ce14-4317-a791-b8b186413c7f/admin_dashboard_ui_enterprise_1772480075841.png"
+                                src="/images/enterprise/admin_dashboard.png"
                                 alt="Admin Dashboard UI"
                                 className="w-full h-auto object-cover border border-border rounded-md"
                             />

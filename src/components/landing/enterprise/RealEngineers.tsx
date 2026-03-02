@@ -22,14 +22,14 @@ const RealEngineers = () => {
                     <div className="grid grid-cols-2 gap-4">
                         <div className="border border-border p-1 bg-surface-soft h-64 overflow-hidden relative grayscale hover:grayscale-0 transition-all duration-500 rounded-sm">
                             <img
-                                src="/Users/macbookair/.gemini/antigravity/brain/4339a5b1-ce14-4317-a791-b8b186413c7f/engineers_collaboration_professional_1772479701988.png"
+                                src="/images/enterprise/engineers.png"
                                 alt="Team collaboration"
                                 className="w-full h-full object-cover"
                             />
                         </div>
                         <div className="border border-border p-1 bg-surface-soft h-64 overflow-hidden relative translate-y-12 grayscale hover:grayscale-0 transition-all duration-500 rounded-sm">
                             <img
-                                src="/Users/macbookair/.gemini/antigravity/brain/4339a5b1-ce14-4317-a791-b8b186413c7f/godzilla_icon_1772440818283.png"
+                                src="/images/enterprise/godzilla_icon.png"
                                 alt="Godzilla Identity"
                                 className="w-full h-full object-contain opacity-20 p-8"
                             />

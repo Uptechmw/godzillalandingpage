@@ -20,7 +20,7 @@ const Architecture = () => {
 
                     <div className="relative border border-border p-4 bg-black/40 backdrop-blur-xl rounded-lg overflow-hidden shadow-2xl">
                         <img
-                            src="/Users/macbookair/.gemini/antigravity/brain/4339a5b1-ce14-4317-a791-b8b186413c7f/infrastructure_architecture_diagram_1772479799207.png"
+                            src="/images/enterprise/architecture.png"
                             alt="Infrastructure Architecture"
                             className="w-full h-auto object-cover border border-border rounded-md"
                         />

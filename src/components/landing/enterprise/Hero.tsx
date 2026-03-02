@@ -45,7 +45,7 @@ const Hero = () => {
                     <div className="absolute -inset-8 bg-emerald/5 blur-[100px] opacity-20 pointer-events-none"></div>
                     <div className="relative border border-border p-2 bg-black/40 backdrop-blur-sm rounded-lg overflow-hidden shadow-2xl">
                         <img
-                            src="/Users/macbookair/.gemini/antigravity/brain/4339a5b1-ce14-4317-a791-b8b186413c7f/enterprise_workstation_hero_1772479568746.png"
+                            src="/images/enterprise/hero.png"
                             alt="Godzilla AI Workstation"
                             className="w-full h-auto object-cover border border-border rounded-md"
                         />

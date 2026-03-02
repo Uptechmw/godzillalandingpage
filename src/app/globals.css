@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 :root {
   /* --- Enterprise Brand Palette --- */
   --color-primary: #0B0F14;
