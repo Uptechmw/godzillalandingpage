@@ -51,13 +51,13 @@ export default function Navbar() {
                 <Link href="/" className="flex items-center gap-3 group relative z-[1001]">
                     <Image
                         src="/assets/logo.png"
-                        alt="Godzilla Coder"
+                        alt="Godzilla"
                         width={28}
                         height={28}
                         className="w-7 h-7"
                     />
                     <span className="font-semibold text-sm tracking-tight" style={{ color: 'var(--color-text)' }}>
-                        Godzilla Coder
+                        Godzilla
                     </span>
                 </Link>
 

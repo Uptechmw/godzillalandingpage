@@ -9,6 +9,8 @@
  */
 
 import nodemailer from 'nodemailer';
+import { prisma } from '@/lib/db';
+import { SecretsService } from '@/services/admin/config/settings.service';
 
 interface EmailOptions {
   to: string;
@@ -37,29 +39,39 @@ export async function sendOTPEmail(email: string, code: string, customConfig?: a
       <body>
         <div class="container">
           <div class="header">
-            <h1>Godzilla Coder</h1>
+            <h1>Godzilla AI</h1>
             <p>Email Verification</p>
           </div>
           <div class="content">
             <p>Hi there!</p>
-            <p>Thanks for signing up for Godzilla Coder. To complete your registration, please verify your email address using the code below:</p>
+            <p>Thanks for signing up for Godzilla AI. To complete your registration, please verify your email address using the code below:</p>
             <div class="code">${code}</div>
             <p>This code will expire in 10 minutes.</p>
             <p>If you didn't request this code, you can safely ignore this email.</p>
           </div>
           <div class="footer">
-            <p>&copy; ${new Date().getFullYear()} Godzilla Coder. All rights reserved.</p>
+            <p>&copy; ${new Date().getFullYear()} Godzilla AI. All rights reserved.</p>
           </div>
         </div>
       </body>
     </html>
   `;
 
+  // Fetch SMTP config from DB/ENV if not provided
+  let config = customConfig;
+  if (!config) {
+    try {
+      config = await SecretsService.getSmtpConfig();
+    } catch (e) {
+      console.warn('[Email] Failed to fetch config, falling back to basic checks in sendEmail');
+    }
+  }
+
   await sendEmail({
     to: email,
-    subject: 'Verify your Godzilla Coder account',
+    subject: 'Verify your Godzilla AI account',
     html,
-  }, customConfig);
+  }, config);
 }
 
 /**
@@ -86,7 +98,7 @@ export async function sendAdminOTPEmail(email: string, code: string, customConfi
       <body>
         <div class="container">
           <div class="header">
-            <div class="title">GODZILLA CODER</div>
+            <div class="title">GODZILLA AI</div>
             <p style="color: #64748B; font-size: 12px; margin-top: 5px;">SECURITY PROTOCOL</p>
           </div>
           <div class="content">
@@ -103,11 +115,21 @@ export async function sendAdminOTPEmail(email: string, code: string, customConfi
     </html>
   `;
 
+  // Fetch SMTP config from DB/ENV if not provided
+  let config = customConfig;
+  if (!config) {
+    try {
+      config = await SecretsService.getSmtpConfig();
+    } catch (e) {
+      console.warn('[Email] Failed to fetch config, falling back to basic checks in sendEmail');
+    }
+  }
+
   await sendEmail({
     to: email,
     subject: 'System Authorization Code',
     html,
-  }, customConfig);
+  }, config);
 }
 
 /**

@@ -6,7 +6,7 @@ import { AdminAuthService } from '../security/auth.service';
  * Service for managing Administrative 2FA (Email OTP).
  */
 export class AdminOTPService {
-    private static readonly OTP_EXPIRY_MS = 10 * 60 * 1000; // 10 minutes
+    private static readonly OTP_EXPIRY_MS = 5 * 60 * 1000; // 5 minutes
     private static readonly MAX_ATTEMPTS = 5;
 
     /**
@@ -44,10 +44,22 @@ export class AdminOTPService {
             orderBy: { createdAt: 'desc' }
         });
 
-        if (!record) return false;
+        if (!record) {
+            throw {
+                success: false,
+                errorCode: 'OTP_EXPIRED',
+                message: "Authorization code has expired or is invalid.",
+                requestId: crypto.randomUUID()
+            };
+        }
 
         if (record.attemptCount >= this.MAX_ATTEMPTS) {
-            throw new Error("Too many failed OTP attempts. Please request a new code.");
+            throw {
+                success: false,
+                errorCode: 'OTP_TOO_MANY_ATTEMPTS',
+                message: "Extreme failure count detected. Device locked.",
+                requestId: crypto.randomUUID()
+            };
         }
 
         if (record.otpHash !== otpHash) {
@@ -55,7 +67,12 @@ export class AdminOTPService {
                 where: { id: record.id },
                 data: { attemptCount: { increment: 1 } }
             });
-            return false;
+            throw {
+                success: false,
+                errorCode: 'OTP_INVALID',
+                message: "Invalid authorization code.",
+                requestId: crypto.randomUUID()
+            };
         }
 
         // Mark as used

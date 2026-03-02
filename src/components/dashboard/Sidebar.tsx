@@ -51,12 +51,12 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                     <div className="flex items-center gap-3 cursor-pointer" onClick={() => router.push("/")}>
                         <Image
                             src="/assets/logo.png"
-                            alt="Godzilla Coder"
+                            alt="Godzilla"
                             width={32}
                             height={32}
                             className="w-8 h-8"
                         />
-                        <span className="font-bold text-base" style={{ color: 'var(--color-text)' }}>Godzilla Coder</span>
+                        <span className="font-bold text-base" style={{ color: 'var(--color-text)' }}>Godzilla</span>
                     </div>
                     {/* Mobile Close Button */}
                     <button onClick={onClose} className="lg:hidden p-2 text-slate-500 hover:text-white">

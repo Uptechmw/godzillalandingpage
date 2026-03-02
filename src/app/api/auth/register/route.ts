@@ -12,18 +12,29 @@ import { SecretsService } from '@/services/admin/config/settings.service';
  * Create new user account and send OTP verification email
  */
 export async function POST(request: NextRequest) {
+  const requestId = crypto.randomUUID();
+
   try {
     const body = await request.json();
 
     // Validate input
     const parsed = registerSchema.safeParse(body);
     if (!parsed.success) {
+      const fieldErrors: Record<string, string> = {};
+      parsed.error.errors.forEach(err => {
+        const path = err.path.join('.');
+        if (path) fieldErrors[path] = err.message;
+      });
+
       return NextResponse.json(
         {
           success: false,
-          error: parsed.error.errors[0].message,
+          errorCode: 'VALIDATION_ERROR',
+          message: 'Invalid request parameters',
+          details: { fieldErrors },
+          requestId
         },
-        { status: 400 }
+        { status: 400, headers: { 'x-request-id': requestId } }
       );
     }
 
@@ -38,9 +49,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Email already registered',
+          errorCode: 'AUTH_EMAIL_IN_USE',
+          message: 'Email already registered',
+          requestId
         },
-        { status: 409 }
+        { status: 409, headers: { 'x-request-id': requestId } }
       );
     }
 
@@ -107,18 +120,20 @@ export async function POST(request: NextRequest) {
           name: user.name,
           coins: user.tokenBalance?.coins ?? 20,
         },
+        requestId
       },
-      { status: 201 }
+      { status: 201, headers: { 'x-request-id': requestId } }
     );
   } catch (error: any) {
-    console.error('[Register Error]', error);
+    console.error('[Register]', requestId, error.code || error.message);
     return NextResponse.json(
       {
         success: false,
-        error: 'Failed to create account. Please try again.',
-        details: error?.message || String(error),
+        errorCode: 'INTERNAL_ERROR',
+        message: 'Failed to create account. Please try again.',
+        requestId
       },
-      { status: 500 }
+      { status: 500, headers: { 'x-request-id': requestId } }
     );
   }
 }

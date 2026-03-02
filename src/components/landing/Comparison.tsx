@@ -12,7 +12,7 @@ export default function Comparison() {
             Architectural Differences
           </h2>
           <p className="max-w-2xl leading-relaxed" style={{ color: 'var(--color-muted)' }}>
-            A technical breakdown of how Godzilla Coder compares to web-based chat interfaces and single-model IDE extensions.
+            A technical breakdown of how Godzilla AI compares to web-based chat interfaces and single-model IDE extensions.
           </p>
         </div>
 
@@ -28,7 +28,7 @@ export default function Comparison() {
             <thead>
               <tr style={{ background: 'var(--color-surface)' }}>
                 <th className="px-6 py-5 text-left font-medium w-1/3" style={{ color: 'var(--color-muted)' }}>Capability</th>
-                <th className="px-6 py-5 text-left font-semibold w-1/4" style={{ color: 'var(--color-accent)' }}>Godzilla Coder</th>
+                <th className="px-6 py-5 text-left font-semibold w-1/4" style={{ color: 'var(--color-accent)' }}>Godzilla AI</th>
                 <th className="px-6 py-5 text-left font-medium w-1/4" style={{ color: 'var(--color-text-faint)' }}>Single-Model IDE</th>
                 <th className="px-6 py-5 text-left font-medium w-1/4" style={{ color: 'var(--color-text-faint)' }}>Web Chat</th>
               </tr>

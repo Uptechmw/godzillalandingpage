@@ -40,25 +40,15 @@ function AuthCallbackHandler() {
                     if (!response.ok) {
                         const errData = await response.json().catch(() => ({}));
                         console.error("[Provision Error]", errData.error);
-                        // Don't block login if provisioning fails -- Supabase session is still valid
-                    } else {
-                        const data = await response.json();
-                        if (data.success && data.token) {
-                            // Store our custom JWT in cookies for the middleware
-                            localStorage.setItem('auth_token', data.token);
-                            Cookies.set('auth_token', data.token, { expires: 7 });
-                        }
                     }
                 } catch (provisionErr) {
                     console.error("[Provision Network Error]", provisionErr);
-                    // Continue -- the user still has a valid Supabase session
                 }
 
                 // If the source is the desktop app, redirect using deep link
                 if (source === "app") {
                     const deepLink = `godzillacoder://auth?token=${accessToken}`;
                     window.location.href = deepLink;
-                    // Fallback if deep link isn't captured
                     setTimeout(() => {
                         router.push("/dashboard?status=success");
                     }, 3000);
@@ -77,19 +67,19 @@ function AuthCallbackHandler() {
     }, [router, source]);
 
     return (
-        <div className="min-h-screen bg-godzilla-bg flex flex-col items-center justify-center p-6 text-center">
+        <div className="min-h-screen bg-[#0B1220] flex flex-col items-center justify-center p-6 text-center">
             <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                className="text-godzilla-accent mb-8"
+                className="text-blue-500 mb-8"
             >
                 <Loader2 className="w-12 h-12" />
             </motion.div>
-            <h1 className="text-2xl font-black text-white uppercase tracking-tighter mb-4">Atomic Synchronization</h1>
-            <p className="text-godzilla-text-muted max-w-sm font-bold">
+            <h1 className="text-2xl font-black text-[#F1F5F9] uppercase tracking-tighter mb-4">Identity Synchronization</h1>
+            <p className="text-[#94A3B8] max-w-sm font-bold">
                 {source === "app"
-                    ? "Finalizing secure link to Godzilla Coder desktop. If you aren't redirected, please check your application."
-                    : "Securing your connection to the Godzilla Coder ecosystem..."
+                    ? "Finalizing secure link to Godzilla desktop. If you aren't redirected, please check your application."
+                    : "Securing your connection to the Godzilla ecosystem..."
                 }
             </p>
         </div>
@@ -99,9 +89,9 @@ function AuthCallbackHandler() {
 export default function AuthCallbackPage() {
     return (
         <Suspense fallback={
-            <div className="min-h-screen bg-godzilla-bg flex flex-col items-center justify-center p-6 text-center">
-                <Loader2 className="w-12 h-12 text-godzilla-accent animate-spin mb-4" />
-                <p className="text-godzilla-text-muted font-bold italic">Initializing Atomic Link...</p>
+            <div className="min-h-screen bg-[#0B1220] flex flex-col items-center justify-center p-6 text-center">
+                <Loader2 className="w-12 h-12 text-blue-500 animate-spin mb-4" />
+                <p className="text-[#94A3B8] font-bold italic">Initializing Identity Link...</p>
             </div>
         }>
             <AuthCallbackHandler />

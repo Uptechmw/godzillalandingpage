@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { redis } from '@/lib/redis';
-import { AtomicBrokerError } from '../utils/normalizer';
+import { GodzillaBrokerError } from '../utils/normalizer';
 
 const RATE_LIMIT_SCRIPT = fs.readFileSync(path.join(process.cwd(), 'src/services/ai/broker/lua/rate_limit.lua'), 'utf8');
 
@@ -23,7 +23,7 @@ export class RateLimiter {
         ) as string;
 
         if (result !== "OK") {
-            throw new AtomicBrokerError(
+            throw new GodzillaBrokerError(
                 "UPSTREAM_PROVIDER_ERROR",
                 "You are sending requests too quickly. Please wait a moment."
             );

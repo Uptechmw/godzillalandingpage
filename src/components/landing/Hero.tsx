@@ -68,7 +68,7 @@ export default function Hero() {
                         transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
                         className="text-xl md:text-2xl text-godzilla-text-muted max-w-2xl mx-auto mb-12 font-medium leading-relaxed"
                     >
-                        Godzilla Coder is the elite AI-first editor that orchestrates
+                        Godzilla is the elite AI-first editor that orchestrates
                         multiple AI agents to build entire features in seconds.
                     </motion.p>
 
@@ -123,7 +123,7 @@ export default function Hero() {
 
                         <Image
                             src="/assets/hero.png"
-                            alt="Godzilla Coder Interface"
+                            alt="Godzilla Interface"
                             width={1400}
                             height={800}
                             className="w-full h-auto opacity-90 brightness-110"

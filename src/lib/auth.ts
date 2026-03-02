@@ -9,6 +9,9 @@ import { NextRequest } from 'next/server';
 const JWT_SECRET = process.env.JWT_SECRET || 'build-time-placeholder-secret';
 const secret = new TextEncoder().encode(JWT_SECRET);
 
+export const USER_COOKIE_NAME = 'godzilla_session';
+export const ADMIN_COOKIE_NAME = 'godzilla_admin_session';
+
 export interface JWTPayload {
   id: string;
   email: string;
@@ -49,14 +52,11 @@ export async function verifyToken(token: string): Promise<JWTPayload> {
  */
 export function extractToken(request: NextRequest): string | null {
   const authHeader = request.headers.get('authorization');
-
-  if (!authHeader) {
-    return null;
-  }
-
-  // Support both "Bearer <token>" and "<token>"
-  const parts = authHeader.split(' ');
-  return parts.length === 2 ? parts[1] : authHeader;
+  // Support cookies, Authorization header ("Bearer <token>"), and raw token
+  const token = request.cookies.get(USER_COOKIE_NAME)?.value ||
+    authHeader?.replace('Bearer ', '') ||
+    authHeader;
+  return token || null;
 }
 
 /**

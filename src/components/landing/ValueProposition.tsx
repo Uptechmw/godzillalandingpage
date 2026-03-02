@@ -35,7 +35,7 @@ export default function ValueProposition() {
             Upgrade Your Coding Game
           </h2>
           <p className="text-lg max-w-2xl mx-auto leading-relaxed" style={{ color: 'var(--color-muted)' }}>
-            Four fundamental capabilities that distinguish Godzilla Coder from standard tools.
+            Four fundamental capabilities that distinguish Godzilla from standard tools.
           </p>
         </div>
 

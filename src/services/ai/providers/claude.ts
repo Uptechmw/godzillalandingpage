@@ -14,6 +14,8 @@ export class ClaudeProvider extends BaseProvider {
 
     async streamChat(messages: any[], options: StreamOptions): Promise<void> {
         const config = MODEL_REGISTRY[options.modelKey];
+        if (!config) throw new Error(`Model ${options.modelKey} not found in registry`);
+
         const isThinkingModel = config.capabilities.thinking;
 
         const thinkingConfig = isThinkingModel ? {

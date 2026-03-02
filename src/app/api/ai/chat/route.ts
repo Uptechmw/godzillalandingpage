@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAuthUser } from "@/lib/auth";
 import { ExecutionRouter } from "@/services/ai/broker/router";
-import { ErrorNormalizer } from "@/services/ai/utils/normalizer";
+import { ErrorNormalizer, GodzillaBrokerError } from "@/services/ai/utils/normalizer";
+import { chatSchema } from "@/lib/validation";
+
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 /**
  * POST /api/ai/chat
@@ -10,25 +14,33 @@ import { ErrorNormalizer } from "@/services/ai/utils/normalizer";
  * and abort-safe streaming.
  */
 export async function POST(req: NextRequest) {
+    const requestId = crypto.randomUUID();
+
     try {
         // 1. Authenticate user (custom JWT)
         const user = await getAuthUser(req);
 
-        // 2. Parse Request Body
+        // 2. Parse and Validate Request Body
         const body = await req.json();
-        const { modelKey, prompt, maxTokens, temperature, system } = body;
+        const parsed = chatSchema.safeParse(body);
 
-        // 3. Extract Idempotency Key from headers
-        const idempotencyKey = req.headers.get("x-idempotency-key") || undefined;
+        if (!parsed.success) {
+            const fieldErrors: Record<string, string> = {};
+            parsed.error.errors.forEach(err => {
+                const path = err.path.join('.');
+                if (path) fieldErrors[path] = err.message;
+            });
 
-        if (!modelKey || !prompt) {
-            return NextResponse.json(
-                { success: false, error: "Missing required fields: modelKey and prompt." },
-                { status: 400 }
+            throw new GodzillaBrokerError(
+                "VALIDATION_ERROR",
+                "Invalid request parameters",
+                { fieldErrors }
             );
         }
 
-        // 4. Invoke Execution Router
+        const { modelKey, prompt, maxTokens, temperature, system, idempotencyKey } = parsed.data;
+
+        // 3. Invoke Execution Router
         const sseStream = await ExecutionRouter.execute(req, {
             userId: user.id,
             modelKey,
@@ -36,31 +48,29 @@ export async function POST(req: NextRequest) {
             idempotencyKey,
             maxTokens,
             temperature,
-            system
+            system,
+            requestId // Pass requestId for logging and framing
         });
 
-        // 5. Return Server-Sent Events (SSE) Response
+        // 4. Return Server-Sent Events (SSE) Response
         return new Response(sseStream, {
             headers: {
-                "Content-Type": "text/event-stream",
-                "Cache-Control": "no-cache",
-                "Connection": "keep-alive",
+                "Content-Type": "text/event-stream; charset=utf-8",
+                "Cache-Control": "no-cache, no-transform",
+                "x-request-id": requestId
             },
         });
 
     } catch (error: any) {
-        console.error("[AI Chat API Error]", error);
-
         // Normalize into canonical error shape
-        const normalized = ErrorNormalizer.normalize(error);
+        const normalized = ErrorNormalizer.normalize(error, requestId);
 
         return NextResponse.json(
+            normalized.toJSON(),
             {
-                success: false,
-                error: normalized.message,
-                code: normalized.code
-            },
-            { status: normalized.code === "INSUFFICIENT_FUNDS" ? 402 : 500 }
+                status: ErrorNormalizer.httpStatus(normalized.code),
+                headers: { "x-request-id": requestId }
+            }
         );
     }
 }

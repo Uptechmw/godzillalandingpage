@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { redis } from '@/lib/redis';
 import { ModelKey } from '../registry';
-import { AtomicBrokerError } from '../utils/normalizer';
+import { GodzillaBrokerError } from '../utils/normalizer';
 
 const CONCURRENCY_SCRIPT = fs.readFileSync(path.join(process.cwd(), 'src/services/ai/broker/lua/concurrency.lua'), 'utf8');
 
@@ -23,7 +23,7 @@ export class ConcurrencyManager {
         ) as string;
 
         if (result !== "OK") {
-            throw new AtomicBrokerError(
+            throw new GodzillaBrokerError(
                 "CONCURRENCY_LIMIT_REACHED",
                 `Too many simultaneous requests. Limit for ${modelKey} is ${limit}.`
             );

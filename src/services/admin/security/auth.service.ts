@@ -61,6 +61,7 @@ export class AdminAuthService {
         const isPasswordValid = admin ? await verifyPassword(password, admin.passwordHash) : false;
 
         if (!admin || !admin.active || !isPasswordValid) {
+            const requestId = crypto.randomUUID();
             if (admin) {
                 const newAttempts = admin.failedLoginAttempts + 1;
                 await prisma.adminUser.update({
@@ -72,10 +73,10 @@ export class AdminAuthService {
                 });
 
                 if (newAttempts >= 5) {
-                    throw new Error("Too many failed attempts. Account locked for 15 minutes.");
+                    throw { success: false, errorCode: 'AUTH_FORBIDDEN', message: "Too many failed attempts. Account locked for 15 minutes.", requestId };
                 }
             }
-            throw new Error("Invalid credentials.");
+            throw { success: false, errorCode: 'AUTH_INVALID_CREDENTIALS', message: "Invalid credentials.", requestId };
         }
 
         if (admin.lockedUntil && admin.lockedUntil > new Date()) {
@@ -115,9 +116,10 @@ export class AdminAuthService {
 
             (await cookies()).set(OTP_PENDING_COOKIE, otpToken, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
+                secure: true, // Always secure for admin functions
                 sameSite: 'lax',
-                path: '/'
+                path: '/',
+                maxAge: 10 * 60 // 10 minutes
             });
 
             return { requires2FA: true, adminId: admin.id };
@@ -137,11 +139,11 @@ export class AdminAuthService {
         const { payload } = await jwtVerify(otpToken, getAdminJwtSecret());
         const { adminId, email, role } = payload as any;
 
-        const isValid = await AdminOTPService.verifyOTP(adminId, otp);
-        if (!isValid) {
-            // Apply rate limiting on 2FA verification attempts too
-            await RateLimiterService.check(`ratelimit:2fa_verify:${adminId}`, 5, 300); // Trigger a count even if we don't block here yet
-            throw new Error("Invalid OTP.");
+        try {
+            await AdminOTPService.verifyOTP(adminId, otp);
+        } catch (error: any) {
+            await RateLimiterService.check(`ratelimit:2fa_verify:${adminId}`, 5, 300);
+            throw error; // Preserve canonical error from OTP service
         }
 
         (await cookies()).delete(OTP_PENDING_COOKIE);
@@ -170,10 +172,10 @@ export class AdminAuthService {
 
         (await cookies()).set(COOKIE_NAME, token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
+            secure: true, // Enforce secure even in dev if possible, but definitely in prod
             sameSite: 'lax',
             path: '/',
-            maxAge: 12 * 60 * 60 // 12 hours
+            maxAge: 8 * 60 * 60 // 8 hours (shorter than user session)
         });
     }
 
@@ -190,12 +192,10 @@ export class AdminAuthService {
     }
 
     /**
-     * Verifies the current admin session.
+     * Verifies a specific admin token against the database.
+     * Useful for session-check where we have the token but want DB confirmation.
      */
-    static async getSession(): Promise<AdminSession | null> {
-        const token = (await cookies()).get(COOKIE_NAME)?.value;
-        if (!token) return null;
-
+    static async getSessionByToken(token: string): Promise<AdminSession | null> {
         try {
             const { payload } = await jwtVerify(token, getAdminJwtSecret());
             const session = payload as any as AdminSession;
@@ -215,6 +215,15 @@ export class AdminAuthService {
     }
 
     /**
+     * Verifies the current admin session.
+     */
+    static async getSession(): Promise<AdminSession | null> {
+        const token = (await cookies()).get(COOKIE_NAME)?.value;
+        if (!token) return null;
+        return this.getSessionByToken(token);
+    }
+
+    /**
      * Middleware check for RBAC.
      */
     static async guard(permission: AdminPermission): Promise<boolean> {
@@ -229,13 +238,18 @@ export class AdminAuthService {
     }
 
     static async logout() {
-        const token = (await cookies()).get(COOKIE_NAME)?.value;
+        const cookieStore = await cookies();
+        const token = cookieStore.get(COOKIE_NAME)?.value;
         if (token) {
-            await prisma.adminSession.update({
-                where: { token },
-                data: { revokedAt: new Date() }
-            });
+            try {
+                await prisma.adminSession.update({
+                    where: { token },
+                    data: { revokedAt: new Date() }
+                });
+            } catch (e) {
+                // Ignore if session already revoked or not found
+            }
         }
-        (await cookies()).delete(COOKIE_NAME);
+        cookieStore.delete(COOKIE_NAME);
     }
 }

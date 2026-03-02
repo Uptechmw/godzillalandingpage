@@ -25,7 +25,17 @@ export const resendOtpSchema = z.object({
   email: z.string().email('Invalid email format'),
 });
 
+export const chatSchema = z.object({
+  modelKey: z.string().min(1, 'Model key is required'),
+  prompt: z.string().min(1, 'Prompt is required').max(50000, 'Prompt too long'),
+  maxTokens: z.number().int().positive().optional(),
+  temperature: z.number().min(0).max(2).optional(),
+  system: z.string().optional(),
+  idempotencyKey: z.string().max(128).optional(),
+});
+
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type VerifyOtpInput = z.infer<typeof verifyOtpSchema>;
 export type ResendOtpInput = z.infer<typeof resendOtpSchema>;
+export type ChatInput = z.infer<typeof chatSchema>;

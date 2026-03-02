@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAdminRole, unauthorizedResponse } from '@/lib/rbac-helper';
+import { jsonError, getRequestId } from '@/lib/http/errors';
 import nodemailer from 'nodemailer';
 
 /**
@@ -7,15 +8,17 @@ import nodemailer from 'nodemailer';
  * Test SMTP connection with provided credentials
  */
 export async function POST(req: NextRequest) {
-    const { error, status } = await requireAdminRole(['SUPER_ADMIN', 'ADMIN']);
-    if (error) return unauthorizedResponse(error, status);
+    const { error } = await requireAdminRole(req, ['SUPER_ADMIN', 'ADMIN']);
+    if (error) return unauthorizedResponse(error);
 
     try {
         const body = await req.json();
         const { host, port, secure, username, password, fromEmail } = body;
 
+        const requestId = getRequestId(req);
+
         if (!host || !username) {
-            return NextResponse.json({ success: false, message: 'Host and username are required' }, { status: 400 });
+            return jsonError(req, 400, 'VALIDATION_ERROR', 'Host and username are required');
         }
 
         const transporter = nodemailer.createTransport({
@@ -32,12 +35,13 @@ export async function POST(req: NextRequest) {
         // Verify connection configuration
         await transporter.verify();
 
-        return NextResponse.json({ success: true, message: 'SMTP connection verified successfully' });
+        return NextResponse.json({
+            success: true,
+            message: 'SMTP connection verified successfully',
+            requestId
+        }, { headers: { 'x-request-id': requestId } });
     } catch (error: any) {
         console.error('[SMTP Test Error]', error);
-        return NextResponse.json({
-            success: false,
-            message: error.message || 'Failed to connect to SMTP server'
-        }, { status: 500 });
+        return jsonError(req, 500, 'INTERNAL_ERROR', error.message || 'Failed to connect to SMTP server');
     }
 }

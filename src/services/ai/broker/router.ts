@@ -5,7 +5,7 @@ import { BillingBroker } from './billing';
 import { ConcurrencyManager } from './concurrency';
 import { RateLimiter } from './rate-limit';
 import { AuditLogger } from '../utils/logger';
-import { ErrorNormalizer, AtomicBrokerError } from '../utils/normalizer';
+import { ErrorNormalizer, GodzillaBrokerError } from '../utils/normalizer';
 import { Tokenizer } from '../security/tokenizer';
 
 export interface ChatRequest {
@@ -14,6 +14,7 @@ export interface ChatRequest {
     messages: any[];
     maxTokens?: number;
     idempotencyKey?: string;
+    requestId?: string;
 }
 
 export class ExecutionRouter {
@@ -22,6 +23,7 @@ export class ExecutionRouter {
      */
     static async execute(req: any, params: any): Promise<ReadableStream> {
         const encoder = new TextEncoder();
+        const requestId = params.requestId;
 
         return new ReadableStream({
             async start(controller) {
@@ -31,7 +33,8 @@ export class ExecutionRouter {
                         modelKey: params.modelKey,
                         messages: params.prompt ? [{ role: 'user', content: params.prompt }] : params.messages,
                         maxTokens: params.maxTokens,
-                        idempotencyKey: params.idempotencyKey
+                        idempotencyKey: params.idempotencyKey,
+                        requestId
                     };
 
                     await ExecutionRouter.stream(chatRequest, (chunk) => {
@@ -41,8 +44,9 @@ export class ExecutionRouter {
                     controller.enqueue(encoder.encode('data: [DONE]\n\n'));
                     controller.close();
                 } catch (error: any) {
-                    const normalized = ErrorNormalizer.normalize(error);
-                    controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: normalized.message, code: normalized.code })}\n\n`));
+                    const normalized = ErrorNormalizer.normalize(error, requestId);
+                    controller.enqueue(encoder.encode(`data: ${JSON.stringify(normalized.toJSON())}\n\n`));
+                    controller.enqueue(encoder.encode('data: [DONE]\n\n'));
                     controller.close();
                 }
             }
@@ -69,6 +73,17 @@ export class ExecutionRouter {
         // 2. Distributed Rate Limiting (Atomic Lua)
         await RateLimiter.check(req.userId, config.rateLimits.requestsPerMinute);
 
+        // 2.5. Server-side premium model enforcement
+        if (config.isPremium && config.minCoinBalance) {
+            const balance = await BillingBroker.getBalance(req.userId);
+            if (balance < config.minCoinBalance) {
+                throw new GodzillaBrokerError(
+                    "INSUFFICIENT_FUNDS",
+                    `This model requires a minimum balance of ${config.minCoinBalance} coins.`
+                );
+            }
+        }
+
         // 3. Distributed Concurrency Lock (Atomic Lua)
         const lockId = await ConcurrencyManager.acquire(
             req.userId,
@@ -81,6 +96,7 @@ export class ExecutionRouter {
         let abortController = new AbortController();
         let timeoutId: NodeJS.Timeout | null = null;
         let estimatedInputTokens = 0;
+        let streamedContent = "";
 
         try {
             // 4. Atomic Billing Reservation (Stripe-grade)
@@ -105,7 +121,6 @@ export class ExecutionRouter {
                 abortController.abort();
             }, config.timeoutMs);
 
-            let streamedContent = "";
             let usageMetadata: any = null;
 
             await provider.streamChat(
@@ -139,9 +154,8 @@ export class ExecutionRouter {
 
             if (reservation) {
                 if (isAbort) {
-                    // Partial charge for what was already streamed
-                    // Note: In refined implementation, error could carry partial content
-                    const partialOutput = Tokenizer.countTokens(error.partialResponse || "");
+                    // Partial charge based on actual streamed content
+                    const partialOutput = Tokenizer.countTokens(streamedContent);
                     await BillingBroker.commit(reservation.id, estimatedInputTokens, partialOutput, 'TIMEOUT');
                 } else {
                     // Fatal provider failure -> Full refund
@@ -149,7 +163,7 @@ export class ExecutionRouter {
                 }
             }
 
-            throw ErrorNormalizer.normalize(error);
+            throw ErrorNormalizer.normalize(error, req.requestId);
         } finally {
             // 7. Cleanup Concurrency Lock
             await ConcurrencyManager.release(req.userId, req.modelKey, lockId);

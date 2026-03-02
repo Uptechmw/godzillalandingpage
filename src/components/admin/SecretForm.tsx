@@ -6,9 +6,9 @@ import {
     Eye,
     EyeOff,
     RefreshCw,
-    CheckCircle2,
-    AlertCircle,
-    Send
+    Send,
+    Lock,
+    Shield
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -28,7 +28,6 @@ export function SecretForm({ secretKey, label, description, isSensitive = true }
     const handleTest = async () => {
         setIsTesting(true);
         try {
-            // This would call an API route that uses ConnectionTestService
             const res = await fetch('/api/admin/config/test', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -72,178 +71,55 @@ export function SecretForm({ secretKey, label, description, isSensitive = true }
     };
 
     return (
-        <div className="secret-form-card">
-            <div className="secret-header">
-                <div className="secret-title">
-                    <Key size={16} className="text-slate-400" />
-                    <span className="font-semibold">{label}</span>
-                    <span className="version-badge">v1</span>
+        <div className="bg-[#0B1220] border border-[#1F2937] rounded-xl p-6 flex flex-col gap-4 shadow-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                        <Lock size={12} className="text-slate-500" />
+                        <span className="text-[11px] font-bold text-[#F1F5F9] uppercase tracking-widest">{label}</span>
+                        <div className="px-1.5 py-0.5 bg-slate-800 border border-slate-700 rounded text-[9px] font-bold text-slate-500 uppercase tracking-tighter">v1.2</div>
+                    </div>
+                    {description && <p className="text-[10px] text-slate-500 font-medium leading-relaxed max-w-sm">{description}</p>}
                 </div>
-                <div className="secret-actions">
+
+                <div className="flex items-center gap-2">
                     <button
-                        className="btn-text"
+                        className="p-2 text-slate-500 hover:text-white transition-colors"
                         onClick={() => setShowValue(!showValue)}
                         title={showValue ? "Hide" : "Show masked"}
                     >
-                        {showValue ? <EyeOff size={16} /> : <Eye size={16} />}
+                        {showValue ? <EyeOff size={14} /> : <Eye size={14} />}
                     </button>
                     <button
-                        className={`btn-test ${isTesting ? 'loading' : ''}`}
+                        className={`flex items-center gap-2 px-3 py-1.5 rounded-md border border-slate-700 bg-slate-800 text-slate-400 text-[10px] font-bold uppercase tracking-widest hover:border-slate-600 hover:text-white transition-all ${isTesting ? 'opacity-50 cursor-wait' : ''}`}
                         onClick={handleTest}
                         disabled={!value || isTesting}
                     >
-                        {isTesting ? <RefreshCw size={14} className="animate-spin" /> : <Send size={14} />}
-                        <span>Test</span>
+                        {isTesting ? <RefreshCw size={10} className="animate-spin" /> : <Send size={10} />}
+                        <span>Verify</span>
                     </button>
                     <button
-                        className={`btn-save ${isSaving ? 'loading' : ''}`}
+                        className={`flex items-center gap-2 px-3 py-1.5 rounded-md bg-blue-600 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-blue-500 transition-all ${isSaving ? 'opacity-50 cursor-wait' : ''}`}
                         onClick={handleSave}
                         disabled={!value || isSaving}
                     >
-                        {isSaving ? <RefreshCw size={14} className="animate-spin" /> : <RefreshCw size={14} />}
+                        <RefreshCw size={10} className={isSaving ? "animate-spin" : ""} />
                         <span>Rotate</span>
                     </button>
                 </div>
             </div>
 
-            {description && <p className="secret-description">{description}</p>}
-
-            <div className="input-group">
+            <div className="relative group">
+                <Shield size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 transition-colors group-focus-within:text-blue-500/50" />
                 <input
                     type={showValue ? 'text' : 'password'}
-                    placeholder={isSensitive ? '************' : 'Enter value'}
+                    placeholder={isSensitive ? '••••••••••••••••••••••••' : 'Enter specific identifier'}
                     value={value}
                     onChange={(e) => setValue(e.target.value)}
-                    className="secret-input"
+                    className="w-full bg-[#111827] border border-[#1F2937] rounded-lg py-2.5 pl-11 pr-4 outline-none transition-all text-xs text-[#F1F5F9] placeholder:text-[#334155] focus:border-blue-500/30 font-mono"
                     autoComplete="off"
                 />
             </div>
-
-            <style jsx>{`
-                .secret-form-card {
-                    background-color: #0f172a;
-                    border: 1px solid #1e293b;
-                    border-radius: 10px;
-                    padding: 20px;
-                    display: flex;
-                    flex-direction: column;
-                    gap: 12px;
-                }
-
-                .secret-header {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                }
-
-                .secret-title {
-                    display: flex;
-                    align-items: center;
-                    gap: 8px;
-                }
-
-                .version-badge {
-                    font-size: 0.65rem;
-                    background-color: #1e293b;
-                    color: #94a3b8;
-                    padding: 2px 6px;
-                    border-radius: 4px;
-                    font-weight: 700;
-                    text-transform: uppercase;
-                }
-
-                .secret-actions {
-                    display: flex;
-                    align-items: center;
-                    gap: 8px;
-                }
-
-                .secret-description {
-                    font-size: 0.8rem;
-                    color: #64748b;
-                    line-height: 1.4;
-                }
-
-                .input-group {
-                    position: relative;
-                }
-
-                .secret-input {
-                    width: 100%;
-                    background-color: #020617;
-                    border: 1px solid #334155;
-                    border-radius: 6px;
-                    padding: 10px 12px;
-                    color: #fff;
-                    font-size: 0.9rem;
-                    outline: none;
-                    transition: border-color 0.2s;
-                }
-
-                .secret-input:focus {
-                    border-color: #3b82f6;
-                }
-
-                .btn-text {
-                    background: none;
-                    border: none;
-                    color: #64748b;
-                    cursor: pointer;
-                    padding: 4px;
-                    border-radius: 4px;
-                }
-
-                .btn-test {
-                    display: flex;
-                    align-items: center;
-                    gap: 6px;
-                    background-color: #1e293b;
-                    border: 1px solid #334155;
-                    color: #94a3b8;
-                    padding: 6px 12px;
-                    border-radius: 6px;
-                    font-size: 0.8rem;
-                    cursor: pointer;
-                    font-weight: 600;
-                }
-
-                .btn-test:hover:not(:disabled) {
-                    background-color: #334155;
-                    color: #fff;
-                }
-
-                .btn-save {
-                    display: flex;
-                    align-items: center;
-                    gap: 6px;
-                    background-color: #3b82f6;
-                    border: none;
-                    color: #fff;
-                    padding: 6px 14px;
-                    border-radius: 6px;
-                    font-size: 0.8rem;
-                    cursor: pointer;
-                    font-weight: 700;
-                }
-
-                .btn-save:hover:not(:disabled) {
-                    background-color: #2563eb;
-                }
-
-                .animate-spin {
-                    animation: spin 1s linear infinite;
-                }
-
-                @keyframes spin {
-                    from { transform: rotate(0deg); }
-                    to { transform: rotate(360deg); }
-                }
-
-                button:disabled {
-                    opacity: 0.5;
-                    cursor: not-allowed;
-                }
-            `}</style>
         </div>
     );
 }

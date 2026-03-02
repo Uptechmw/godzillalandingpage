@@ -1,14 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAdminRole, unauthorizedResponse } from '@/lib/rbac-helper';
+import { jsonError, getRequestId } from '@/lib/http/errors';
 import { SecretsService } from '@/services/admin/config/settings.service';
 
 /**
  * GET /api/admin/config/smtp
  * Fetch current SMTP config (masked)
  */
-export async function GET() {
-    const { error, status } = await requireAdminRole(['SUPER_ADMIN', 'ADMIN']);
-    if (error) return unauthorizedResponse(error, status);
+export async function GET(req: NextRequest) {
+    const { error, requestId } = await requireAdminRole(req, ['SUPER_ADMIN', 'ADMIN']);
+    if (error) return unauthorizedResponse(error);
 
     try {
         const host = await SecretsService.getSecret('SMTP_HOST');
@@ -20,6 +21,7 @@ export async function GET() {
 
         return NextResponse.json({
             success: true,
+            requestId,
             config: {
                 host: host || '',
                 port: port || '587',
@@ -29,9 +31,9 @@ export async function GET() {
                 fromName: fromName || '',
                 fromEmail: fromEmail || ''
             }
-        });
+        }, { headers: { 'x-request-id': requestId! } });
     } catch (error) {
-        return NextResponse.json({ success: false, error: 'Failed to load SMTP config' }, { status: 500 });
+        return jsonError(req, 500, 'INTERNAL_ERROR', 'Failed to load SMTP config');
     }
 }
 
@@ -40,8 +42,8 @@ export async function GET() {
  * Save encrypted SMTP config
  */
 export async function POST(req: NextRequest) {
-    const { session, error, status } = await requireAdminRole(['SUPER_ADMIN']);
-    if (error) return unauthorizedResponse(error, status);
+    const { session, error, requestId } = await requireAdminRole(req, ['SUPER_ADMIN']);
+    if (error) return unauthorizedResponse(error);
 
     try {
         const body = await req.json();
@@ -60,8 +62,12 @@ export async function POST(req: NextRequest) {
         await SecretsService.setSecret('SMTP_FROM_NAME', fromName, adminId);
         await SecretsService.setSecret('SMTP_FROM_EMAIL', fromEmail, adminId);
 
-        return NextResponse.json({ success: true, message: 'SMTP Configuration updated' });
+        return NextResponse.json({
+            success: true,
+            message: 'SMTP Configuration updated',
+            requestId
+        }, { headers: { 'x-request-id': requestId! } });
     } catch (error) {
-        return NextResponse.json({ success: false, error: 'Failed to save SMTP config' }, { status: 500 });
+        return jsonError(req, 500, 'INTERNAL_ERROR', 'Failed to save SMTP config');
     }
 }

@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/db';
 import { MODEL_REGISTRY, ModelKey, PricingSnapshot } from '../registry';
-import { AtomicBrokerError } from '../utils/normalizer';
+import { GodzillaBrokerError } from '../utils/normalizer';
 import { AuditLogger } from '../utils/logger';
 
 export class BillingBroker {
@@ -28,7 +28,7 @@ export class BillingBroker {
             const existing = await tx.tokenReservation.findUnique({ where: { idempotencyKey } });
             if (existing) {
                 if (existing.requestHash !== requestHash) {
-                    throw new AtomicBrokerError("IDEMPOTENCY_MISMATCH", "Mismatch between idempotency key and request payload (Replay Attack detected).");
+                    throw new GodzillaBrokerError("IDEMPOTENCY_MISMATCH", "Mismatch between idempotency key and request payload (Replay Attack detected).");
                 }
                 // If already committed or failed, return early. If PENDING, allow attaching.
                 return existing;
@@ -42,7 +42,7 @@ export class BillingBroker {
             `;
 
             if (result === 0) {
-                throw new AtomicBrokerError("INSUFFICIENT_FUNDS", `Cannot reserve ${maxPotentialCost} coins. Balance too low or user not found.`);
+                throw new GodzillaBrokerError("INSUFFICIENT_FUNDS", `Cannot reserve ${maxPotentialCost} coins. Balance too low or user not found.`);
             }
 
             // 3. Create Reservation (State: PENDING)
@@ -85,21 +85,37 @@ export class BillingBroker {
     }
 
     /**
+     * Fast balance lookup for premium model gating.
+     */
+    static async getBalance(userId: string): Promise<number> {
+        const record = await prisma.tokenBalance.findUnique({ where: { userId } });
+        return record?.coins ?? 0;
+    }
+
+    /**
      * Finalizes the transaction based on actual authoritative usage.
      * Refunds the reserved difference.
+     * Idempotent: second call on an already-finalized reservation is a safe no-op.
      */
     static async commit(reservationId: string, actualInput: number, actualOutput: number, reason: 'COMMITTED' | 'TIMEOUT' | 'CLIENT_DISCONNECT' | 'FAILED' = 'COMMITTED') {
         const status = reason === 'TIMEOUT' ? 'TIMEOUT' : reason === 'CLIENT_DISCONNECT' ? 'ABORTED' : reason === 'FAILED' ? 'FAILED' : 'COMMITTED';
 
         return await prisma.$transaction(async (tx) => {
-            const reservation = await tx.tokenReservation.findUniqueOrThrow({ where: { id: reservationId } });
+            // Atomic guard: only transition from PENDING or PROVIDER_STARTED
+            const affected = await tx.$executeRaw`
+                UPDATE "TokenReservation"
+                SET status = ${status}
+                WHERE id = ${reservationId}
+                  AND status IN ('PENDING', 'PROVIDER_STARTED')
+            `;
 
-            // Allow commit from PENDING or PROVIDER_STARTED
-            if (reservation.status !== 'PENDING' && reservation.status !== 'PROVIDER_STARTED') {
-                if (reservation.status === status) return reservation; // Idempotent
-                throw new AtomicBrokerError("INTERNAL_BROKER_ERROR", `Cannot commit a reservation in state: ${reservation.status}`);
+            // If no rows affected, reservation was already finalized — idempotent no-op
+            if (affected === 0) {
+                const current = await tx.tokenReservation.findUnique({ where: { id: reservationId } });
+                return current;
             }
 
+            const reservation = await tx.tokenReservation.findUniqueOrThrow({ where: { id: reservationId } });
             const pricing = reservation.pricingSnapshot as any as PricingSnapshot;
             const exactCost = Math.ceil((actualInput * pricing.baseInputMultiplier) + (actualOutput * pricing.baseOutputMultiplier));
 
@@ -112,10 +128,9 @@ export class BillingBroker {
                 });
             }
 
-            const updated = await tx.tokenReservation.update({
+            await tx.tokenReservation.update({
                 where: { id: reservationId },
                 data: {
-                    status,
                     actualCost: exactCost,
                     metadata: { inputTokens: actualInput, outputTokens: actualOutput }
                 }
@@ -143,7 +158,7 @@ export class BillingBroker {
                 metrics: { inputTokens: actualInput, outputTokens: actualOutput, calculatedCost: exactCost, latencyMs: 0 }
             });
 
-            return updated;
+            return reservation;
         });
     }
 

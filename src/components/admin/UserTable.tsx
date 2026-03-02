@@ -27,33 +27,33 @@ interface AdminUserTableProps {
 
 export function AdminUserTable({ users }: AdminUserTableProps) {
     return (
-        <div className="space-y-6">
-            <div className="flex flex-col md:flex-row gap-4 justify-between items-center bg-[#111827] p-4 rounded-2xl border border-[#1F2937]">
-                <div className="relative w-full md:w-96 group">
-                    <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+        <div className="space-y-4">
+            <div className="flex flex-col md:flex-row gap-4 justify-between items-center bg-[#111827] p-3 rounded-xl border border-[#1F2937]">
+                <div className="relative w-full md:w-80 group">
+                    <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-600" />
                     <input
                         type="text"
-                        placeholder="Search by email..."
-                        className="w-full py-2.5 pl-10 pr-4 text-xs rounded-xl bg-[#0B1220] border border-[#1F2937] text-white outline-none focus:border-blue-500 transition-all"
+                        placeholder="Search by identity email..."
+                        className="w-full py-2 pl-9 pr-4 text-[11px] font-bold rounded-lg bg-[#0B1220] border border-[#1F2937] text-[#F1F5F9] placeholder:text-[#334155] outline-none focus:border-blue-500/30 transition-all uppercase tracking-wider"
                     />
                 </div>
-                <button className="flex items-center gap-2 px-4 py-2.5 text-xs font-bold text-slate-300 bg-[#1F2937] hover:bg-[#374151] rounded-xl border border-[#374151] transition-all">
-                    <Filter size={14} />
-                    <span>Filter</span>
+                <button className="flex items-center gap-2 px-4 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-[#0B1220] hover:text-white rounded-lg border border-[#1F2937] transition-all">
+                    <Filter size={12} />
+                    <span>Filter Parameters</span>
                 </button>
             </div>
 
-            <div className="bg-[#111827] border border-[#1F2937] rounded-3xl overflow-hidden shadow-2xl">
+            <div className="bg-[#111827] border border-[#1F2937] rounded-xl overflow-hidden shadow-sm">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
-                            <tr className="border-b border-[#1F2937]">
-                                <th className="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Identify</th>
-                                <th className="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Email Status</th>
-                                <th className="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Balance</th>
-                                <th className="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Activity</th>
-                                <th className="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Join Date</th>
-                                <th className="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest text-right">Ops</th>
+                            <tr className="border-b border-[#1F2937] bg-[#0B1220]/30">
+                                <th className="px-6 py-3 text-[9px] font-bold text-slate-500 uppercase tracking-[0.2em]">Identify</th>
+                                <th className="px-6 py-3 text-[9px] font-bold text-slate-500 uppercase tracking-[0.2em]">Email Status</th>
+                                <th className="px-6 py-3 text-[9px] font-bold text-slate-500 uppercase tracking-[0.2em]">Balance</th>
+                                <th className="px-6 py-3 text-[9px] font-bold text-slate-500 uppercase tracking-[0.2em]">Activity</th>
+                                <th className="px-6 py-3 text-[9px] font-bold text-slate-500 uppercase tracking-[0.2em]">Join Date</th>
+                                <th className="px-6 py-3 text-[9px] font-bold text-slate-500 uppercase tracking-[0.2em] text-right">Ops</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-[#1F2937]">

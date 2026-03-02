@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 const API_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
 
 /**
- * Standardized API client for Godzilla Coder Backend
+ * Standardized API client for Godzilla Backend
  */
 export async function apiRequest(endpoint: string, options: RequestInit = {}) {
     try {

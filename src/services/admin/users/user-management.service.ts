@@ -31,14 +31,7 @@ export class AdminUserManagementService {
      * Toggles user account status (Currently disabled as 'status' field was removed from DB).
      */
     static async setUserStatus(userId: string, status: 'ACTIVE' | 'DISABLED' | 'BANNED', adminId: string): Promise<void> {
-        // Note: Field removed to fix DB mismatch. Re-implement when schema is updated.
-        /*
-        await prisma.user.update({
-            where: { id: userId },
-            data: { status }
-        });
-        */
-
+        // Note: Field removed from DB to fix schema mismatch. Action is logged but not applied to User model.
         await prisma.auditLog.create({
             data: {
                 adminId,

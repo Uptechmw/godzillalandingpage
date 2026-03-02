@@ -24,7 +24,7 @@ export default function FinalCTA() {
           </h2>
 
           <p className="text-lg mb-12 max-w-2xl mx-auto leading-relaxed" style={{ color: 'var(--color-muted)' }}>
-            Download Godzilla Coder and experience multi-agent AI coding on your own machine.
+            Download Godzilla and experience multi-agent AI coding on your own machine.
           </p>
 
           <div className="flex flex-col items-center gap-6">

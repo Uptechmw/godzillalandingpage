@@ -142,10 +142,21 @@ export class SecretsService {
     }
 
     /**
-     * Retrieves all SMTP settings and decrypts them for use in the email service.
+     * Checks if an SMTP configuration object is fully populated.
+     */
+    private static isCompleteSmtpConfig(cfg: any): boolean {
+        return !!(cfg && cfg.host && cfg.port && cfg.user && cfg.pass && cfg.fromEmail);
+    }
+
+    /**
+     * Retrieves all SMTP settings. Priority:
+     * 1. DB (if enabled and complete)
+     * 2. ENV (if complete)
+     * 3. Throw error
      */
     static async getSmtpConfig(): Promise<any> {
-        const [host, port, user, pass, fromName, fromEmail, secure] = await Promise.all([
+        // Attempt DB First
+        const [host, port, user, pass, fromName, fromEmail, secure, enabled] = await Promise.all([
             this.getSecret('SMTP_HOST'),
             this.getSecret('SMTP_PORT'),
             this.getSecret('SMTP_USERNAME'),
@@ -153,18 +164,44 @@ export class SecretsService {
             this.getSecret('SMTP_FROM_NAME'),
             this.getSecret('SMTP_FROM_EMAIL'),
             this.getSecret('SMTP_SECURE'),
+            SettingsService.get('SMTP_ENABLED')
         ]);
 
-        if (!host || !user || !pass) return null;
-
-        return {
+        const dbConfig = {
             host,
-            port,
+            port: port ? parseInt(port) : undefined,
             user,
             pass,
             fromName,
             fromEmail,
             secure: secure === 'true',
+        };
+
+        if (enabled === 'true' && this.isCompleteSmtpConfig(dbConfig)) {
+            return dbConfig;
+        }
+
+        // Fallback to ENV
+        const envConfig = {
+            host: process.env.SMTP_HOST,
+            port: process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT) : 587,
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASS,
+            fromName: process.env.SMTP_FROM_NAME || 'Godzilla AI',
+            fromEmail: process.env.SMTP_FROM_EMAIL || process.env.FROM_EMAIL,
+            secure: process.env.SMTP_SECURE === 'true'
+        };
+
+        if (this.isCompleteSmtpConfig(envConfig)) {
+            console.log('[SMTP] Using environment-based configuration.');
+            return envConfig;
+        }
+
+        throw {
+            success: false,
+            errorCode: 'SMTP_NOT_CONFIGURED',
+            message: 'No complete SMTP configuration found in DB or environment.',
+            requestId: crypto.randomUUID()
         };
     }
 }

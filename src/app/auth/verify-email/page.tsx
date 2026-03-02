@@ -2,11 +2,9 @@
 
 import { useState, useEffect, useRef } from "react";
 import { api } from "@/lib/api";
-import Cookies from "js-cookie";
 import { motion } from "framer-motion";
 import { Mail, Loader2, CheckCircle2, RefreshCw } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import Image from "next/image";
 import { Suspense } from "react";
 import { toast } from "sonner";
 
@@ -21,67 +19,51 @@ function VerifyEmailForm() {
     const email = searchParams.get("email");
     const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-    // Countdown timer
     useEffect(() => {
         if (timeLeft <= 0) return;
-
         const timer = setInterval(() => {
             setTimeLeft((prev) => prev - 1);
         }, 1000);
-
         return () => clearInterval(timer);
     }, [timeLeft]);
 
-    // Format time as MM:SS
     const formatTime = (seconds: number) => {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
-    // Handle OTP input
     const handleOtpChange = (index: number, value: string) => {
-        if (!/^\d*$/.test(value)) return; // Only allow digits
-
+        if (!/^\d*$/.test(value)) return;
         const newOtp = [...otp];
-        newOtp[index] = value.slice(-1); // Only take last character
+        newOtp[index] = value.slice(-1);
         setOtp(newOtp);
         setError("");
-
-        // Auto-focus next input
         if (value && index < 5) {
             inputRefs.current[index + 1]?.focus();
         }
     };
 
-    // Handle backspace
     const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Backspace' && !otp[index] && index > 0) {
             inputRefs.current[index - 1]?.focus();
         }
     };
 
-    // Handle paste
     const handlePaste = (e: React.ClipboardEvent) => {
         e.preventDefault();
         const pastedData = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
         const newOtp = [...otp];
-
         for (let i = 0; i < pastedData.length; i++) {
             newOtp[i] = pastedData[i];
         }
-
         setOtp(newOtp);
-
-        // Focus last filled input or first empty
         const nextIndex = Math.min(pastedData.length, 5);
         inputRefs.current[nextIndex]?.focus();
     };
 
-    // Verify OTP
     const handleVerify = async (e: React.FormEvent) => {
         e.preventDefault();
-
         const code = otp.join('');
         if (code.length !== 6) {
             setError('Please enter all 6 digits');
@@ -97,13 +79,10 @@ function VerifyEmailForm() {
                 code,
             });
 
-            if (data.success && data.token) {
-                // Store token in localStorage and Cookies for middleware
-                localStorage.setItem('auth_token', data.token);
-                Cookies.set('auth_token', data.token, { expires: 7 });
-
-                toast.success("Email Verified!", {
-                    description: "Your account is now active. Redirecting..."
+            if (data.success) {
+                // TOKEN STORAGE REMOVED: Managed by HttpOnly cookies
+                toast.success("Identity Confirmed", {
+                    description: "Redirecting to secure dashboard..."
                 });
                 router.push("/dashboard");
             }
@@ -115,19 +94,17 @@ function VerifyEmailForm() {
         }
     };
 
-    // Resend OTP
     const handleResend = async () => {
         setResending(true);
         setError("");
-
         try {
             const data = await api.post('/auth/resend-otp', { email });
             if (data.success) {
-                toast.success("Code Resent!", {
-                    description: "Check your email for the new verification code."
+                toast.success("Authorization Resent", {
+                    description: "Check your secure inbox for the new code."
                 });
-                setTimeLeft(600); // Reset timer
-                setOtp(["", "", "", "", "", ""]); // Clear inputs
+                setTimeLeft(600);
+                setOtp(["", "", "", "", "", ""]);
                 inputRefs.current[0]?.focus();
             }
         } catch (error: any) {
@@ -139,12 +116,12 @@ function VerifyEmailForm() {
 
     if (!email) {
         return (
-            <div className="min-h-screen bg-godzilla-bg flex items-center justify-center p-6">
+            <div className="min-h-screen bg-[#0B1220] flex items-center justify-center p-6">
                 <div className="text-center">
-                    <p className="text-white text-lg mb-4">Invalid verification link</p>
+                    <p className="text-[#F1F5F9] text-sm font-bold mb-4">INVALID IDENTITY LINK</p>
                     <button
                         onClick={() => router.push('/auth/login')}
-                        className="text-godzilla-accent hover:underline"
+                        className="text-blue-500 hover:underline text-xs font-bold uppercase tracking-widest"
                     >
                         Return to login
                     </button>
@@ -154,39 +131,33 @@ function VerifyEmailForm() {
     }
 
     return (
-        <div className="min-h-screen bg-godzilla-bg flex items-center justify-center p-6 relative overflow-hidden">
-            {/* Background Glow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-godzilla-accent/10 blur-[120px] rounded-full -z-10" />
-
+        <div className="min-h-screen bg-[#0B1220] flex items-center justify-center p-6 relative overflow-hidden">
             <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
+                initial={{ opacity: 0, scale: 0.98 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="w-full max-w-md bg-godzilla-surface border border-godzilla-border p-10 rounded-3xl shadow-2xl relative"
+                className="w-full max-w-md bg-[#111827] border border-[#1F2937] p-8 lg:p-10 rounded-xl shadow-2xl relative"
             >
                 <div className="text-center mb-10">
                     <div className="flex justify-center mb-6">
-                        <div className="w-16 h-16 bg-godzilla-accent/20 rounded-full flex items-center justify-center">
-                            <Mail className="w-8 h-8 text-godzilla-accent" />
+                        <div className="w-12 h-12 bg-slate-800 rounded-xl flex items-center justify-center border border-slate-700">
+                            <Mail className="w-6 h-6 text-blue-500" />
                         </div>
                     </div>
-                    <h1 className="text-3xl font-black text-white uppercase tracking-tighter mb-2">
-                        Verify Your Email
+                    <h1 className="text-2xl font-bold text-[#F1F5F9] tracking-tight mb-2">
+                        Verify Identity
                     </h1>
-                    <p className="text-godzilla-text-muted text-sm font-bold">
-                        We sent a 6-digit code to
+                    <p className="text-[#94A3B8] text-sm font-medium">
+                        Secure authorization dispatched to
                     </p>
-                    <p className="text-white text-sm font-bold mt-1">{email}</p>
+                    <p className="text-[#F1F5F9] text-sm font-bold mt-1">{email}</p>
                 </div>
 
-                <form onSubmit={handleVerify} className="space-y-6">
-                    {/* OTP Input */}
+                <form onSubmit={handleVerify} className="space-y-8">
                     <div className="flex gap-2 justify-center">
                         {otp.map((digit, index) => (
                             <input
                                 key={index}
-                                ref={(el) => {
-                                    inputRefs.current[index] = el;
-                                }}
+                                ref={(el) => { inputRefs.current[index] = el; }}
                                 type="text"
                                 inputMode="numeric"
                                 maxLength={1}
@@ -194,65 +165,60 @@ function VerifyEmailForm() {
                                 onChange={(e) => handleOtpChange(index, e.target.value)}
                                 onKeyDown={(e) => handleKeyDown(index, e)}
                                 onPaste={handlePaste}
-                                className="w-12 h-14 bg-black/50 border border-godzilla-border rounded-xl text-center text-white text-xl font-bold focus:outline-none focus:border-godzilla-accent transition-all"
+                                className="w-12 h-14 bg-[#0B1220] border border-[#1F2937] rounded-lg text-center text-[#F1F5F9] text-xl font-bold focus:outline-none focus:border-blue-500/50 transition-all"
                                 disabled={loading}
                             />
                         ))}
                     </div>
 
-                    {/* Error Message */}
                     {error && (
-                        <motion.div
-                            initial={{ opacity: 0, y: -10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="text-red-400 text-sm text-center font-bold"
-                        >
+                        <div className="text-red-400 text-[10px] text-center font-bold uppercase tracking-widest">
                             {error}
-                        </motion.div>
+                        </div>
                     )}
 
-                    {/* Timer */}
                     <div className="text-center">
-                        <p className="text-godzilla-text-muted text-xs font-bold">
-                            Code expires in: <span className="text-white">{formatTime(timeLeft)}</span>
+                        <p className="text-[#475569] text-[10px] font-bold uppercase tracking-widest">
+                            CIPHER EXPIRES: <span className="text-[#94A3B8]">{formatTime(timeLeft)}</span>
                         </p>
                     </div>
 
-                    {/* Verify Button */}
                     <button
                         type="submit"
                         disabled={loading || otp.join('').length !== 6}
-                        className="w-full bg-godzilla-accent text-black py-4 rounded-xl font-black text-sm shadow-[0_0_20px_rgba(0,255,148,0.2)] hover:shadow-[0_0_30px_rgba(0,255,148,0.4)] transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full bg-slate-800 border border-slate-700 text-[#F1F5F9] py-4 rounded-lg font-bold text-xs uppercase tracking-widest hover:bg-slate-750 hover:border-blue-500/50 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
                     >
                         {loading ? (
-                            <Loader2 className="w-5 h-5 animate-spin" />
+                            <Loader2 className="w-4 h-4 animate-spin" />
                         ) : (
-                            <CheckCircle2 className="w-5 h-5" />
+                            <CheckCircle2 className="w-4 h-4" />
                         )}
-                        Verify Email
+                        Establish Session
                     </button>
 
-                    {/* Resend Button */}
                     <div className="text-center">
                         <button
                             type="button"
                             onClick={handleResend}
-                            disabled={resending || timeLeft > 540} // Can resend after 1 minute
-                            className="text-godzilla-text-muted hover:text-white text-xs font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 mx-auto"
+                            disabled={resending || timeLeft > 540}
+                            className="text-[#475569] hover:text-[#F1F5F9] text-[10px] font-bold uppercase tracking-widest transition-colors disabled:opacity-50 flex items-center gap-2 mx-auto"
                         >
                             {resending ? (
-                                <Loader2 className="w-4 h-4 animate-spin" />
+                                <Loader2 className="w-3 h-3 animate-spin" />
                             ) : (
-                                <RefreshCw className="w-4 h-4" />
+                                <RefreshCw className="w-3 h-3" />
                             )}
-                            Didn't receive the code? Resend
+                            Request New Authorization
                         </button>
                     </div>
                 </form>
 
-                <p className="mt-10 text-center text-[10px] text-godzilla-text-muted font-bold uppercase tracking-widest">
-                    Secure email verification powered by Godzilla Coder
-                </p>
+                <div className="mt-10 pt-8 border-t border-[#1F2937] text-center">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#475569] leading-6">
+                        Godzilla Hardening Protocol v2.1 <br />
+                        <span className="text-blue-500/50">Restricted Environmental Access</span>
+                    </p>
+                </div>
             </motion.div>
         </div>
     );
@@ -261,8 +227,8 @@ function VerifyEmailForm() {
 export default function VerifyEmailPage() {
     return (
         <Suspense fallback={
-            <div className="min-h-screen bg-godzilla-bg flex items-center justify-center">
-                <div className="w-12 h-12 border-4 border-godzilla-accent border-t-transparent rounded-full animate-spin" />
+            <div className="min-h-screen bg-[#0B1220] flex items-center justify-center">
+                <div className="w-8 h-8 border-2 border-slate-700 border-t-blue-500 rounded-full animate-spin" />
             </div>
         }>
             <VerifyEmailForm />

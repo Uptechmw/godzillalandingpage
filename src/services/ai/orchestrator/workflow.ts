@@ -1,7 +1,7 @@
 import { createHash } from 'crypto';
 import { ModelKey, PricingSnapshot } from "../registry";
 import { BillingBroker } from "../broker/billing";
-import { AtomicBrokerError } from "../utils/normalizer";
+import { GodzillaBrokerError } from "../utils/normalizer";
 
 /**
  * WorkflowContext manages the state and token budget for a multi-agent orchestration.
@@ -42,7 +42,7 @@ export class WorkflowContext {
      */
     assertBudget(estimatedCost: number) {
         if (this.usedCost + estimatedCost > this.maxBudget) {
-            throw new AtomicBrokerError("INSUFFICIENT_FUNDS", "Workflow token budget exceeded.");
+            throw new GodzillaBrokerError("INSUFFICIENT_FUNDS", "Workflow token budget exceeded.");
         }
     }
 

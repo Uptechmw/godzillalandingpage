@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Mail, ShieldCheck, RefreshCw, Send, Save, Server } from 'lucide-react';
+import { Mail, ShieldCheck, RefreshCw, Send, Save, Server, Lock, Globe } from 'lucide-react';
 import { toast } from 'sonner';
 
 export function SmtpForm() {
@@ -19,7 +19,6 @@ export function SmtpForm() {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        // Load existing settings on mount
         async function loadSettings() {
             try {
                 const res = await fetch('/api/admin/config/smtp');
@@ -87,227 +86,125 @@ export function SmtpForm() {
         }
     };
 
-    if (isLoading) return <div className="animate-pulse h-64 bg-slate-900/50 rounded-xl"></div>;
+    if (isLoading) return <div className="animate-pulse h-64 bg-slate-900/50 rounded-xl border border-slate-800"></div>;
 
     return (
-        <div className="smtp-form-container">
-            <div className="smtp-grid">
-                <div className="form-group span-2">
-                    <label className="label">SMTP Host</label>
-                    <div className="input-wrapper">
-                        <Server size={16} className="input-icon" />
+        <div className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-1.5 md:col-span-2">
+                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-1">Primary SMTP Gateway</label>
+                    <div className="relative">
+                        <Globe size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600" />
                         <input
                             name="host"
                             value={config.host}
                             onChange={handleChange}
-                            placeholder="smtp.example.com"
-                            className="input-with-icon"
+                            placeholder="smtp.relay.provider.com"
+                            className="w-full bg-[#0B1220] border border-[#1F2937] rounded-lg py-3 pl-11 pr-4 outline-none transition-all text-sm text-[#F1F5F9] placeholder:text-[#334155] focus:border-blue-500/30"
                         />
                     </div>
                 </div>
 
-                <div className="form-group">
-                    <label className="label">Port</label>
-                    <input
-                        name="port"
-                        value={config.port}
-                        onChange={handleChange}
-                        placeholder="587"
-                        className="input"
-                    />
+                <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-1">Network Port</label>
+                    <div className="relative">
+                        <Server size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600" />
+                        <input
+                            name="port"
+                            value={config.port}
+                            onChange={handleChange}
+                            placeholder="587"
+                            className="w-full bg-[#0B1220] border border-[#1F2937] rounded-lg py-3 pl-11 pr-4 outline-none transition-all text-sm text-[#F1F5F9] focus:border-blue-500/30"
+                        />
+                    </div>
                 </div>
 
-                <div className="form-group flex-row">
-                    <label className="label checkbox-label">
+                <div className="flex items-center gap-3 px-1 pt-6">
+                    <label className="relative inline-flex items-center cursor-pointer group">
                         <input
                             type="checkbox"
                             name="secure"
                             checked={config.secure}
                             onChange={handleChange}
+                            className="sr-only peer"
                         />
-                        <span>Secure (SSL/TLS)</span>
+                        <div className="w-10 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-400 after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600 peer-checked:after:bg-white group-hover:after:bg-slate-300"></div>
+                        <span className="ml-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest group-hover:text-slate-200 transition-colors">Enforce SSL/TLS Protocol</span>
                     </label>
                 </div>
 
-                <div className="form-group">
-                    <label className="label">Username</label>
-                    <input
-                        name="username"
-                        value={config.username}
-                        onChange={handleChange}
-                        placeholder="user@example.com"
-                        className="input"
-                        autoComplete="off"
-                    />
+                <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-1">Auth Username</label>
+                    <div className="relative">
+                        <Mail size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600" />
+                        <input
+                            name="username"
+                            value={config.username}
+                            onChange={handleChange}
+                            placeholder="access@relay.com"
+                            className="w-full bg-[#0B1220] border border-[#1F2937] rounded-lg py-3 pl-11 pr-4 outline-none transition-all text-sm text-[#F1F5F9] placeholder:text-[#334155] focus:border-blue-500/30"
+                            autoComplete="off"
+                        />
+                    </div>
                 </div>
 
-                <div className="form-group">
-                    <label className="label">Password</label>
-                    <input
-                        type="password"
-                        name="password"
-                        value={config.password}
-                        onChange={handleChange}
-                        placeholder="••••••••••••"
-                        className="input"
-                        autoComplete="off"
-                    />
+                <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-1">Auth Password</label>
+                    <div className="relative">
+                        <Lock size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600" />
+                        <input
+                            type="password"
+                            name="password"
+                            value={config.password}
+                            onChange={handleChange}
+                            placeholder="••••••••••••"
+                            className="w-full bg-[#0B1220] border border-[#1F2937] rounded-lg py-3 pl-11 pr-4 outline-none transition-all text-sm text-[#F1F5F9] placeholder:text-[#334155] focus:border-blue-500/30"
+                            autoComplete="off"
+                        />
+                    </div>
                 </div>
 
-                <div className="form-group">
-                    <label className="label">From Name</label>
+                <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-1">Outbound Signal Name</label>
                     <input
                         name="fromName"
                         value={config.fromName}
                         onChange={handleChange}
-                        placeholder="Godzilla Support"
-                        className="input"
+                        placeholder="Godzilla Cloud Service"
+                        className="w-full bg-[#0B1220] border border-[#1F2937] rounded-lg py-3 px-4 outline-none transition-all text-sm text-[#F1F5F9] placeholder:text-[#334155] focus:border-blue-500/30"
                     />
                 </div>
 
-                <div className="form-group">
-                    <label className="label">From Email</label>
+                <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-1">Outbound Source Address</label>
                     <input
                         name="fromEmail"
                         value={config.fromEmail}
                         onChange={handleChange}
-                        placeholder="noreply@godzilla.ai"
-                        className="input"
+                        placeholder="no-reply@godzilla.ai"
+                        className="w-full bg-[#0B1220] border border-[#1F2937] rounded-lg py-3 px-4 outline-none transition-all text-sm text-[#F1F5F9] placeholder:text-[#334155] focus:border-blue-500/30"
                     />
                 </div>
             </div>
 
-            <div className="form-actions">
+            <div className="flex flex-col sm:flex-row gap-4 pt-8 border-t border-[#1F2937]">
                 <button
-                    className={`btn btn-secondary ${isTesting ? 'loading' : ''}`}
+                    className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-lg border border-slate-700 bg-slate-800 text-slate-300 text-[10px] font-bold uppercase tracking-widest hover:bg-slate-750 hover:text-white transition-all ${isTesting ? 'opacity-50 cursor-wait' : ''}`}
                     onClick={handleTest}
                     disabled={isTesting || !config.host}
                 >
-                    {isTesting ? <RefreshCw className="animate-spin" size={16} /> : <Send size={16} />}
-                    <span>Test Gateway</span>
+                    {isTesting ? <RefreshCw className="animate-spin" size={12} /> : <Send size={12} />}
+                    Dispatch Trace Signal
                 </button>
                 <button
-                    className={`btn btn-primary ${isSaving ? 'loading' : ''}`}
+                    className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-lg bg-blue-600 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-blue-500 transition-all shadow-lg shadow-blue-600/10 ${isSaving ? 'opacity-50 cursor-wait' : ''}`}
                     onClick={handleSave}
                     disabled={isSaving || !config.host}
                 >
-                    {isSaving ? <RefreshCw className="animate-spin" size={16} /> : <Save size={16} />}
-                    <span>Apply Settings</span>
+                    {isSaving ? <RefreshCw className="animate-spin" size={12} /> : <Save size={12} />}
+                    Commit Configuration
                 </button>
             </div>
-
-            <style jsx>{`
-                .smtp-form-container {
-                    background-color: #020617;
-                    border: 1px solid #1e293b;
-                    border-radius: 12px;
-                    padding: 32px;
-                }
-                .smtp-grid {
-                    display: grid;
-                    grid-template-columns: 1fr 1fr;
-                    gap: 24px;
-                }
-                .span-2 {
-                    grid-column: span 2;
-                }
-                .form-group {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 8px;
-                }
-                .flex-row {
-                    flex-direction: row;
-                    align-items: center;
-                    padding-top: 24px;
-                }
-                .label {
-                    font-size: 0.8rem;
-                    font-weight: 600;
-                    color: #94a3b8;
-                    text-transform: uppercase;
-                    letter-spacing: 0.5px;
-                }
-                .checkbox-label {
-                    display: flex;
-                    align-items: center;
-                    gap: 12px;
-                    cursor: pointer;
-                    text-transform: none;
-                    color: #f8fafc;
-                    font-size: 0.85rem;
-                }
-                .input-wrapper {
-                    position: relative;
-                }
-                .input-icon {
-                    position: absolute;
-                    left: 12px;
-                    top: 50%;
-                    transform: translateY(-50%);
-                    color: #475569;
-                }
-                .input, .input-with-icon {
-                    width: 100%;
-                    background-color: #0f172a;
-                    border: 1px solid #1e293b;
-                    border-radius: 8px;
-                    padding: 12px;
-                    color: #fff;
-                    font-size: 0.9rem;
-                    outline: none;
-                    transition: border-color 0.2s;
-                }
-                .input-with-icon {
-                    padding-left: 40px;
-                }
-                .input:focus, .input-with-icon:focus {
-                    border-color: #3b82f6;
-                }
-                .form-actions {
-                    margin-top: 32px;
-                    display: flex;
-                    justify-content: flex-end;
-                    gap: 16px;
-                    padding-top: 24px;
-                    border-top: 1px solid #1e293b;
-                }
-                .btn {
-                    padding: 12px 24px;
-                    border-radius: 8px;
-                    font-size: 0.85rem;
-                    font-weight: 700;
-                    cursor: pointer;
-                    display: flex;
-                    align-items: center;
-                    gap: 10px;
-                    transition: all 0.2s;
-                    border: none;
-                }
-                .btn-primary {
-                    background-color: #3b82f6;
-                    color: #fff;
-                }
-                .btn-primary:hover {
-                    background-color: #2563eb;
-                }
-                .btn-secondary {
-                    background-color: transparent;
-                    color: #94a3b8;
-                    border: 1px solid #1e293b;
-                }
-                .btn-secondary:hover {
-                    background-color: #0f172a;
-                    color: #fff;
-                }
-                .animate-spin {
-                    animation: spin 1s linear infinite;
-                }
-                @keyframes spin {
-                    from { transform: rotate(0deg); }
-                    to { transform: rotate(360deg); }
-                }
-            `}</style>
         </div>
     );
 }

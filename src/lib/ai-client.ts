@@ -1,5 +1,5 @@
 /**
- * Godzilla Coder Desktop AI Client
+ * Godzilla Desktop AI Client
  * Handles streaming responses and abort propagation.
  */
 export class AIClient {

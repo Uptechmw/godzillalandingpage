@@ -1,4 +1,5 @@
 'use client';
+
 import React from 'react';
 
 interface PageHeaderProps {
@@ -9,38 +10,12 @@ interface PageHeaderProps {
 
 export function PageHeader({ title, subtitle, children }: PageHeaderProps) {
     return (
-        <header className="page-header">
-            <div className="header-text">
-                <h2 className="header-title">{title}</h2>
-                {subtitle && <p className="header-subtitle">{subtitle}</p>}
+        <header className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 pb-6 border-b border-[#1F2937]/50">
+            <div className="space-y-1">
+                <h2 className="text-xl font-bold text-[#F1F5F9] uppercase tracking-tight">{title}</h2>
+                {subtitle && <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.1em]">{subtitle}</p>}
             </div>
-            {children && <div className="header-actions">{children}</div>}
-
-            <style jsx>{`
-                .page-header {
-                    display: flex;
-                    align-items: flex-start;
-                    justify-content: space-between;
-                    margin-bottom: 32px;
-                }
-
-                .header-title {
-                    font-size: 1.5rem;
-                    font-weight: 700;
-                    color: #fff;
-                }
-
-                .header-subtitle {
-                    font-size: 0.9rem;
-                    color: #94a3b8;
-                    margin-top: 4px;
-                }
-
-                .header-actions {
-                    display: flex;
-                    gap: 12px;
-                }
-            `}</style>
+            {children && <div className="flex items-center gap-3">{children}</div>}
         </header>
     );
 }

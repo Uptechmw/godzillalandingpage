@@ -1,20 +1,48 @@
-import Navbar from "@/components/landing/Navbar";
-import HeroNew from "@/components/landing/HeroNew";
-import ValueProposition from "@/components/landing/ValueProposition";
-import Comparison from "@/components/landing/Comparison";
-import PricingNew from "@/components/landing/PricingNew";
-import FinalCTA from "@/components/landing/FinalCTA";
-import Footer from "@/components/landing/Footer";
+import React from 'react';
+import Navbar from '@/components/landing/enterprise/Navbar';
+import Hero from '@/components/landing/enterprise/Hero';
+import TrustStrip from '@/components/landing/enterprise/TrustStrip';
+import BuiltForTeams from '@/components/landing/enterprise/BuiltForTeams';
+import Architecture from '@/components/landing/enterprise/Architecture';
+import MultiModel from '@/components/landing/enterprise/MultiModel';
+import SecurityPrivacy from '@/components/landing/enterprise/SecurityPrivacy';
+import BuiltForTeamsManagement from '@/components/landing/enterprise/BuiltForTeamsManagement';
+import Pricing from '@/components/landing/enterprise/Pricing';
+import RealEngineers from '@/components/landing/enterprise/RealEngineers';
+import Footer from '@/components/landing/enterprise/Footer';
 
 export default function Home() {
   return (
-    <main className="min-h-screen text-white" style={{ background: 'var(--color-primary)' }}>
+    <main className="min-h-screen bg-primary text-text font-sans antialiased text-base selection:bg-emerald/30">
       <Navbar />
-      <HeroNew />
-      <ValueProposition />
-      <Comparison />
-      <PricingNew />
-      <FinalCTA />
+
+      <div className="pt-20">
+        <Hero />
+        <TrustStrip />
+
+        <div id="architecture">
+          <Architecture />
+        </div>
+
+        <BuiltForTeams />
+
+        <div id="models">
+          <MultiModel />
+        </div>
+
+        <div id="security">
+          <SecurityPrivacy />
+        </div>
+
+        <BuiltForTeamsManagement />
+
+        <div id="pricing">
+          <Pricing />
+        </div>
+
+        <RealEngineers />
+      </div>
+
       <Footer />
     </main>
   );

@@ -32,17 +32,17 @@ interface AdminModelTableProps {
 
 export function AdminModelTable({ models }: AdminModelTableProps) {
     return (
-        <div className="model-table-wrapper relative overflow-hidden rounded-[2rem] bg-[#111827] border border-[#1F2937] shadow-2xl">
+        <div className="model-table-wrapper relative overflow-hidden rounded-xl bg-[#111827] border border-[#1F2937] shadow-sm">
             <div className="overflow-x-auto scrollbar-hide">
                 <table className="w-full border-collapse text-left">
                     <thead>
                         <tr className="border-b border-[#1F2937] bg-[#0B1220]/50">
-                            <th className="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Neural Architecture</th>
-                            <th className="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Provider</th>
-                            <th className="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">System Status</th>
-                            <th className="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Rate Limits</th>
-                            <th className="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Context Window</th>
-                            <th className="px-6 py-5 text-right text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Config</th>
+                            <th className="px-6 py-4 text-[9px] font-bold text-slate-500 uppercase tracking-[0.2em]">Neural Architecture</th>
+                            <th className="px-6 py-4 text-[9px] font-bold text-slate-500 uppercase tracking-[0.2em]">Provider</th>
+                            <th className="px-6 py-4 text-[9px] font-bold text-slate-500 uppercase tracking-[0.2em]">System Status</th>
+                            <th className="px-6 py-4 text-[9px] font-bold text-slate-500 uppercase tracking-[0.2em]">Rate Limits</th>
+                            <th className="px-6 py-4 text-[9px] font-bold text-slate-500 uppercase tracking-[0.2em]">Context Window</th>
+                            <th className="px-6 py-4 text-right text-[9px] font-bold text-slate-500 uppercase tracking-[0.2em]">Config</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-[#1F2937]">
@@ -50,8 +50,8 @@ export function AdminModelTable({ models }: AdminModelTableProps) {
                             <tr key={model.key} className="hover:bg-[#1F2937]/30 transition-colors group">
                                 <td className="px-6 py-6 whitespace-nowrap">
                                     <div className="flex items-center gap-4">
-                                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-blue-500/20 flex items-center justify-center text-blue-400 shadow-lg shadow-blue-500/10 group-hover:scale-105 transition-transform">
-                                            <Zap size={18} />
+                                        <div className="w-9 h-9 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-blue-500 shadow-sm group-hover:scale-105 transition-transform">
+                                            <Zap size={16} />
                                         </div>
                                         <div>
                                             <p className="text-sm font-bold text-white group-hover:text-blue-400 transition-colors tracking-tight">{model.name}</p>
@@ -70,8 +70,8 @@ export function AdminModelTable({ models }: AdminModelTableProps) {
                                 <td className="px-6 py-6 whitespace-nowrap">
                                     <div className="flex items-center gap-3">
                                         <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full border text-[10px] font-black tracking-widest uppercase ${model.enabled
-                                                ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
-                                                : 'bg-rose-500/10 border-rose-500/20 text-rose-400'
+                                            ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
+                                            : 'bg-rose-500/10 border-rose-500/20 text-rose-400'
                                             }`}>
                                             <div className={`w-1 h-1 rounded-full ${model.enabled ? 'bg-emerald-400 animate-pulse' : 'bg-rose-400'}`} />
                                             {model.enabled ? 'Live' : 'Offline'}
@@ -105,8 +105,6 @@ export function AdminModelTable({ models }: AdminModelTableProps) {
                     </tbody>
                 </table>
             </div>
-
-            <div className="absolute inset-0 pointer-events-none border border-white/5 rounded-[2rem]" />
         </div>
     );
 }

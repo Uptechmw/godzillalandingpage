@@ -242,7 +242,7 @@ MIT License - see LICENSE file
 
 - Documentation: See `/docs` folder
 - Issues: GitHub Issues
-- Email: support@godzillaai.com
+- Email: support@godzilla.ai
 
 ---
 

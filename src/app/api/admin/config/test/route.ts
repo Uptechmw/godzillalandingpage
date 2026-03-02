@@ -1,17 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { AdminAuthService } from '@/services/admin/security/auth.service';
+import { requireAdminRole, unauthorizedResponse } from '@/lib/rbac-helper';
+import { jsonError, getRequestId } from '@/lib/http/errors';
 import { ConnectionTestService } from '@/services/admin/config/test-connection.service';
 
 /**
  * API route to run connection tests for external providers.
  */
 export async function POST(req: NextRequest) {
-    const session = await AdminAuthService.getSession();
-    if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const { error, requestId } = await requireAdminRole(req, ['SUPER_ADMIN', 'ADMIN']);
+    if (error) return unauthorizedResponse(error);
 
     try {
         const { key, value } = await req.json();
-        if (!key || !value) return NextResponse.json({ error: 'Value is required' }, { status: 400 });
+        if (!key || !value) return jsonError(req, 400, 'VALIDATION_ERROR', 'Key and Value are required');
 
         let result;
 
@@ -20,16 +21,18 @@ export async function POST(req: NextRequest) {
         } else if (key === 'ANTHROPIC_API_KEY') {
             result = await ConnectionTestService.testClaude(value);
         } else if (key === 'SMTP_PASSWORD') {
-            // In a real scenario, we'd need other SMTP fields too.
-            // For now, assume this triggers a standard verification.
-            return NextResponse.json({ success: true, message: "SMTP testing requires full config." });
+            return NextResponse.json({
+                success: true,
+                message: "SMTP testing requires full config. Use the dedicated test-smtp endpoint.",
+                requestId
+            }, { headers: { 'x-request-id': requestId! } });
         } else {
-            return NextResponse.json({ error: 'Unsupported test key' }, { status: 400 });
+            return jsonError(req, 400, 'VALIDATION_ERROR', 'Unsupported test key');
         }
 
-        return NextResponse.json(result);
+        return NextResponse.json({ ...result, requestId }, { headers: { 'x-request-id': requestId! } });
     } catch (error: any) {
         console.error('[AdminAPI] Test Error:', error);
-        return NextResponse.json({ error: 'Internal server error during test' }, { status: 500 });
+        return jsonError(req, 500, 'INTERNAL_ERROR', 'Internal server error during test');
     }
 }

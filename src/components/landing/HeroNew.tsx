@@ -35,7 +35,7 @@ export default function HeroNew() {
               className="text-sm font-semibold mb-4"
               style={{ color: 'var(--color-accent)' }}
             >
-              Godzilla Coder — AI Powered by AI
+              Godzilla — AI Powered by AI
             </motion.p>
 
             <motion.h1
@@ -57,7 +57,7 @@ export default function HeroNew() {
               className="text-lg mb-10 leading-relaxed max-w-lg"
               style={{ color: 'var(--color-muted)' }}
             >
-              Godzilla Coder boosts your productivity with AI-powered code editing, multi-agent orchestration, and real local execution.
+              Godzilla AI boosts your productivity with AI-powered code editing, multi-agent orchestration, and real local execution.
             </motion.p>
 
             <motion.div

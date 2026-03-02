@@ -11,6 +11,7 @@ import {
     ShieldCheck,
     LogOut,
     Activity,
+    Shield,
     X
 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -37,10 +38,10 @@ export function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
 
     const handleLogout = async () => {
         try {
-            const res = await fetch('/api/admin/auth/logout', { method: 'POST' });
+            const res = await fetch('/api/auth/logout?type=admin', { method: 'POST' });
             if (res.ok) {
                 toast.success('Logged out successfully');
-                router.push('/admin/login');
+                router.push('/admin/auth/login');
             } else {
                 toast.error('Logout failed');
             }
@@ -60,15 +61,20 @@ export function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
             <aside className={`admin-sidebar ${isOpen ? 'mobile-open' : ''}`}>
                 <div className="sidebar-header">
                     <div className="flex justify-between items-center w-full">
-                        <div className="flex flex-col">
-                            <span className="logo-text">GODZILLA</span>
-                            <span className="logo-subtext">CORE ADMIN</span>
+                        <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                                <Shield className="text-white w-5 h-5" />
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="logo-text">GODZILLA</span>
+                                <span className="logo-subtext">ADMIN CLOUD</span>
+                            </div>
                         </div>
                         <button
                             className="lg:hidden p-2 text-slate-500 hover:text-white transition-colors"
                             onClick={onClose}
                         >
-                            <X size={20} />
+                            <X size={18} />
                         </button>
                     </div>
                 </div>
@@ -84,7 +90,7 @@ export function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
                                     className={`nav-item${pathname === item.href ? ' active' : ''}`}
                                     onClick={onClose}
                                 >
-                                    <item.icon size={17} />
+                                    <item.icon size={15} />
                                     <span>{item.name}</span>
                                 </Link>
                             ))}
@@ -94,8 +100,8 @@ export function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
 
                 <div className="sidebar-footer">
                     <button className="logout-button" onClick={handleLogout}>
-                        <LogOut size={17} />
-                        <span>Sign Out</span>
+                        <LogOut size={14} />
+                        <span>Terminate Session</span>
                     </button>
                 </div>
             </aside>

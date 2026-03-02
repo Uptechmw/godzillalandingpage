@@ -1,7 +1,7 @@
 import { createCipheriv, createDecipheriv, randomBytes, scryptSync } from 'crypto';
 
 /**
- * Encryption Utility for Godzilla Coder Admin Dashboard.
+ * Encryption Utility for Godzilla Admin Dashboard.
  * Uses AES-256-GCM for secure, authenticated encryption of sensitive secrets.
  */
 export class EncryptionUtils {

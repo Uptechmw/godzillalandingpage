@@ -30,17 +30,17 @@ interface AdminAuditLogTableProps {
 
 export function AdminAuditLogTable({ logs }: AdminAuditLogTableProps) {
     return (
-        <div className="audit-table-wrapper relative overflow-hidden rounded-[2rem] bg-[#111827] border border-[#1F2937] shadow-2xl">
+        <div className="audit-table-wrapper relative overflow-hidden rounded-xl bg-[#111827] border border-[#1F2937] shadow-sm">
             <div className="overflow-x-auto scrollbar-hide">
                 <table className="w-full border-collapse">
                     <thead>
                         <tr className="border-b border-[#1F2937] bg-[#0B1220]/50">
-                            <th className="px-6 py-5 text-left text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Timestamp</th>
-                            <th className="px-6 py-5 text-left text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Admin</th>
-                            <th className="px-6 py-5 text-left text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Action</th>
-                            <th className="px-6 py-5 text-left text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Module</th>
-                            <th className="px-6 py-5 text-left text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Target</th>
-                            <th className="px-6 py-5 text-right text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Details</th>
+                            <th className="px-6 py-4 text-left text-[9px] font-bold text-slate-500 uppercase tracking-[0.25em]">Timestamp</th>
+                            <th className="px-6 py-4 text-left text-[9px] font-bold text-slate-500 uppercase tracking-[0.25em]">Admin</th>
+                            <th className="px-6 py-4 text-left text-[9px] font-bold text-slate-500 uppercase tracking-[0.25em]">Action</th>
+                            <th className="px-6 py-4 text-left text-[9px] font-bold text-slate-500 uppercase tracking-[0.25em]">Module</th>
+                            <th className="px-6 py-4 text-left text-[9px] font-bold text-slate-500 uppercase tracking-[0.25em]">Target</th>
+                            <th className="px-6 py-4 text-right text-[9px] font-bold text-slate-500 uppercase tracking-[0.25em]">Details</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-[#1F2937]">
@@ -105,8 +105,6 @@ export function AdminAuditLogTable({ logs }: AdminAuditLogTableProps) {
                     </tbody>
                 </table>
             </div>
-
-            <div className="absolute inset-0 pointer-events-none border border-white/5 rounded-[2rem]" />
         </div>
     );
 }

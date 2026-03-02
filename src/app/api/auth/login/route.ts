@@ -10,18 +10,29 @@ import { loginSchema } from '@/lib/validation';
  * Authenticate user and return JWT token
  */
 export async function POST(request: NextRequest) {
+  const requestId = crypto.randomUUID();
+
   try {
     const body = await request.json();
 
     // Validate input
     const parsed = loginSchema.safeParse(body);
     if (!parsed.success) {
+      const fieldErrors: Record<string, string> = {};
+      parsed.error.errors.forEach(err => {
+        const path = err.path.join('.');
+        if (path) fieldErrors[path] = err.message;
+      });
+
       return NextResponse.json(
         {
           success: false,
-          error: parsed.error.errors[0].message,
+          errorCode: 'VALIDATION_ERROR',
+          message: 'Invalid request parameters',
+          details: { fieldErrors },
+          requestId
         },
-        { status: 400 }
+        { status: 400, headers: { 'x-request-id': requestId } }
       );
     }
 
@@ -39,9 +50,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Invalid email or password',
+          errorCode: 'AUTH_INVALID_CREDENTIALS',
+          message: 'Invalid email or password',
+          requestId
         },
-        { status: 401 }
+        { status: 401, headers: { 'x-request-id': requestId } }
       );
     }
 
@@ -51,9 +64,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Invalid email or password',
+          errorCode: 'AUTH_INVALID_CREDENTIALS',
+          message: 'Invalid email or password',
+          requestId
         },
-        { status: 401 }
+        { status: 401, headers: { 'x-request-id': requestId } }
       );
     }
 
@@ -62,28 +77,26 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Please verify your email before logging in',
-          requiresVerification: true,
+          errorCode: 'AUTH_REQUIRED',
+          message: 'Please verify your email before logging in',
+          details: { requiresVerification: true },
+          requestId
         },
-        { status: 401 }
+        { status: 401, headers: { 'x-request-id': requestId } }
       );
     }
 
     // Generate JWT token
     const token = await signToken(user.id, user.email);
 
-    // FIX: Professional redirect logic for Admins vs Users
-    // This is the USER login route. If an admin logs in here, we should ideally
-    // check if they have an AdminUser record and redirect accordingly.
     const adminUser = await (prisma as any).adminUser.findUnique({
       where: { email: user.email }
     });
 
     const redirectTo = adminUser ? '/admin' : '/dashboard';
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
-      token,
       redirectTo,
       user: {
         id: user.id,
@@ -91,16 +104,31 @@ export async function POST(request: NextRequest) {
         name: user.name,
         coins: user.tokenBalance?.coins ?? 0,
       },
+      requestId
+    }, {
+      headers: { 'x-request-id': requestId }
     });
+
+    // Set HttpOnly sessions cookie
+    response.cookies.set('godzilla_session', token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 7 * 24 * 60 * 60 // 7 days
+    });
+
+    return response;
   } catch (error: any) {
-    console.error('[Login Error]', error);
+    console.error('[Login]', requestId, error.code || error.message);
     return NextResponse.json(
       {
         success: false,
-        error: 'Login failed. Please try again.',
-        details: error?.message || String(error),
+        errorCode: 'INTERNAL_ERROR',
+        message: 'Login failed. Please try again.',
+        requestId
       },
-      { status: 500 }
+      { status: 500, headers: { 'x-request-id': requestId } }
     );
   }
 }

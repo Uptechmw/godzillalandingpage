@@ -9,11 +9,11 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "Godzilla Coder | The AI-Powered Future of Coding",
-  description: "The world's most advanced AI-first desktop code editor. Built on VS Code, powered by Godzilla AI.",
+  title: "Godzilla | The AI-Powered Future of Coding",
+  description: "The world's most advanced AI-first desktop code editor. Powered by Godzilla AI.",
 };
 
-import { Toaster } from "sonner";
+import { ToastProvider, ToastInitializer } from "@/components/ui/toast";
 
 export default function RootLayout({
   children,
@@ -23,8 +23,10 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={`${outfit.variable} font-outfit antialiased`}>
-        {children}
-        <Toaster position="top-center" richColors theme="dark" />
+        <ToastProvider>
+          <ToastInitializer />
+          {children}
+        </ToastProvider>
       </body>
     </html>
   );

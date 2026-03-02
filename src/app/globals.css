@@ -1,83 +1,199 @@
-@import "tailwindcss";
-
-/* ============================================================
-   GODZILLA AI — GLOBAL DESIGN TOKEN SYSTEM
-   One source of truth for all colors across the project.
-   ============================================================ */
-
 :root {
-  /* --- Primary Brand Palette --- */
-  --color-primary: #0B1220;
-  /* Deep Slate — page primary bg */
-  --color-surface: #111827;
-  /* Surface — cards, panels */
-  --color-accent: #2563EB;
-  /* Accent Blue — buttons, links, active states */
-  --color-muted: #94A3B8;
-  /* Muted Text — secondary text */
+  /* --- Enterprise Brand Palette --- */
+  --color-primary: #0B0F14;
+  /* Carbon Black — page base */
+  --color-surface: #0E1116;
+  /* Deep Slate — main surface */
+  --color-surface-soft: #1A1F26;
+  /* Muted Graphite — cards, lifted areas */
+
+  --color-accent-emerald: #00C27A;
+  /* Emerald — technical indicators, CTAs */
+  --color-accent-blue: #2E6CF6;
+  /* Enterprise Blue — documentation, links */
+
+  --color-text: #F9FAFB;
+  /* High Contrast White */
+  --color-text-muted: #9BA3AF;
+  /* Soft Neutral Gray */
+  --color-text-faint: #4B5563;
+  /* Subdued UI elements */
+
   --color-border: #1F2937;
-  /* Borders — dividers, card edges */
-  --color-success: #16A34A;
-  /* Success — positive badges */
-  --color-danger: #DC2626;
-  /* Danger — error/warning badges */
+  /* Structured dividers */
+  --color-border-subtle: #111827;
 
-  /* --- Text Tokens --- */
-  --color-text: #F1F5F9;
-  /* Primary text (on dark) */
-  --color-text-subtle: #94A3B8;
-  /* Muted / secondary */
-  --color-text-faint: #475569;
-  /* Placeholder / timestamps */
+  /* --- 8px Grid Spacing Tokens --- */
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+  --space-6: 48px;
+  --space-8: 64px;
+  --space-12: 96px;
+  --space-16: 128px;
 
-  /* --- Surface Variants --- */
-  --color-surface-2: #1F2937;
-  /* Slightly raised surface */
-  --color-surface-3: #374151;
-  /* Active / hover state surface */
-
-  /* --- Landing Page Dark Shell (same palette) --- */
-  --color-landing-bg: var(--color-primary);
-  --color-landing-surface: var(--color-surface);
-  --color-landing-border: var(--color-border);
-
-  /* --- Godzilla Brand (User Auth Pages — preserved) --- */
-  --color-godzilla-bg: #0A0A0A;
-  --color-godzilla-surface: #111111;
-  --color-godzilla-border: #2A2A2A;
-  --color-godzilla-accent: #00FF94;
-  --color-godzilla-text-muted: #6B6B6B;
-
-  /* --- Admin Surface Tokens (dark blue-slate shell) --- */
-  --color-admin-bg: var(--color-primary);
-  --color-admin-surface: var(--color-surface);
-  --color-admin-surface-2: var(--color-surface-2);
-  --color-admin-border: var(--color-border);
-  --color-admin-text: var(--color-text);
-  --color-admin-muted: var(--color-muted);
-  --color-admin-subtle: var(--color-text-faint);
+  /* --- Type Scale --- */
+  --font-size-h1: clamp(64px, 6vw, 72px);
+  --font-size-h2: clamp(40px, 4vw, 48px);
+  --font-size-h3: 28px;
+  --font-size-body-lg: 19px;
+  --font-size-body: 17px;
+  --font-size-micro: 13px;
 
   /* --- Typography --- */
-  --font-outfit: "Outfit", sans-serif;
-  --font-sans: var(--font-outfit), "Inter", -apple-system, sans-serif;
-  --font-mono: "JetBrains Mono", "Fira Code", monospace;
-}
+  --font-sans: "Inter", -apple-system, sans-serif;
+  --font-display: "Outfit", var(--font-sans);
+  --font-mono: "JetBrains Mono", monospace;
 
+  /* --- Layout --- */
+  --container-max-width: 1200px;
+}
 
 body {
   background-color: var(--color-primary);
   color: var(--color-text);
   font-family: var(--font-sans);
+  font-size: var(--font-size-body);
+  font-weight: 400;
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* --- Enterprise Headlines --- */
+h1,
+.h1 {
+  font-family: var(--font-display);
+  font-size: var(--font-size-h1);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+h2,
+.h2 {
+  font-family: var(--font-display);
+  font-size: var(--font-size-h2);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  margin: 0;
+}
+
+h3,
+.h3 {
+  font-family: var(--font-display);
+  font-size: var(--font-size-h3);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.body-lg {
+  font-size: var(--font-size-body-lg);
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+.label-micro {
+  font-size: var(--font-size-micro);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+}
+
 @layer utilities {
-  .glass-card {
-    background: rgba(17, 24, 39, 0.7);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+  .enterprise-container {
+    max-width: var(--container-max-width);
+    margin: 0 auto;
+    padding: 0 80px;
+    /* Enterprise side margins */
+  }
+
+  .grid-enterprise {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: var(--space-4);
+  }
+
+  /* --- Section Padding --- */
+  .section-hero {
+    padding-top: var(--space-16);
+    padding-bottom: var(--space-16);
+  }
+
+  .section-standard {
+    padding-top: var(--space-12);
+    padding-bottom: var(--space-12);
+  }
+
+  .section-arch {
+    padding-top: 140px;
+    padding-bottom: 140px;
+  }
+
+  /* --- Card System --- */
+  .enterprise-card {
+    background-color: var(--color-surface-soft);
     border: 1px solid var(--color-border);
+    padding: var(--space-4);
+    /* 32px internal */
+    border-radius: 8px;
+    /* Max 8px radius */
+    transition: border-color 0.2s ease;
+  }
+
+  .enterprise-card:hover {
+    border-color: var(--color-accent-emerald);
+  }
+
+  /* --- Button System --- */
+  .btn-primary {
+    height: 48px;
+    background-color: var(--color-accent-emerald);
+    color: var(--color-primary);
+    font-weight: 700;
+    font-size: 16px;
+    padding: 0 24px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s ease;
+  }
+
+  .btn-primary:hover {
+    opacity: 0.9;
+  }
+
+  .btn-secondary {
+    height: 48px;
+    background-color: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    font-weight: 600;
+    font-size: 16px;
+    padding: 0 24px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .max-w-content {
+    max-width: 680px;
+  }
+
+  .text-glow-emerald {
+    text-shadow: 0 0 15px rgba(0, 194, 122, 0.4);
   }
 }
 
@@ -86,7 +202,7 @@ html {
 }
 
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 10px;
 }
 
 ::-webkit-scrollbar-track {
@@ -94,10 +210,10 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-border);
-  border-radius: 4px;
+  background: var(--color-surface-soft);
+  border: 3px solid var(--color-primary);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-surface-2);
+  background: var(--color-text-faint);
 }
