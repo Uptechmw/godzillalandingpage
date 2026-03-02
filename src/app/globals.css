@@ -1,22 +1,26 @@
 @import "tailwindcss";
 
 :root {
-  /* --- Enterprise Brand Palette --- */
-  --color-primary: #0B0F14;
-  /* Carbon Black — page base */
-  --color-surface: #0E1116;
+  /* --- Enterprise Brand Palette (Unified Blue) --- */
+  --color-primary: #0B1220;
+  /* Dark Navy — page base */
+  --color-surface: #0F172A;
   /* Deep Slate — main surface */
-  --color-surface-soft: #1A1F26;
+  --color-surface-soft: #111827;
   /* Muted Graphite — cards, lifted areas */
 
-  --color-accent-emerald: #00C27A;
-  /* Emerald — technical indicators, CTAs */
-  --color-accent-blue: #2E6CF6;
-  /* Enterprise Blue — documentation, links */
+  --color-accent-blue: #2563EB;
+  /* Enterprise Blue — primary brand color */
+  --color-accent-blue-hover: #1D4ED8;
+  /* Deep Blue - active/hover states */
+  --color-accent-blue-glow: rgba(37, 99, 235, 0.2);
 
-  --color-text: #F9FAFB;
+  --color-success: #22C55E;
+  /* Metrics only */
+
+  --color-text: #F3F4F6;
   /* High Contrast White */
-  --color-text-muted: #9BA3AF;
+  --color-text-muted: #9CA3AF;
   /* Soft Neutral Gray */
   --color-text-faint: #4B5563;
   /* Subdued UI elements */
@@ -126,10 +130,10 @@ h3,
     gap: var(--space-4);
   }
 
-  /* --- Section Padding --- */
+  /* --- Section Padding (Industrial 96px Density) --- */
   .section-hero {
-    padding-top: var(--space-16);
-    padding-bottom: var(--space-16);
+    padding-top: var(--space-12);
+    padding-bottom: var(--space-12);
   }
 
   .section-standard {
@@ -138,13 +142,13 @@ h3,
   }
 
   .section-arch {
-    padding-top: 140px;
-    padding-bottom: 140px;
+    padding-top: 120px;
+    padding-bottom: 120px;
   }
 
   /* --- Card System --- */
   .enterprise-card {
-    background-color: var(--color-surface-soft);
+    background-color: var(--color-surface);
     border: 1px solid var(--color-border);
     padding: var(--space-4);
     /* 32px internal */
@@ -154,14 +158,14 @@ h3,
   }
 
   .enterprise-card:hover {
-    border-color: var(--color-accent-emerald);
+    border-color: var(--color-accent-blue);
   }
 
   /* --- Button System --- */
   .btn-primary {
     height: 48px;
-    background-color: var(--color-accent-emerald);
-    color: var(--color-primary);
+    background-color: var(--color-accent-blue);
+    color: white;
     font-weight: 700;
     font-size: 16px;
     padding: 0 24px;
@@ -169,11 +173,11 @@ h3,
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    transition: opacity 0.2s ease;
+    transition: background-color 0.2s ease;
   }
 
   .btn-primary:hover {
-    opacity: 0.9;
+    background-color: var(--color-accent-blue-hover);
   }
 
   .btn-secondary {
@@ -188,14 +192,21 @@ h3,
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    transition: all 0.2s ease;
+  }
+
+  .btn-secondary:hover {
+    background-color: var(--color-surface-soft);
+    border-color: var(--color-text-faint);
+    color: var(--color-text);
   }
 
   .max-w-content {
     max-width: 680px;
   }
 
-  .text-glow-emerald {
-    text-shadow: 0 0 15px rgba(0, 194, 122, 0.4);
+  .text-glow-blue {
+    text-shadow: 0 0 15px var(--color-accent-blue-glow);
   }
 }
 

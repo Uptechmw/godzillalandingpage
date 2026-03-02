@@ -16,7 +16,7 @@ const TrustStrip = () => {
                     {items.map((item, idx) => (
                         <React.Fragment key={idx}>
                             <div className="flex flex-col">
-                                <span className="label-micro text-emerald mb-2">{item.detail}</span>
+                                <span className="label-micro text-accent-blue mb-2">{item.detail}</span>
                                 <span className="text-sm font-bold tracking-tight text-text whitespace-nowrap">{item.label}</span>
                             </div>
                             {idx < items.length - 1 && (

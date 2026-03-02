@@ -6,7 +6,7 @@ const Contact = () => {
             <div className="enterprise-container">
                 <div className="grid lg:grid-cols-2 gap-20 items-center">
                     <div>
-                        <span className="label-micro text-emerald mb-6 inline-block">Engineering Support</span>
+                        <span className="label-micro text-accent-blue mb-6 inline-block">Engineering Support</span>
                         <h2 className="h2 mb-8">Talk to Our Engineering Team</h2>
                         <p className="body-lg text-text-muted mb-12 max-w-md">
                             Direct technical access for production scaling, security audits, and infrastructure integration.
@@ -15,21 +15,21 @@ const Contact = () => {
                         <div className="space-y-6">
                             <div className="flex items-center gap-6 p-4 border border-border bg-surface-soft rounded-sm">
                                 <div className="label-micro text-text-faint w-24">General</div>
-                                <a href="mailto:support@godzillaai.dev" className="text-[17px] font-mono text-emerald hover:underline">support@godzillaai.dev</a>
+                                <a href="mailto:support@godzillaai.dev" className="text-[17px] font-mono text-accent-blue hover:underline">support@godzillaai.dev</a>
                             </div>
                             <div className="flex items-center gap-6 p-4 border border-border bg-surface-soft rounded-sm">
                                 <div className="label-micro text-text-faint w-24">Enterprise</div>
-                                <a href="mailto:enterprise@godzillaai.dev" className="text-[17px] font-mono text-emerald hover:underline">enterprise@godzillaai.dev</a>
+                                <a href="mailto:enterprise@godzillaai.dev" className="text-[17px] font-mono text-accent-blue hover:underline">enterprise@godzillaai.dev</a>
                             </div>
                             <div className="flex items-center gap-6 p-4 border border-border bg-surface-soft rounded-sm">
                                 <div className="label-micro text-text-faint w-24">Security</div>
-                                <a href="mailto:security@godzillaai.dev" className="text-[17px] font-mono text-emerald hover:underline">security@godzillaai.dev</a>
+                                <a href="mailto:security@godzillaai.dev" className="text-[17px] font-mono text-accent-blue hover:underline">security@godzillaai.dev</a>
                             </div>
                         </div>
                     </div>
 
                     <div className="relative group">
-                        <div className="absolute -inset-10 bg-emerald/5 blur-[120px] opacity-20 pointer-events-none"></div>
+                        <div className="absolute -inset-10 bg-accent-blue/5 blur-[120px] opacity-20 pointer-events-none"></div>
                         <div className="relative border border-border p-2 bg-black overflow-hidden rounded-md shadow-2xl">
                             <img
                                 src="/images/enterprise/architecture.png"
@@ -37,7 +37,7 @@ const Contact = () => {
                                 className="w-full h-auto object-cover opacity-60 grayscale hover:grayscale-0 transition-all duration-700"
                             />
                             <div className="absolute inset-x-0 bottom-0 p-8 bg-black/60 backdrop-blur-md">
-                                <p className="label-micro text-emerald">Production Ops Center</p>
+                                <p className="label-micro text-accent-blue">Production Ops Center</p>
                             </div>
                         </div>
                     </div>

@@ -6,7 +6,7 @@ const BuiltForTeamsManagement = () => {
             <div className="enterprise-container">
                 <div className="grid lg:grid-cols-2 gap-20 items-center">
                     <div>
-                        <span className="label-micro text-emerald mb-6 inline-block">Enterprise Control</span>
+                        <span className="label-micro text-accent-blue mb-6 inline-block">Enterprise Control</span>
                         <h2 className="h2 mb-10 leading-tight">
                             Management Depth for Modern Teams
                         </h2>
@@ -35,7 +35,7 @@ const BuiltForTeamsManagement = () => {
                     </div>
 
                     <div className="relative group">
-                        <div className="absolute -inset-10 bg-emerald/5 blur-[100px] opacity-20 pointer-events-none"></div>
+                        <div className="absolute -inset-10 bg-accent-blue/5 blur-[100px] opacity-20 pointer-events-none"></div>
                         <div className="relative border border-border p-2 bg-black/40 backdrop-blur-sm rounded-lg overflow-hidden shadow-2xl skew-y-3 lg:-rotate-3 translate-x-4 lg:translate-x-12 transition-transform duration-700 group-hover:rotate-0 group-hover:skew-y-0 group-hover:translate-x-0">
                             <img
                                 src="/images/enterprise/admin_dashboard.png"

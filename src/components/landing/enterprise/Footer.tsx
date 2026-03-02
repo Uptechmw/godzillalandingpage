@@ -6,7 +6,7 @@ const Footer = () => {
             <div className="enterprise-container overflow-hidden">
                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-12 border-t border-border pt-16">
                     <div className="col-span-2">
-                        <div className="text-[22px] font-display font-black tracking-tighter mb-8 h-8 text-glow-emerald uppercase">
+                        <div className="text-[22px] font-display font-black tracking-tighter mb-8 h-8 text-glow-blue uppercase">
                             GODZILLA AI
                         </div>
                         <p className="label-micro text-text-faint leading-relaxed max-w-xs lowercase">
@@ -15,7 +15,7 @@ const Footer = () => {
                     </div>
 
                     <div>
-                        <h4 className="label-micro text-emerald mb-8">Platform</h4>
+                        <h4 className="label-micro text-accent-blue mb-8">Platform</h4>
                         <ul className="space-y-5 text-[14px] font-medium text-text-muted">
                             <li className="hover:text-text cursor-pointer transition-colors">Infrastructure</li>
                             <li className="hover:text-text cursor-pointer transition-colors">Model Router</li>
@@ -25,7 +25,7 @@ const Footer = () => {
                     </div>
 
                     <div>
-                        <h4 className="label-micro text-emerald mb-8">Engineering</h4>
+                        <h4 className="label-micro text-accent-blue mb-8">Engineering</h4>
                         <ul className="space-y-5 text-[14px] font-medium text-text-muted">
                             <li className="hover:text-text cursor-pointer transition-colors">Documentation</li>
                             <li className="hover:text-text cursor-pointer transition-colors">API Reference</li>
@@ -45,7 +45,7 @@ const Footer = () => {
                     </div>
 
                     <div>
-                        <h4 className="label-micro text-emerald mb-8">Connect</h4>
+                        <h4 className="label-micro text-accent-blue mb-8">Connect</h4>
                         <ul className="space-y-5 text-[14px] font-medium text-text-muted">
                             <li className="hover:text-text cursor-pointer transition-colors font-mono lowercase">support@godzillaai.dev</li>
                             <li className="hover:text-text cursor-pointer transition-colors font-mono lowercase">enterprise@godzillaai.dev</li>

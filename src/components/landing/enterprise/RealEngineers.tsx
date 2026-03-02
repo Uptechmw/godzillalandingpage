@@ -34,17 +34,17 @@ const RealEngineers = () => {
                                 className="w-full h-full object-contain opacity-20 p-8"
                             />
                             <div className="absolute inset-x-0 bottom-0 p-4 bg-black/60 backdrop-blur-md">
-                                <p className="label-micro text-emerald">Authored by humans</p>
+                                <p className="label-micro text-accent-blue">Authored by humans</p>
                             </div>
                         </div>
                     </div>
 
                     {/* Quotes */}
                     <div className="space-y-16">
-                        <span className="label-micro text-emerald mb-6 inline-block">Trusted by Leaders</span>
+                        <span className="label-micro text-accent-blue mb-6 inline-block">Trusted by Leaders</span>
                         {testimonials.map((t, idx) => (
                             <div key={idx} className="relative">
-                                <div className="text-5xl font-serif text-emerald opacity-20 absolute -top-8 -left-8">"</div>
+                                <div className="text-5xl font-serif text-accent-blue opacity-20 absolute -top-8 -left-8">"</div>
                                 <blockquote className="text-[20px] font-medium leading-relaxed text-text italic mb-6">
                                     {t.quote}
                                 </blockquote>

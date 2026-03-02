@@ -5,7 +5,7 @@ const Architecture = () => {
         <section className="section-arch border-b border-border bg-primary relative overflow-hidden">
             <div className="enterprise-container text-left lg:text-center">
                 <div className="mb-16 max-w-content mx-auto">
-                    <span className="label-micro text-emerald mb-6 inline-block">Platform Architecture</span>
+                    <span className="label-micro text-accent-blue mb-6 inline-block">Platform Architecture</span>
                     <h2 className="h2 mb-8">
                         Engineered for Scale and Security
                     </h2>
@@ -41,14 +41,14 @@ const Architecture = () => {
 
                 {/* System Pillars */}
                 <div className="grid md:grid-cols-3 gap-8 mt-16 max-w-5xl mx-auto">
-                    <div className="enterprise-card border-l-4 border-emerald text-left">
-                        <h4 className="label-micro text-emerald mb-4">Identity & Access</h4>
+                    <div className="enterprise-card border-l-4 border-accent-blue text-left">
+                        <h4 className="label-micro text-accent-blue mb-4">Identity & Access</h4>
                         <p className="text-[16px] font-medium leading-relaxed">
                             DB-verified session validation with immediate revocation and Admin 2FA authentication.
                         </p>
                     </div>
-                    <div className="enterprise-card border-l-4 border-enterprise-blue text-left">
-                        <h4 className="label-micro text-enterprise-blue mb-4">Economy Engine</h4>
+                    <div className="enterprise-card border-l-4 border-accent-blue text-left">
+                        <h4 className="label-micro text-accent-blue mb-4">Economy Engine</h4>
                         <p className="text-[16px] font-medium leading-relaxed">
                             Token-level accounting with granular cost-center allocation and usage-based transparency.
                         </p>

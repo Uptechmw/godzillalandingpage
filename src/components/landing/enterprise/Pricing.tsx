@@ -12,13 +12,13 @@ const Pricing = () => {
         <section className="section-standard border-b border-border bg-primary">
             <div className="enterprise-container">
                 <div className="text-left mb-16">
-                    <span className="label-micro text-emerald mb-6 inline-block">Subscription Model</span>
+                    <span className="label-micro text-accent-blue mb-6 inline-block">Subscription Model</span>
                     <h2 className="h2 mb-8">Predictable Infrastructure Pricing</h2>
                 </div>
 
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {tiers.map((tier, idx) => (
-                        <div key={idx} className="enterprise-card flex flex-col items-start h-full border-border/50 hover:border-emerald/40 transition-all">
+                        <div key={idx} className="enterprise-card flex flex-col items-start h-full border-border/50 hover:border-accent-blue/40 transition-all">
                             <h3 className="text-[20px] font-bold mb-2">{tier.name}</h3>
                             <p className="text-[14px] text-text-muted mb-8 leading-relaxed h-12">{tier.desc}</p>
 

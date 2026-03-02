@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const Hero = () => {
     return (
@@ -7,12 +8,12 @@ const Hero = () => {
             <div className="enterprise-container grid lg:grid-cols-2 gap-16 items-center">
                 {/* Left Side: Content */}
                 <div className="z-10">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-surface-soft border border-border label-micro text-emerald mb-8">
-                        <span className="w-1.5 h-1.5 bg-emerald"></span>
+                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-surface-soft border border-border label-micro text-accent-blue mb-8">
+                        <span className="w-1.5 h-1.5 bg-accent-blue"></span>
                         System Status: Operational
                     </div>
 
-                    <h1 className="h1 text-glow-emerald mb-6">
+                    <h1 className="h1 text-glow-blue mb-6">
                         The Multi-Model AI Development Platform for Production Software Engineering
                     </h1>
 
@@ -21,13 +22,13 @@ const Hero = () => {
                     </p>
 
                     <div className="flex flex-wrap gap-4 mb-8">
-                        <button className="btn-primary gap-3 px-8">
-                            <span>Download for macOS</span>
+                        <Link href="/auth/signup" className="btn-primary gap-3 px-8">
+                            <span>Get Started</span>
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M5 12l7 7 7-7" /></svg>
-                        </button>
-                        <button className="btn-secondary px-8">
+                        </Link>
+                        <Link href="/docs" className="btn-secondary px-8">
                             View Documentation
-                        </button>
+                        </Link>
                     </div>
 
                     <div className="flex items-center gap-6">
@@ -42,7 +43,7 @@ const Hero = () => {
 
                 {/* Right Side: Workstation Visual */}
                 <div className="relative group">
-                    <div className="absolute -inset-8 bg-emerald/5 blur-[100px] opacity-20 pointer-events-none"></div>
+                    <div className="absolute -inset-8 bg-accent-blue/5 blur-[100px] opacity-20 pointer-events-none"></div>
                     <div className="relative border border-border p-2 bg-black/40 backdrop-blur-sm rounded-lg overflow-hidden shadow-2xl">
                         <img
                             src="/images/enterprise/hero.png"

@@ -15,7 +15,7 @@ const BuiltForTeams = () => {
             <div className="enterprise-container grid lg:grid-cols-2 gap-20 items-center">
                 {/* Left Side: Professional Imagery */}
                 <div className="relative group">
-                    <div className="absolute -inset-8 bg-emerald/5 blur-[100px] opacity-0 group-hover:opacity-40 transition-opacity"></div>
+                    <div className="absolute -inset-8 bg-accent-blue/5 blur-[100px] opacity-0 group-hover:opacity-40 transition-opacity"></div>
                     <div className="relative border border-border p-2 bg-black/40 backdrop-blur-sm rounded-lg overflow-hidden shadow-2xl">
                         <img
                             src="/images/enterprise/engineers.png"
@@ -27,7 +27,7 @@ const BuiltForTeams = () => {
 
                 {/* Right Side: Technical Specs */}
                 <div>
-                    <span className="label-micro text-emerald mb-6 inline-block">AI Infrastructure for Code</span>
+                    <span className="label-micro text-accent-blue mb-6 inline-block">AI Infrastructure for Code</span>
                     <h2 className="h2 mb-10">
                         AI Infrastructure Built for Production Codebases
                     </h2>
@@ -39,7 +39,7 @@ const BuiltForTeams = () => {
                     <div className="space-y-8 text-left">
                         {points.map((point, idx) => (
                             <div key={idx} className="flex gap-6 group">
-                                <div className="flex-shrink-0 w-8 h-8 rounded-full border border-border bg-surface-soft flex items-center justify-center text-[10px] font-mono group-hover:border-emerald transition-colors font-bold">
+                                <div className="flex-shrink-0 w-8 h-8 rounded-full border border-border bg-surface-soft flex items-center justify-center text-[10px] font-mono group-hover:border-accent-blue transition-colors font-bold">
                                     0{idx + 1}
                                 </div>
                                 <div className="space-y-2">

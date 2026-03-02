@@ -67,16 +67,16 @@ function AuthCallbackHandler() {
     }, [router, source]);
 
     return (
-        <div className="min-h-screen bg-[#0B1220] flex flex-col items-center justify-center p-6 text-center">
+        <div className="min-h-screen bg-primary flex flex-col items-center justify-center p-6 text-center">
             <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                className="text-blue-500 mb-8"
+                className="text-accent-blue mb-8"
             >
                 <Loader2 className="w-12 h-12" />
             </motion.div>
-            <h1 className="text-2xl font-black text-[#F1F5F9] uppercase tracking-tighter mb-4">Identity Synchronization</h1>
-            <p className="text-[#94A3B8] max-w-sm font-bold">
+            <h1 className="text-2xl font-display font-black text-white uppercase tracking-tighter mb-4">Identity Synchronization</h1>
+            <p className="text-text-muted max-w-sm font-bold">
                 {source === "app"
                     ? "Finalizing secure link to Godzilla desktop. If you aren't redirected, please check your application."
                     : "Securing your connection to the Godzilla ecosystem..."
@@ -89,9 +89,9 @@ function AuthCallbackHandler() {
 export default function AuthCallbackPage() {
     return (
         <Suspense fallback={
-            <div className="min-h-screen bg-[#0B1220] flex flex-col items-center justify-center p-6 text-center">
-                <Loader2 className="w-12 h-12 text-blue-500 animate-spin mb-4" />
-                <p className="text-[#94A3B8] font-bold italic">Initializing Identity Link...</p>
+            <div className="min-h-screen bg-primary flex flex-col items-center justify-center p-6 text-center">
+                <Loader2 className="w-12 h-12 text-accent-blue animate-spin mb-4" />
+                <p className="text-text-muted font-bold italic">Initializing Identity Link...</p>
             </div>
         }>
             <AuthCallbackHandler />
